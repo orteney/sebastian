@@ -1,0 +1,35 @@
+name: champmastery
+description: A new Flutter project.
+publish_to: "none"
+version: 1.1.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_bloc: ^8.0.1
+
+  #Utils
+  path: ^1.8.1
+  intl: ^0.17.0
+
+  #Plugins
+  shared_preferences: ^2.0.15
+  file_picker: ^4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+  build_runner: ^2.1.11
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/champions.json
+    - assets/images/

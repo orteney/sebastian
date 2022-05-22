@@ -1,10 +1,10 @@
 import 'package:champmastery/data/lcu.dart';
 import 'package:champmastery/data/models/pick_session.dart';
 
-class PickSessionRepository {
+class LeagueClientEventRepository {
   final LCU _lcu;
 
-  PickSessionRepository(this._lcu);
+  LeagueClientEventRepository(this._lcu);
 
   Stream<PickSession?> observePickSession() {
     return _lcu.subscribeToChampSelectEvent().map(
@@ -19,5 +19,9 @@ class PickSessionRepository {
         return PickSession.fromMap(data);
       },
     );
+  }
+
+  Stream<void> observeGameEndEvent() {
+    return _lcu.subscribeToEndOfGameEvent();
   }
 }

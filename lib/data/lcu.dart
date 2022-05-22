@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kDebugMode;
+
 import 'package:champmastery/data/lcu_store.dart';
 import 'package:champmastery/data/models/champion_mastery.dart';
 import 'package:champmastery/data/models/chest_eligibility.dart';
@@ -17,7 +19,10 @@ class LCU {
   final HttpClient _restClient;
   final WebSocket _websocket;
 
-  LCU._(this._authKey, this._port, this._restClient, this._websocket);
+  LCU._(this._authKey, this._port, this._restClient, this._websocket)
+      : _broadcastWebsocket = _websocket.asBroadcastStream();
+
+  final Stream<dynamic> _broadcastWebsocket;
 
   static Future<LCU> create(LcuStore store, {int retries = 5, int retryAfter = 5}) async {
     String authKey = '';
@@ -42,7 +47,9 @@ class LCU {
       throw 'Чота не удалось прочитать';
     }
 
-    print('lockfile = auth:$authKey port:$port');
+    if (kDebugMode) {
+      print('lockfile = auth:$authKey port:$port');
+    }
 
     final httpClient = HttpClient();
     httpClient.badCertificateCallback = (cert, host, port) => true;
@@ -64,14 +71,14 @@ class LCU {
     return _websocketEvent(eventName);
   }
 
-  Stream<void> subscribeToEndOfGameEvent() {
+  Stream<dynamic> subscribeToEndOfGameEvent() {
     const eventName = 'OnJsonApiEvent_lol-end-of-game_v1_champion-mastery-updates';
     _websocket.add('[5, "$eventName"]');
     return _websocketEvent(eventName);
   }
 
   Stream<dynamic> _websocketEvent(String eventName) {
-    return _websocket
+    return _broadcastWebsocket
         .map((event) {
           if (event.isEmpty) return null;
           final jsonEvent = json.decode(event);

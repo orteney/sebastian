@@ -8,7 +8,7 @@ import 'package:champmastery/data/lcu.dart';
 import 'package:champmastery/data/lcu_store.dart';
 import 'package:champmastery/data/models/chamption.dart';
 import 'package:champmastery/data/repositories/champion_repository.dart';
-import 'package:champmastery/data/repositories/pick_session_repository.dart';
+import 'package:champmastery/data/repositories/league_client_event_repository.dart';
 import 'package:champmastery/data/repositories/summoner_repository.dart';
 
 import 'home_event.dart';
@@ -31,9 +31,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   late LCU _lcu;
   late SummonerRepository _summonerRepository;
   late ChampionRepository _championRepository;
-  late PickSessionRepository _pickSessionRepository;
+  late LeagueClientEventRepository _leagueClientEventRepository;
 
   StreamSubscription? _pickSessionSubscription;
+  StreamSubscription? _gameEndEventSubscription;
 
   Future<void> _onStartHomeEvent(StartHomeEvent event, Emitter<HomeState> emit) async {
     if (state is! InitialHomeState) {
@@ -46,7 +47,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       _summonerRepository = SummonerRepository(lcu: _lcu);
       _championRepository = ChampionRepository(lcu: _lcu);
-      _pickSessionRepository = PickSessionRepository(_lcu);
+      _leagueClientEventRepository = LeagueClientEventRepository(_lcu);
 
       add(LoadCurrentSummonerInfoHomeEvent());
     } on NoLockFilePathException {
@@ -91,7 +92,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _onLoadCurrentSummonerInfoHomeEvent(
-      LoadCurrentSummonerInfoHomeEvent event, Emitter<HomeState> emit) async {
+    LoadCurrentSummonerInfoHomeEvent event,
+    Emitter<HomeState> emit,
+  ) async {
     emit(LoadingSummonerInfoHomeState());
 
     final summoner = await _summonerRepository.getCurrentSummoner();
@@ -104,9 +107,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       sortColumn: ChampionsTableColumn.champion,
     ));
 
-    _pickSessionSubscription = _pickSessionRepository.observePickSession().listen(
-          (event) => add(PickSessionUpdatedHomeEvent(pickSession: event)),
-        );
+    _pickSessionSubscription ??= _leagueClientEventRepository.observePickSession().listen((event) {
+      add(PickSessionUpdatedHomeEvent(pickSession: event));
+    });
+
+    _gameEndEventSubscription ??= _leagueClientEventRepository.observeGameEndEvent().listen((event) {
+      add(LoadCurrentSummonerInfoHomeEvent());
+    });
   }
 
   void _onChangeSortHomeEvent(ChangeSortHomeEvent event, Emitter<HomeState> emit) {

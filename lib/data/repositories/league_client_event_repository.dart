@@ -21,7 +21,5 @@ class LeagueClientEventRepository {
     );
   }
 
-  Stream<void> observeGameEndEvent() {
-    return _lcu.subscribeToEndOfGameEvent();
-  }
+  Stream<dynamic> observeGameEndEvent() => _lcu.subscribeToEndOfGameEvent();
 }

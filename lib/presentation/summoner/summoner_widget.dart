@@ -1,11 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:champmastery/data/models/chest_eligibility.dart';
 import 'package:champmastery/data/models/summoner.dart';
+import 'package:champmastery/di/di.dart';
 
-class SummonerInfo extends StatelessWidget {
-  const SummonerInfo({
-    super.key,
+import 'bloc/summoner_bloc.dart';
+
+class SummonerWidget extends StatelessWidget {
+  const SummonerWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => SummonerBloc(getIt()),
+      child: BlocBuilder<SummonerBloc, SummonerState>(
+        builder: (context, state) {
+          if (state.summoner == null) {
+            return const CircularProgressIndicator();
+          }
+
+          return _SummonerInfo(summoner: state.summoner!);
+        },
+      ),
+    );
+  }
+}
+
+class _SummonerInfo extends StatelessWidget {
+  const _SummonerInfo({
     required this.summoner,
   });
 
@@ -27,7 +50,7 @@ class SummonerInfo extends StatelessWidget {
             _LevelProgress(
               currentLvl: summoner.summonerLevel,
               currentExp: summoner.xpSinceLastLevel,
-              totalExp: summoner.xpSinceLastLevel + summoner.xpUntilNextLevel,
+              untilNextLvlExp: summoner.xpUntilNextLevel,
             ),
             const SizedBox(height: 32),
             if (summoner.chestEligibility != null) _AvailableChests(chests: summoner.chestEligibility!),
@@ -43,25 +66,28 @@ class _LevelProgress extends StatelessWidget {
     Key? key,
     required this.currentLvl,
     required this.currentExp,
-    required this.totalExp,
+    required this.untilNextLvlExp,
   }) : super(key: key);
 
   final int currentLvl;
   final int currentExp;
-  final int totalExp;
+  final int untilNextLvlExp;
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTextStyle(
-      style: Theme.of(context).textTheme.titleMedium!,
-      child: Row(
-        children: [
-          Text(currentLvl.toString()),
-          const SizedBox(width: 16),
-          Expanded(child: LinearProgressIndicator(value: currentExp / totalExp)),
-          const SizedBox(width: 16),
-          Text((currentLvl + 1).toString()),
-        ],
+    return Tooltip(
+      message: 'До следующего уровня $untilNextLvlExp опыта.',
+      child: DefaultTextStyle(
+        style: Theme.of(context).textTheme.titleMedium!,
+        child: Row(
+          children: [
+            Text(currentLvl.toString()),
+            const SizedBox(width: 16),
+            Expanded(child: LinearProgressIndicator(value: currentExp / (currentExp + untilNextLvlExp))),
+            const SizedBox(width: 16),
+            Text((currentLvl + 1).toString()),
+          ],
+        ),
       ),
     );
   }

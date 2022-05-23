@@ -14,21 +14,18 @@ class NoLockFilePathException implements Exception {}
 class LockFileNotFoundException implements Exception {}
 
 class LCU {
-  final String _authKey;
-  final int _port;
-  final HttpClient _restClient;
-  final WebSocket _websocket;
+  final LcuStore _lcuStore;
 
-  LCU._(this._authKey, this._port, this._restClient, this._websocket)
-      : _broadcastWebsocket = _websocket.asBroadcastStream();
+  LCU(this._lcuStore);
 
-  final Stream<dynamic> _broadcastWebsocket;
+  late String _authKey;
+  late int _port;
+  late HttpClient _restClient;
+  late WebSocket _websocket;
+  late Stream<dynamic> _broadcastWebsocket;
 
-  static Future<LCU> create(LcuStore store, {int retries = 5, int retryAfter = 5}) async {
-    String authKey = '';
-    int port = -1;
-
-    final lockfile = store.getLcuLockfile();
+  Future<void> init() async {
+    final lockfile = _lcuStore.getLcuLockfile();
 
     if (lockfile == null) {
       throw NoLockFilePathException();
@@ -40,29 +37,27 @@ class LCU {
 
     String content = lockfile.readAsStringSync();
     List<String> args = content.split(':');
-    authKey = args[3];
-    port = int.parse(args[2]);
+    _authKey = args[3];
+    _port = int.parse(args[2]);
 
-    if (authKey == '' || port == -1) {
+    if (_authKey == '' || _port == -1) {
       throw 'Чота не удалось прочитать';
     }
 
     if (kDebugMode) {
-      print('lockfile = auth:$authKey port:$port');
+      print('lockfile = auth:$_authKey port:$_port');
     }
 
-    final httpClient = HttpClient();
-    httpClient.badCertificateCallback = (cert, host, port) => true;
+    _restClient = HttpClient();
+    _restClient.badCertificateCallback = (cert, host, port) => true;
 
-    final webSocket = await WebSocket.connect(
-      'wss://127.0.0.1:$port',
-      headers: {'Authorization': 'Basic ${utf8.fuse(base64).encode('riot:$authKey')}'},
-      customClient: httpClient,
+    _websocket = await WebSocket.connect(
+      'wss://127.0.0.1:$_port',
+      headers: {'Authorization': 'Basic ${utf8.fuse(base64).encode('riot:$_authKey')}'},
+      customClient: _restClient,
     );
 
-    final lcu = LCU._(authKey, port, httpClient, webSocket);
-
-    return lcu;
+    _broadcastWebsocket = _websocket.asBroadcastStream();
   }
 
   Stream<dynamic> subscribeToChampSelectEvent() {

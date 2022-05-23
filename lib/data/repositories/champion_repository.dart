@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
+import 'package:rxdart/rxdart.dart';
+
 import 'package:champmastery/data/lcu.dart';
 import 'package:champmastery/data/models/champion_mastery.dart';
 import 'package:champmastery/data/models/chamption.dart';
-import 'package:flutter/services.dart';
 
 class ChampionRepository {
   final LCU lcu;
@@ -12,14 +14,14 @@ class ChampionRepository {
     required this.lcu,
   });
 
-  List<Champion>? cachedChampions;
+  final _championsSubject = BehaviorSubject<List<Champion>>();
 
-  Future<List<Champion>> getChampions(int summonerId) async {
-    cachedChampions ??= await _loadRawChampions();
+  Future<List<Champion>> updateChampions(int summonerId) async {
+    var champions = _championsSubject.valueOrNull ?? await _loadRawChampions();
 
     final masteries = await lcu.getChampionMasteryList(summonerId);
 
-    cachedChampions = cachedChampions!.map((champion) {
+    champions = champions.map((champion) {
       ChampionMastery? mastery;
 
       for (var element in masteries) {
@@ -32,7 +34,9 @@ class ChampionRepository {
       return champion.copyWith(mastery: mastery);
     }).toList();
 
-    return cachedChampions!;
+    _championsSubject.add(champions);
+
+    return champions;
   }
 
   Future<List<Champion>> _loadRawChampions() async {
@@ -56,4 +60,8 @@ class ChampionRepository {
 
     return champions;
   }
+
+  Stream<List<Champion>> get stream => _championsSubject.stream;
+
+  List<Champion> get champions => _championsSubject.valueOrNull ?? const [];
 }

@@ -1,5 +1,6 @@
 import 'package:champmastery/data/lcu.dart';
 import 'package:champmastery/data/models/summoner.dart';
+import 'package:rxdart/subjects.dart';
 
 class SummonerRepository {
   final LCU lcu;
@@ -8,16 +9,20 @@ class SummonerRepository {
     required this.lcu,
   });
 
-  Summoner? _cachedSummoner;
+  final _summonerSubject = BehaviorSubject<Summoner>();
 
   Future<Summoner> getCurrentSummoner() async {
-    if (_cachedSummoner == null) {
-      final summoner = await lcu.getCurrentSummoner();
-      final chestEligibility = await lcu.getChestEligibility();
+    final summoner = await lcu.getCurrentSummoner();
+    final chestEligibility = await lcu.getChestEligibility();
 
-      _cachedSummoner = summoner.copyWith(chestEligibility: chestEligibility);
-    }
+    final updatedSummoner = summoner.copyWith(chestEligibility: chestEligibility);
 
-    return _cachedSummoner!;
+    _summonerSubject.add(updatedSummoner);
+
+    return updatedSummoner;
   }
+
+  Stream<Summoner> stream() => _summonerSubject.stream;
+
+  Summoner? load() => _summonerSubject.valueOrNull;
 }

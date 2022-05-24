@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:champmastery/data/models/chamption.dart';
+import 'package:champmastery/data/models/champion.dart';
 import 'package:champmastery/di/di.dart';
 import 'package:champmastery/presentation/core/unknown_bloc_state.dart';
 

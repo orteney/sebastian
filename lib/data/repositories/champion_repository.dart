@@ -5,7 +5,7 @@ import 'package:rxdart/rxdart.dart';
 
 import 'package:champmastery/data/lcu.dart';
 import 'package:champmastery/data/models/champion_mastery.dart';
-import 'package:champmastery/data/models/chamption.dart';
+import 'package:champmastery/data/models/champion.dart';
 
 class ChampionRepository {
   final LCU lcu;
@@ -40,14 +40,13 @@ class ChampionRepository {
   }
 
   Future<List<Champion>> _loadRawChampions() async {
-    final jsonString = await rootBundle.loadString('assets/champions.json');
+    final jsonString = await rootBundle.loadString('assets/champions_ru.json');
     final json = jsonDecode(jsonString);
 
     final champions = <Champion>[];
 
-    final championsData = json['data'] as Map<String, dynamic>;
-    championsData.forEach((key, value) {
-      final championId = int.parse(value['key']);
+    for (var value in json) {
+      final championId = value['id'] as int;
 
       champions.add(
         Champion(
@@ -56,7 +55,7 @@ class ChampionRepository {
           mastery: ChampionMastery.empty(championId),
         ),
       );
-    });
+    }
 
     return champions;
   }

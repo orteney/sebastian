@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import 'package:champmastery/data/models/chamption.dart';
+import 'package:champmastery/data/models/champion.dart';
 import 'package:champmastery/data/models/pick_session.dart';
 import 'package:champmastery/data/repositories/champion_repository.dart';
 import 'package:champmastery/data/repositories/league_client_event_repository.dart';

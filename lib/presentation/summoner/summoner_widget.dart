@@ -76,14 +76,14 @@ class _LevelProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'До следующего уровня $untilNextLvlExp опыта.',
+      message: 'До следующего уровня ${untilNextLvlExp - currentExp} опыта.',
       child: DefaultTextStyle(
         style: Theme.of(context).textTheme.titleMedium!,
         child: Row(
           children: [
             Text(currentLvl.toString()),
             const SizedBox(width: 16),
-            Expanded(child: LinearProgressIndicator(value: currentExp / (currentExp + untilNextLvlExp))),
+            Expanded(child: LinearProgressIndicator(value: currentExp / untilNextLvlExp)),
             const SizedBox(width: 16),
             Text((currentLvl + 1).toString()),
           ],
@@ -108,7 +108,7 @@ class _AvailableChests extends StatelessWidget {
     } else if (difference.inHours > 0) {
       when = '${difference.inDays} ч.';
     } else {
-      when = '${difference.inDays} мин.';
+      when = '${difference.inMinutes} мин.';
     }
 
     return 'Следующий сундук через $when';
@@ -128,7 +128,7 @@ class _AvailableChests extends StatelessWidget {
               'assets/images/hextech_chest.webp',
               width: 28,
               height: 28,
-              color: i + 1 > chests.earnableChests ? theme.disabledColor : null,
+              color: i + 1 > chests.earnableChests ? theme.colorScheme.primary : null,
             ),
         ],
       ),

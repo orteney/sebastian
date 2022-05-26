@@ -1,7 +1,7 @@
 name: champmastery
 description: A new Flutter project.
 publish_to: "none"
-version: 1.1.0+1
+version: 1.2.0+1
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -9,10 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   bloc: ^8.0.3
   flutter_bloc: ^8.0.1
-  
+
   rxdart: ^0.27.3
   get_it: ^7.2.0
 
@@ -25,6 +27,7 @@ dependencies:
   #Plugins
   shared_preferences: ^2.0.15
   file_picker: ^4.5.1
+  package_info_plus: ^1.4.2
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +37,7 @@ dev_dependencies:
   build_runner: ^2.1.11
 
 flutter:
+  generate: true
   uses-material-design: true
 
   assets:

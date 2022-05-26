@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:champmastery/di/di.dart';
 import 'package:champmastery/presentation/champions_table/champions_table_widget.dart';
-import 'package:champmastery/presentation/core/unknown_bloc_state.dart';
+import 'package:champmastery/presentation/core/widgets/unknown_bloc_state.dart';
 import 'package:champmastery/presentation/summoner/summoner_widget.dart';
 
 import 'bloc/home_bloc.dart';

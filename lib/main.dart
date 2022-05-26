@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:champmastery/di/di.dart';
 import 'package:champmastery/presentation/core/theme.dart';
@@ -9,8 +11,14 @@ void main() async {
 
   runApp(
     MaterialApp(
-      locale: const Locale('ru'),
       theme: mainTheme(),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const HomePage(),
     ),
   );

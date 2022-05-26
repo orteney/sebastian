@@ -104,6 +104,11 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
           ((a, b) => a.mastery.championPointsUntilNextLevel.compareTo(b.mastery.championPointsUntilNextLevel)),
         );
         break;
+      case ChampionsTableColumn.statStones:
+        sortedChampions.sort(
+          ((a, b) => a.statStones.milestonesPassed.compareTo(b.statStones.milestonesPassed)),
+        );
+        break;
     }
 
     if (!ascending) {

@@ -1,0 +1,14 @@
+{
+    "championsTableStonesCount": "{count, plural, one{{count} камень} few{{count} камня} many{{count} камней} other{{count} камней}}",
+    "@championsTableStonesCount": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "championsTableMilestonesCount": "{count, plural, one{{count} веха} few{{count} вехи} many{{count} вех} other{{count} вех}}",
+    "@championsTableMilestonesCount": {
+        "placeholders": {
+            "count": {}
+        }
+    }
+}

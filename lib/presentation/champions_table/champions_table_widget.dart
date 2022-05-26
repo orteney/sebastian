@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:champmastery/data/models/champion.dart';
 import 'package:champmastery/di/di.dart';
-import 'package:champmastery/presentation/core/unknown_bloc_state.dart';
+import 'package:champmastery/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_table_bloc.dart';
 
@@ -65,13 +66,15 @@ class _ChampionsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return SingleChildScrollView(
       child: DataTable(
         sortColumnIndex: sortColumnIndex,
         sortAscending: sortAscending,
         headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
         columns: _buildChampionColumns(onSortColumn),
-        rows: champions.map((champion) => _buildChampionRow(champion, _ChampionType.none)).toList(),
+        rows: champions.map((champion) => _buildChampionRow(appLocalizations, champion, _ChampionType.none)).toList(),
       ),
     );
   }
@@ -90,14 +93,16 @@ class _PickTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return SingleChildScrollView(
       child: DataTable(
         headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
         columns: _buildChampionColumns(),
         rows: [
-          if (myChampion != null) _buildChampionRow(myChampion!, _ChampionType.my),
-          ...benchChampions.map((e) => _buildChampionRow(e, _ChampionType.bench)),
-          ...teamChampions.map((e) => _buildChampionRow(e, _ChampionType.teamMate)),
+          if (myChampion != null) _buildChampionRow(appLocalizations, myChampion!, _ChampionType.my),
+          ...benchChampions.map((e) => _buildChampionRow(appLocalizations, e, _ChampionType.bench)),
+          ...teamChampions.map((e) => _buildChampionRow(appLocalizations, e, _ChampionType.teamMate)),
         ],
       ),
     );
@@ -129,6 +134,10 @@ List<DataColumn> _buildChampionColumns([DataColumnSortCallback? onSortColumn]) {
       onSort: onSortColumn,
       label: const Text('Сундук?'),
     ),
+    DataColumn(
+      onSort: onSortColumn,
+      label: const Text('Вечные'),
+    ),
   ];
 }
 
@@ -139,20 +148,20 @@ enum _ChampionType {
   teamMate,
 }
 
-DataRow _buildChampionRow(Champion champion, _ChampionType type) {
+DataRow _buildChampionRow(AppLocalizations appLocalizations, Champion champion, _ChampionType type) {
   MaterialStateProperty<Color>? rowColor;
 
   switch (type) {
     case _ChampionType.none:
       break;
     case _ChampionType.my:
-      rowColor = MaterialStateProperty.all(Colors.green[900]!);
+      rowColor = MaterialStateProperty.all(const Color(0xFF14460F));
       break;
     case _ChampionType.bench:
-      rowColor = MaterialStateProperty.all(Colors.yellow[900]!);
+      rowColor = MaterialStateProperty.all(const Color(0xFF4A460F));
       break;
     case _ChampionType.teamMate:
-      rowColor = MaterialStateProperty.all(Colors.blue[900]!);
+      rowColor = MaterialStateProperty.all(const Color(0xFF141045));
       break;
   }
 
@@ -164,6 +173,9 @@ DataRow _buildChampionRow(Champion champion, _ChampionType type) {
       DataCell(Text(champion.mastery.championPoints.toString())),
       DataCell(Text(champion.mastery.championPointsUntilNextLevel.toString())),
       DataCell(Checkbox(value: champion.mastery.chestGranted, onChanged: null)),
+      DataCell(Text(
+        '${appLocalizations.championsTableStonesCount(champion.statStones.stonesOwned)}, ${appLocalizations.championsTableMilestonesCount(champion.statStones.milestonesPassed)}',
+      )),
     ],
   );
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:champmastery/data/models/champion_stat_stones.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 import 'package:champmastery/data/lcu_store.dart';
@@ -102,8 +103,18 @@ class LCU {
       '/lol-collections/v1/inventories/$summonerId/champion-mastery',
     );
 
-    if (response is List<dynamic>) {
+    if (response is List) {
       return response.map((e) => ChampionMastery.fromMap(e)).toList();
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<ChampionStatStones>> getChampionStatStones() async {
+    final response = await _request('GET', '/lol-statstones/v2/player-summary-self');
+
+    if (response is List) {
+      return response.map((e) => ChampionStatStones.fromMap(e)).toList();
     } else {
       return [];
     }

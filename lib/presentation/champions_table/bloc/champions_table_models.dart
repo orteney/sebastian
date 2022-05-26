@@ -6,4 +6,5 @@ enum ChampionsTableColumn {
   points,
   tillNextLevel,
   chestEarned,
+  statStones,
 }

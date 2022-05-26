@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:champmastery/data/models/chest_eligibility.dart';
 import 'package:champmastery/data/models/summoner.dart';
 import 'package:champmastery/di/di.dart';
+import 'package:champmastery/presentation/core/widgets/app_version.dart';
 
 import 'bloc/summoner_bloc.dart';
 
@@ -54,6 +55,9 @@ class _SummonerInfo extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             if (summoner.chestEligibility != null) _AvailableChests(chests: summoner.chestEligibility!),
+            const Spacer(),
+            const SizedBox(height: 16),
+            const AppVersion(),
           ],
         ),
       ),
@@ -106,7 +110,7 @@ class _AvailableChests extends StatelessWidget {
     if (difference.inDays > 0) {
       when = '${difference.inDays} дн.';
     } else if (difference.inHours > 0) {
-      when = '${difference.inDays} ч.';
+      when = '${difference.inHours} ч.';
     } else {
       when = '${difference.inMinutes} мин.';
     }

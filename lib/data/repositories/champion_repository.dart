@@ -4,8 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:champmastery/data/lcu.dart';
-import 'package:champmastery/data/models/champion_mastery.dart';
 import 'package:champmastery/data/models/champion.dart';
+import 'package:champmastery/data/models/champion_mastery.dart';
+import 'package:champmastery/data/models/champion_stat_stones.dart';
 
 class ChampionRepository {
   final LCU lcu;
@@ -20,10 +21,20 @@ class ChampionRepository {
     var champions = _championsSubject.valueOrNull ?? await _loadRawChampions();
 
     final masteries = await lcu.getChampionMasteryList(summonerId);
+    final statStones = await lcu.getChampionStatStones();
 
-    champions = champions.map((champion) {
+    champions = _merge(champions, masteries, statStones).toList();
+    _championsSubject.add(champions);
+    return champions;
+  }
+
+  Iterable<Champion> _merge(
+    List<Champion> champions,
+    List<ChampionMastery> masteries,
+    List<ChampionStatStones> statStones,
+  ) sync* {
+    for (var champion in champions) {
       ChampionMastery? mastery;
-
       for (var element in masteries) {
         if (element.championId == champion.id) {
           mastery = element;
@@ -31,12 +42,16 @@ class ChampionRepository {
         }
       }
 
-      return champion.copyWith(mastery: mastery);
-    }).toList();
+      ChampionStatStones? champStatStones;
+      for (var statStone in statStones) {
+        if (statStone.championId == champion.id) {
+          champStatStones = statStone;
+          break;
+        }
+      }
 
-    _championsSubject.add(champions);
-
-    return champions;
+      yield champion.copyWith(mastery: mastery, statStones: champStatStones);
+    }
   }
 
   Future<List<Champion>> _loadRawChampions() async {
@@ -53,6 +68,7 @@ class ChampionRepository {
           id: championId,
           name: value['name'],
           mastery: ChampionMastery.empty(championId),
+          statStones: ChampionStatStones.empty(championId),
         ),
       );
     }

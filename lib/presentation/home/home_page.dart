@@ -28,19 +28,20 @@ class HomePage extends StatelessWidget {
         body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             if (state is InitialHomeState) {
-              return const MessageWithLoading(message: 'Соединяюсь с League of Legends');
+              return const MessageWithLoading(message: 'Соединяюсь с League of Legends... 🤔');
             }
 
             if (state is LolPathUnspecifiedHomeState) {
               return PickLolPathScreen(
                 customMessage: state.message,
+                onRetryTap: () => context.read<HomeBloc>().add(StartHomeEvent()),
                 onPickedPath: (path) => context.read<HomeBloc>().add(PickLolPathHomeEvent(pickedPath: path)),
               );
             }
 
             if (state is LolNotLaunchedOrWrongPathProvidedHomeState) {
               return MessageWithRetryScreen(
-                message: 'Похоже лига не запущена, нажми кнопку, когда запустится',
+                message: 'Похоже лига не запущена, нажми "повторить", когда запустится 🙃',
                 onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
               );
             }

@@ -20,35 +20,8 @@ class LcuStore {
     return File(path);
   }
 
-  /// Checks that [directoryPath] contains lockfile or LeagueClient executables and then saves path to persistent storage
   Future<void> putLcuLockfilePath(String directoryPath) async {
-    final lolPath = Directory(directoryPath);
-
-    bool foundLolClients = false;
-    File? lockfilePath;
-
-    await for (final FileSystemEntity f in lolPath.list()) {
-      if (f is File) {
-        switch (path.basename(f.path)) {
-          case 'lockfile':
-            lockfilePath = f;
-            break;
-          case 'LeagueClient.exe':
-          case 'LeagueClientUx.exe':
-            foundLolClients = true;
-            break;
-        }
-      }
-    }
-
-    if (lockfilePath == null) {
-      if (!foundLolClients) {
-        throw Exception();
-      }
-
-      lockfilePath = File(path.join(directoryPath, 'lockfile'));
-    }
-
-    _sharedPreferences.setString(_spLockfilePathKey, lockfilePath.path);
+    final lockfilePath = File(path.join(directoryPath, 'lockfile'));
+    await _sharedPreferences.setString(_spLockfilePathKey, lockfilePath.path);
   }
 }

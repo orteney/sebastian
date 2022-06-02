@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 
@@ -53,11 +54,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _onPickLolPathHomeEvent(PickLolPathHomeEvent event, Emitter<HomeState> emit) async {
     try {
-      _lcuStore.putLcuLockfilePath(event.pickedPath);
-      add(StartHomeEvent());
-    } catch (e) {
-      return emit(LolPathUnspecifiedHomeState(message: 'Что-то не удалось найти файлы лиги легенд, не обманываешь?'));
-    }
+      final lockfile = await _lcu.getLockfileFromLolDirectory(Directory(event.pickedPath));
+      if (lockfile != null) {
+        _lcuStore.putLcuLockfilePath(lockfile.path);
+        return add(StartHomeEvent());
+      }
+    } catch (e) {/** Ommit error body */}
+
+    return emit(LolPathUnspecifiedHomeState(message: 'Что-то не удалось найти файлы лиги легенд, не обманываешь?'));
   }
 
   Future<void> _onLoadCurrentSummonerInfoHomeEvent(

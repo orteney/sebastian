@@ -128,7 +128,7 @@ List<DataColumn> _buildChampionColumns([DataColumnSortCallback? onSortColumn]) {
     DataColumn(
       onSort: onSortColumn,
       numeric: true,
-      label: const Text('До сл. ур.'),
+      label: const Text('Прогресс'),
     ),
     DataColumn(
       onSort: onSortColumn,
@@ -165,16 +165,28 @@ DataRow _buildChampionRow(AppLocalizations appLocalizations, Champion champion, 
       break;
   }
 
+  Widget progressRowData;
+
+  if (champion.mastery.championLevel == 7) {
+    progressRowData = const Text('Мастер');
+  } else if (champion.mastery.championLevel == 6) {
+    progressRowData = Text('${champion.mastery.tokensEarned}/3');
+  } else if (champion.mastery.championLevel == 5) {
+    progressRowData = Text('${champion.mastery.tokensEarned}/2');
+  } else {
+    progressRowData = Text(champion.mastery.championPointsUntilNextLevel.toString());
+  }
+
   return DataRow(
     color: rowColor,
     cells: <DataCell>[
       DataCell(Text(champion.name)),
       DataCell(Text(champion.mastery.championLevel.toString())),
       DataCell(Text(champion.mastery.championPoints.toString())),
-      DataCell(Text(champion.mastery.championPointsUntilNextLevel.toString())),
+      DataCell(progressRowData),
       DataCell(Checkbox(value: champion.mastery.chestGranted, onChanged: null)),
       DataCell(Text(
-        '${appLocalizations.championsTableStonesCount(champion.statStones.stonesOwned)}, ${appLocalizations.championsTableMilestonesCount(champion.statStones.milestonesPassed)}',
+        '${appLocalizations.championsTableStonesCount(champion.statStones.stonesOwned)}\n${appLocalizations.championsTableMilestonesCount(champion.statStones.milestonesPassed)}',
       )),
     ],
   );

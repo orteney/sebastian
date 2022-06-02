@@ -99,10 +99,8 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
           return 1;
         }));
         break;
-      case ChampionsTableColumn.tillNextLevel:
-        sortedChampions.sort(
-          ((a, b) => a.mastery.championPointsUntilNextLevel.compareTo(b.mastery.championPointsUntilNextLevel)),
-        );
+      case ChampionsTableColumn.progress:
+        sortedChampions.sort(_sortByProgress);
         break;
       case ChampionsTableColumn.statStones:
         sortedChampions.sort(
@@ -116,6 +114,10 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     }
 
     return sortedChampions;
+  }
+
+  int _sortByProgress(Champion a, Champion b) {
+    return a.mastery.championPointsUntilNextLevel.compareTo(b.mastery.championPointsUntilNextLevel);
   }
 
   void _onPickSessionUpdatedChampionsTableEvent(
@@ -132,7 +134,7 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     }
 
     final pickSession = event.pickSession;
-    if (pickSession == null) {
+    if (pickSession == null || pickSession.isCustomGame || !pickSession.benchEnabled) {
       emit(summaryState);
       return;
     }

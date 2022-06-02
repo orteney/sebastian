@@ -1,5 +1,5 @@
 {
-    "championsTableStonesCount": "{count, plural, one{{count} камень} few{{count} камня} many{{count} камней} other{{count} камней}}",
+    "championsTableStonesCount": "{count, plural, one{{count} вечный} few{{count} вечных} many{{count} вечных} other{{count} вечных}}",
     "@championsTableStonesCount": {
         "placeholders": {
             "count": {}

@@ -2,13 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:champmastery/data/models/champion_stat_stones.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:path/path.dart' as path;
 
 import 'package:champmastery/data/lcu_store.dart';
 import 'package:champmastery/data/models/champion_mastery.dart';
+import 'package:champmastery/data/models/champion_stat_stones.dart';
 import 'package:champmastery/data/models/chest_eligibility.dart';
 import 'package:champmastery/data/models/summoner.dart';
+import 'package:champmastery/data/utils/proccess.dart';
 
 class NoLockFilePathException implements Exception {}
 
@@ -26,17 +28,21 @@ class LCU {
   late Stream<dynamic> _broadcastWebsocket;
 
   Future<void> init() async {
-    final lockfile = _lcuStore.getLcuLockfile();
+    var savedLockfile = _lcuStore.getLcuLockfile();
 
-    if (lockfile == null) {
-      throw NoLockFilePathException();
+    if (savedLockfile == null) {
+      if (await _tryFindRunningLolDirectory()) {
+        savedLockfile = _lcuStore.getLcuLockfile();
+      } else {
+        throw NoLockFilePathException();
+      }
     }
 
-    if (!lockfile.existsSync()) {
+    if (!savedLockfile!.existsSync()) {
       throw LockFileNotFoundException();
     }
 
-    String content = lockfile.readAsStringSync();
+    String content = savedLockfile.readAsStringSync();
     List<String> args = content.split(':');
     _authKey = args[3];
     _port = int.parse(args[2]);
@@ -59,6 +65,55 @@ class LCU {
     );
 
     _broadcastWebsocket = _websocket.asBroadcastStream();
+  }
+
+  Future<bool> _tryFindRunningLolDirectory() async {
+    if (!Platform.isWindows) return false;
+
+    final lolExeFile = await findExePathByProcessName('LeagueClientUx.exe');
+
+    if (lolExeFile == null) return false;
+
+    final lolDirectory = lolExeFile.parent;
+
+    final lockfile = await getLockfileFromLolDirectory(lolDirectory);
+
+    if (lockfile != null) {
+      await _lcuStore.putLcuLockfilePath(lockfile.path);
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<File?> getLockfileFromLolDirectory(Directory directory) async {
+    bool foundLolClients = false;
+    File? lockfileFile;
+
+    await for (final FileSystemEntity f in directory.list()) {
+      if (f is File) {
+        switch (path.basename(f.path)) {
+          case 'lockfile':
+            lockfileFile = f;
+            break;
+          case 'LeagueClient.exe':
+          case 'LeagueClientUx.exe':
+            foundLolClients = true;
+            break;
+        }
+      }
+    }
+
+    if (lockfileFile == null) {
+      if (!foundLolClients) {
+        return null;
+      }
+
+      // LeagueClient offline so there is no Lockfile right now but directory is valid
+      lockfileFile = File(path.join(directory.path, 'lockfile'));
+    }
+
+    return lockfileFile;
   }
 
   Stream<dynamic> subscribeToChampSelectEvent() {

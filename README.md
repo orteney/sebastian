@@ -1,11 +1,18 @@
 # Champmastery
 
-## Features:
+![Idle](docs/screenshots/idle.png)
 
-* Display current summoner's level and chest's availability
-* Display champions mastery levels with sort ability
-* Filters champions during pick phase
+#### Во время выбора в АРАМ таблица фильтруется до доступных
+![ARAM Pick](docs/screenshots/aram.png)
 
-## Getting Started
+## Что может?
 
-This project is build on [Flutter](https://flutter.dev/).
+* Показывает уровень призывателя
+* Показывает доступные для получения сундуки
+* Показывает информацию по чемпионам (Мастерство, доступность сундука и вечные)
+
+## Как начать?
+
+1. Скачиваем последнюю версию [champmastery.zip](https://github.com/orteney/champmastery/releases/latest)
+1. Распаковываем в любое место
+1. Запускаем `champmastery.exe`

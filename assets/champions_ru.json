@@ -55,6 +55,11 @@
         "name": "Бард"
     },
     {
+        "id": 200,
+        "alias": "Belveth",
+        "name": "Бел'Вет"
+    },
+    {
         "id": 53,
         "alias": "Blitzcrank",
         "name": "Блицкранк"

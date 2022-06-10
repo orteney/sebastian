@@ -2,13 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:champmastery/data/models/lcu_image.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:champmastery/data/lcu_store.dart';
 import 'package:champmastery/data/models/champion_mastery.dart';
 import 'package:champmastery/data/models/champion_stat_stones.dart';
 import 'package:champmastery/data/models/chest_eligibility.dart';
+import 'package:champmastery/data/models/loot.dart';
 import 'package:champmastery/data/models/summoner.dart';
 import 'package:champmastery/data/utils/proccess.dart';
 
@@ -21,11 +24,12 @@ class LCU {
 
   LCU(this._lcuStore);
 
-  late String _authKey;
   late int _port;
   late HttpClient _restClient;
   late WebSocket _websocket;
   late Stream<dynamic> _broadcastWebsocket;
+
+  late String _authHeader;
 
   Future<void> init() async {
     var savedLockfile = _lcuStore.getLcuLockfile();
@@ -44,23 +48,23 @@ class LCU {
 
     String content = savedLockfile.readAsStringSync();
     List<String> args = content.split(':');
-    _authKey = args[3];
+    final authKey = args[3];
     _port = int.parse(args[2]);
 
-    if (_authKey == '' || _port == -1) {
+    if (authKey == '' || _port == -1) {
       throw 'Чота не удалось прочитать';
     }
 
     if (kDebugMode) {
-      print('lockfile = auth:$_authKey port:$_port');
+      print('lockfile = auth:$authKey port:$_port');
     }
 
     _restClient = HttpClient();
-    _restClient.badCertificateCallback = (cert, host, port) => true;
+    _authHeader = 'Basic ${utf8.fuse(base64).encode('riot:$authKey')}';
 
     _websocket = await WebSocket.connect(
       'wss://127.0.0.1:$_port',
-      headers: {'Authorization': 'Basic ${utf8.fuse(base64).encode('riot:$_authKey')}'},
+      headers: {'Authorization': _authHeader},
       customClient: _restClient,
     );
 
@@ -175,22 +179,61 @@ class LCU {
     }
   }
 
+  Future<List<Loot>> getPlayerLoot() async {
+    final response = await _request('GET', '/lol-loot/v1/player-loot');
+
+    if (response is List) {
+      return response.map((e) => Loot.fromMap(e)).toList();
+    } else {
+      return [];
+    }
+  }
+
+  Future<void> disenchantChampion(String lootId, int count) async {
+    return _request(
+      'POST',
+      '/lol-loot/v1/recipes/CHAMPION_RENTAL_disenchant/craft?repeat=$count',
+      body: [lootId],
+    );
+  }
+
   Future<dynamic> _request(
     String method,
     String endpoint, {
-    Map<String, dynamic>? body,
+    dynamic body,
   }) async {
     HttpClientRequest req = await _restClient.openUrl(method, Uri.parse('https://127.0.0.1:$_port$endpoint'));
 
     req.headers.set(HttpHeaders.acceptHeader, 'application/json');
     req.headers.set(HttpHeaders.contentTypeHeader, 'application/json');
-    req.headers.set(HttpHeaders.authorizationHeader, 'Basic ${utf8.fuse(base64).encode('riot:$_authKey')}');
+    req.headers.set(HttpHeaders.authorizationHeader, _authHeader);
 
     if (body != null) req.add(json.fuse(utf8).encode(body));
 
-    HttpClientResponse resp = await req.close();
+    final response = await req.close();
+    final responseBody = await response.transform(utf8.decoder).join();
 
-    return resp.transform(utf8.decoder).join().then((String data) => json.decode(data.isEmpty ? '{}' : data));
+    _logRequest(req, response, responseBody);
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Lcu error (code: ${response.statusCode}): $responseBody');
+    }
+
+    return json.decode(responseBody.isEmpty ? '{}' : responseBody);
+  }
+
+  void _logRequest(HttpClientRequest request, HttpClientResponse response, String responseBody) {
+    if (kDebugMode) {
+      print('${request.method} ${request.uri}: ${response.statusCode}');
+      print(responseBody);
+    }
+  }
+
+  LcuImage getLcuImage(String path) {
+    return LcuImage(
+      url: 'https://127.0.0.1:$_port$path',
+      headers: {'Authorization': _authHeader},
+    );
   }
 
   void close() {

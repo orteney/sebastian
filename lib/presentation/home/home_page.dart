@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:champmastery/di/di.dart';
+import 'package:champmastery/presentation/champions_disenchanter/champions_disenchanter_widget.dart';
 import 'package:champmastery/presentation/champions_table/champions_table_widget.dart';
+import 'package:champmastery/presentation/core/widgets/app_version.dart';
 import 'package:champmastery/presentation/core/widgets/unknown_bloc_state.dart';
 import 'package:champmastery/presentation/summoner/summoner_widget.dart';
 
@@ -58,12 +60,22 @@ class HomePage extends StatelessWidget {
             }
 
             if (state is LoadedHomeState) {
+              Widget body;
+
+              switch (state.destination) {
+                case Destination.mastery:
+                  body = ChampionsTableWidget(summonerId: state.summonerId);
+                  break;
+                case Destination.disenchanter:
+                  body = const ChampionsDisenchanterWidget();
+                  break;
+              }
+
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SummonerWidget(),
-                  const VerticalDivider(),
-                  Expanded(child: ChampionsTableWidget(summonerId: state.summonerId)),
+                  NavigationDrawer(currentDestination: state.destination),
+                  Expanded(child: body),
                 ],
               );
             }
@@ -72,6 +84,92 @@ class HomePage extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+class NavigationDrawer extends StatelessWidget {
+  const NavigationDrawer({
+    super.key,
+    required this.currentDestination,
+  });
+
+  final Destination currentDestination;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFF151515),
+      child: SizedBox(
+        width: 216,
+        child: Column(
+          children: [
+            const Card(
+              elevation: 0,
+              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: SummonerWidget(),
+              ),
+            ),
+            Card(
+              elevation: 0,
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              child: Column(
+                children: [
+                  NavigationMenuItem(
+                    destination: Destination.mastery,
+                    isChecked: currentDestination == Destination.mastery,
+                  ),
+                  NavigationMenuItem(
+                    destination: Destination.disenchanter,
+                    isChecked: currentDestination == Destination.disenchanter,
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            const SizedBox(height: 16),
+            const AppVersion(),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NavigationMenuItem extends StatelessWidget {
+  const NavigationMenuItem({
+    super.key,
+    required this.destination,
+    required this.isChecked,
+  });
+
+  final Destination destination;
+  final bool isChecked;
+
+  @override
+  Widget build(BuildContext context) {
+    String name;
+
+    switch (destination) {
+      case Destination.mastery:
+        name = 'МАСТЕРСТВО';
+        break;
+      case Destination.disenchanter:
+        name = 'РАСПЫЛИТЕЛЬ';
+        break;
+    }
+
+    return ListTile(
+      title: Text(name),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+      style: ListTileStyle.drawer,
+      selected: isChecked,
+      onTap: () => context.read<HomeBloc>().add(TapDestinationHomeEvent(destination)),
     );
   }
 }

@@ -1,0 +1,306 @@
+import 'package:champmastery/di/di.dart';
+import 'package:champmastery/presentation/core/widgets/collection_tag.dart';
+import 'package:champmastery/presentation/core/widgets/unknown_bloc_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+
+import 'bloc/champions_disenchanter_bloc.dart';
+
+class ChampionsDisenchanterWidget extends StatelessWidget {
+  const ChampionsDisenchanterWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ChampionsDisenchanterBloc(getIt()),
+      child: BlocBuilder<ChampionsDisenchanterBloc, ChampionsDisenchanterState>(
+        builder: (context, state) {
+          if (state is LoadingChampionsDisenchanterState) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is SelectChampionsDisenchanterState) {
+            return Stack(
+              children: [
+                GridView.builder(
+                  padding: const EdgeInsets.only(left: 8, bottom: 8, top: 100, right: 8),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                  ),
+                  itemCount: state.loots.length,
+                  itemBuilder: (context, index) {
+                    final lootCount = state.loots[index];
+
+                    return _LootCard(
+                      key: Key(lootCount.loot.lootId),
+                      lootCount: lootCount,
+                    );
+                  },
+                ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: _SummaryDisenchantWidget(
+                    sortField: state.sortField,
+                    summaryDisenchantLoot: state.summary,
+                  ),
+                ),
+              ],
+            );
+          }
+
+          if (state is DisenchantingChampionsDisenchanterState) {
+            return Center(
+              child: LinearProgressIndicator(
+                value: state.completedEntriesCount / state.toDisenchantEntriesCount,
+              ),
+            );
+          }
+
+          return UnknownBlocState(blocState: state);
+        },
+      ),
+    );
+  }
+}
+
+class _LootCard extends StatelessWidget {
+  const _LootCard({
+    super.key,
+    required this.lootCount,
+  });
+
+  final SelectedLootCount lootCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.hardEdge,
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(lootCount.image.url, headers: lootCount.image.headers),
+          ),
+        ),
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (lootCount.purchased) const OwnedBadge(),
+                  Spacer(),
+                  Card(
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4, left: 4, right: 8, bottom: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _BlueEssence(
+                            value: lootCount.loot.disenchantValue,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black87,
+                      Colors.black,
+                    ],
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 24),
+                    Text(
+                      lootCount.loot.itemDesc,
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.start,
+                    ),
+                    const SizedBox(height: 8),
+                    OutlinedButtonTheme(
+                      data: OutlinedButtonThemeData(
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(28, 28),
+                          padding: EdgeInsets.zero,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () => context
+                                .read<ChampionsDisenchanterBloc>()
+                                .add(DecreaseChampionsDisenchanterEvent(lootCount)),
+                            child: const Icon(Icons.remove),
+                          ),
+                          Text(
+                            '${lootCount.count} из ${lootCount.loot.count}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          OutlinedButton(
+                            onPressed: () => context
+                                .read<ChampionsDisenchanterBloc>()
+                                .add(IncreaseCountChampionsDisenchanterEvent(lootCount)),
+                            child: const Icon(Icons.add),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OwnedBadge extends StatelessWidget {
+  const OwnedBadge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Tooltip(
+      message: 'Куплено',
+      child: Padding(
+        padding: EdgeInsets.only(left: 12, right: 8),
+        child: CollectionTag(),
+      ),
+    );
+  }
+}
+
+class _SummaryDisenchantWidget extends StatelessWidget {
+  const _SummaryDisenchantWidget({
+    required this.summaryDisenchantLoot,
+    required this.sortField,
+  });
+
+  final SummaryDisenchantLoot summaryDisenchantLoot;
+  final SortField sortField;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(left: 12, top: 15, right: 12),
+      elevation: 10,
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+        height: 75,
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  PopupMenuButton(
+                    icon: const Icon(Icons.sort),
+                    tooltip: 'Сортировка',
+                    onSelected: (SortField selectedSort) => context
+                        .read<ChampionsDisenchanterBloc>()
+                        .add(PickedSortFieldChampionsDisenchanterEvent(selectedSort)),
+                    itemBuilder: (context) => [
+                      CheckedPopupMenuItem(
+                        checked: sortField == SortField.name,
+                        value: SortField.name,
+                        child: const Text('По алфавиту'),
+                      ),
+                      CheckedPopupMenuItem(
+                        checked: sortField == SortField.value,
+                        value: SortField.value,
+                        child: const Text('По стоимости'),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () =>
+                        context.read<ChampionsDisenchanterBloc>().add(UnselectAllChampionsDisenchanterEvent()),
+                    icon: const Icon(Icons.indeterminate_check_box),
+                    tooltip: 'Убрать все',
+                  ),
+                  IconButton(
+                    onPressed: () =>
+                        context.read<ChampionsDisenchanterBloc>().add(SelectAllChampionsDisenchanterEvent()),
+                    icon: const Icon(Icons.add_box),
+                    tooltip: 'Добавить все',
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 16),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+              ),
+              onPressed: () =>
+                  context.read<ChampionsDisenchanterBloc>().add(DisenchantSelectedChampionsDisenchanterEvent()),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('РАСПЫЛИТЬ'),
+                  Row(
+                    children: [
+                      Text('${summaryDisenchantLoot.totalCount} оск.'),
+                      const Icon(Icons.arrow_right_alt),
+                      _BlueEssence(value: summaryDisenchantLoot.totalEssence)
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BlueEssence extends StatelessWidget {
+  const _BlueEssence({required this.value});
+
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset('assets/images/currency_champion.png', width: 24, height: 24),
+        Text(
+          NumberFormat.decimalPattern('ru').format(value),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            height: 24 / 16,
+          ),
+        ),
+      ],
+    );
+  }
+}

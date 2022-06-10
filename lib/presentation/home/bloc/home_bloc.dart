@@ -11,6 +11,7 @@ import 'package:champmastery/data/repositories/summoner_repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
+part 'home_models.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final LcuStore _lcuStore;
@@ -30,6 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<PickLolPathHomeEvent>(_onPickLolPathHomeEvent);
     on<LoadCurrentSummonerInfoHomeEvent>(_onLoadCurrentSummonerInfoHomeEvent);
     on<EndGameHomeEvent>(_onEndGameHomeEvent);
+    on<TapDestinationHomeEvent>(_onTapDestinationHomeEvent);
   }
 
   StreamSubscription? _pickSessionSubscription;
@@ -75,6 +77,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     emit(LoadedHomeState(
       summonerId: summoner.summonerId,
+      destination: Destination.mastery,
     ));
 
     _gameEndEventSubscription ??= _leagueClientEventRepository.observeGameEndEvent().listen((event) {
@@ -85,6 +88,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _onEndGameHomeEvent(EndGameHomeEvent event, Emitter<HomeState> emit) async {
     final summoner = await _summonerRepository.getCurrentSummoner();
     await _championRepository.updateChampions(summoner.summonerId);
+  }
+
+  void _onTapDestinationHomeEvent(TapDestinationHomeEvent event, Emitter<HomeState> emit) {
+    if (this.state is! LoadedHomeState) return;
+
+    final state = this.state as LoadedHomeState;
+
+    if (state.destination == event.destination) return;
+
+    emit(state.copyWith(destination: event.destination));
   }
 
   @override

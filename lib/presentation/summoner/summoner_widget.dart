@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:champmastery/data/models/chest_eligibility.dart';
 import 'package:champmastery/data/models/summoner.dart';
 import 'package:champmastery/di/di.dart';
-import 'package:champmastery/presentation/core/widgets/app_version.dart';
 
 import 'bloc/summoner_bloc.dart';
 
@@ -37,30 +36,23 @@ class _SummonerInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 250,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(
-              summoner.displayName,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 16),
-            _LevelProgress(
-              currentLvl: summoner.summonerLevel,
-              currentExp: summoner.xpSinceLastLevel,
-              untilNextLvlExp: summoner.xpUntilNextLevel,
-            ),
-            const SizedBox(height: 32),
-            if (summoner.chestEligibility != null) _AvailableChests(chests: summoner.chestEligibility!),
-            const Spacer(),
-            const SizedBox(height: 16),
-            const AppVersion(),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          summoner.displayName,
+          style: Theme.of(context).textTheme.titleMedium,
+          textAlign: TextAlign.start,
         ),
-      ),
+        const SizedBox(height: 16),
+        _LevelProgress(
+          currentLvl: summoner.summonerLevel,
+          currentExp: summoner.xpSinceLastLevel,
+          untilNextLvlExp: summoner.xpUntilNextLevel,
+        ),
+        const SizedBox(height: 24),
+        if (summoner.chestEligibility != null) _AvailableChests(chests: summoner.chestEligibility!),
+      ],
     );
   }
 }
@@ -86,9 +78,9 @@ class _LevelProgress extends StatelessWidget {
         child: Row(
           children: [
             Text(currentLvl.toString()),
-            const SizedBox(width: 16),
+            const SizedBox(width: 8),
             Expanded(child: LinearProgressIndicator(value: currentExp / untilNextLvlExp)),
-            const SizedBox(width: 16),
+            const SizedBox(width: 8),
             Text((currentLvl + 1).toString()),
           ],
         ),
@@ -125,7 +117,7 @@ class _AvailableChests extends StatelessWidget {
     return Tooltip(
       message: _formatChestTime(chests.nextChestDateTime()),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           for (int i = 0; i < chests.maximumChests; i++)
             Image.asset(

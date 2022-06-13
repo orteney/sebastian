@@ -1,7 +1,7 @@
 name: champmastery
 description: A new Flutter project.
 publish_to: "none"
-version: 2.0.0+1
+version: 2.0.1+1
 
 environment:
   sdk: ">=2.17.0 <3.0.0"

@@ -17,19 +17,12 @@ class _CollectionTagCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();
-    path_0.moveTo(27.6191, 0);
-    path_0.lineTo(2.38105, 0);
-    path_0.lineTo(1.19053, 0);
-    path_0.lineTo(0, 0);
-    path_0.lineTo(0, 33.8537);
-    path_0.cubicTo(0, 34.2818, 0.495258, 34.6741, 1.2845, 34.8712);
-    path_0.cubicTo(2.07358, 35.0683, 3.02521, 35.0374, 3.75206, 34.7909);
-    path_0.lineTo(15, 30.9776);
-    path_0.lineTo(26.2479, 34.7909);
-    path_0.cubicTo(26.9756, 35.0376, 27.9269, 35.0681, 28.7155, 34.8712);
-    path_0.cubicTo(29.5047, 34.6741, 30, 34.2817, 30, 33.8537);
+    path_0.moveTo(0, 0);
+    path_0.lineTo(0, 35);
+    path_0.lineTo(15, 29);
+    path_0.lineTo(30, 35);
     path_0.lineTo(30, 0);
-    path_0.lineTo(27.6191, 0);
+    path_0.lineTo(0, 0);
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;

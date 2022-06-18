@@ -1,9 +1,11 @@
-import 'package:champmastery/di/di.dart';
-import 'package:champmastery/presentation/core/widgets/collection_tag.dart';
-import 'package:champmastery/presentation/core/widgets/unknown_bloc_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+import 'package:champmastery/di/di.dart';
+import 'package:champmastery/presentation/core/widgets/collection_tag.dart';
+import 'package:champmastery/presentation/core/widgets/mastery_tag.dart';
+import 'package:champmastery/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_disenchanter_bloc.dart';
 
@@ -13,11 +15,15 @@ class ChampionsDisenchanterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChampionsDisenchanterBloc(getIt()),
+      create: (context) => ChampionsDisenchanterBloc(getIt(), getIt()),
       child: BlocBuilder<ChampionsDisenchanterBloc, ChampionsDisenchanterState>(
         builder: (context, state) {
           if (state is LoadingChampionsDisenchanterState) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is EmptyChampionsDisenchanterState) {
+            return const Center(child: Text('А нету у тебя осколков чемпионов'));
           }
 
           if (state is SelectChampionsDisenchanterState) {
@@ -89,8 +95,13 @@ class _LootCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (lootCount.purchased) const OwnedBadge(),
-                  Spacer(),
+                  if (!lootCount.purchased) const NotOwnedBadge(),
+                  if (lootCount.nextLevelTokensCount != null)
+                    MasteryBadge(
+                      level: lootCount.masteryLevel,
+                      nextLevelTokensCount: lootCount.nextLevelTokensCount!,
+                    ),
+                  const Spacer(),
                   Card(
                     elevation: 4,
                     child: Padding(
@@ -177,16 +188,38 @@ class _LootCard extends StatelessWidget {
   }
 }
 
-class OwnedBadge extends StatelessWidget {
-  const OwnedBadge({super.key});
+class NotOwnedBadge extends StatelessWidget {
+  const NotOwnedBadge({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Tooltip(
-      message: 'Куплено',
+      message: 'Не куплено',
       child: Padding(
-        padding: EdgeInsets.only(left: 12, right: 8),
+        padding: EdgeInsets.only(left: 12),
         child: CollectionTag(),
+      ),
+    );
+  }
+}
+
+class MasteryBadge extends StatelessWidget {
+  const MasteryBadge({
+    super.key,
+    required this.level,
+    required this.nextLevelTokensCount,
+  });
+
+  final int level;
+  final int nextLevelTokensCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: '$level ур. и $nextLevelTokensCount жетонов',
+      child: const Padding(
+        padding: EdgeInsets.only(left: 12),
+        child: MasteryTag(),
       ),
     );
   }

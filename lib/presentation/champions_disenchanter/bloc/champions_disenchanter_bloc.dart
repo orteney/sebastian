@@ -1,10 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:champmastery/data/models/lcu_image.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:champmastery/data/lcu.dart';
+import 'package:champmastery/data/models/lcu_image.dart';
 import 'package:champmastery/data/models/loot.dart';
+import 'package:champmastery/data/repositories/champion_repository.dart';
 import 'package:champmastery/data/utils/cyrillic_comparator.dart';
 
 part 'champions_disenchanter_event.dart';
@@ -13,8 +14,9 @@ part 'champions_disenchanter_state.dart';
 
 class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, ChampionsDisenchanterState> {
   final LCU _lcu;
+  final ChampionRepository _championRepository;
 
-  ChampionsDisenchanterBloc(this._lcu) : super(LoadingChampionsDisenchanterState()) {
+  ChampionsDisenchanterBloc(this._lcu, this._championRepository) : super(LoadingChampionsDisenchanterState()) {
     on<LoadLootChampionsDisenchanterEvent>(_onLoadLootChampionsDisenchanterEvent);
     on<IncreaseCountChampionsDisenchanterEvent>(_onIncreaseCountChampionsDisenchanterEvent);
     on<DecreaseChampionsDisenchanterEvent>(_onDecreaseChampionsDisenchanterEvent);
@@ -32,16 +34,57 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
   ) async {
     final loots = await _lcu.getPlayerLoot();
 
-    final championsLoots = loots.where((element) => element.type == 'CHAMPION_RENTAL');
+    final tokenLoots = <Loot>[];
+    final championsLoots = <Loot>[];
 
-    final selectableLoots = championsLoots
-        .map((e) => SelectedLootCount(
-              loot: e,
-              count: 0,
-              image: _lcu.getLcuImage(e.tilePath),
-              purchased: e.redeemableStatus == 'ALREADY_OWNED',
-            ))
-        .toList();
+    for (var loot in loots) {
+      switch (loot.type) {
+        case 'CHAMPION_RENTAL':
+          championsLoots.add(loot);
+          break;
+        case 'CHAMPION_TOKEN':
+          tokenLoots.add(loot);
+          break;
+      }
+    }
+
+    loots.where((element) => element.type == 'CHAMPION_RENTAL');
+
+    if (championsLoots.isEmpty) {
+      return emit(EmptyChampionsDisenchanterState());
+    }
+
+    final selectableLoots = <SelectedLootCount>[];
+
+    for (var championLoot in championsLoots) {
+      int masteryLevel = 0;
+      final champion = _championRepository.champions.where((element) => element.id == championLoot.storeItemId);
+      if (champion.isNotEmpty) {
+        masteryLevel = champion.first.mastery.championLevel;
+      }
+
+      int? nextLevelTokensCount;
+      if (masteryLevel >= 5 && masteryLevel < 7) {
+        for (var tokenLoot in tokenLoots) {
+          if (tokenLoot.refId == championLoot.storeItemId.toString()) {
+            nextLevelTokensCount = tokenLoot.count;
+            tokenLoots.remove(tokenLoot);
+            break;
+          }
+        }
+      }
+
+      selectableLoots.add(
+        SelectedLootCount(
+          loot: championLoot,
+          count: 0,
+          image: _lcu.getLcuImage(championLoot.tilePath),
+          purchased: championLoot.redeemableStatus == 'ALREADY_OWNED',
+          masteryLevel: masteryLevel,
+          nextLevelTokensCount: nextLevelTokensCount,
+        ),
+      );
+    }
 
     emit(SelectChampionsDisenchanterState(
       loots: _sortLootsByField(selectableLoots, SortField.name),

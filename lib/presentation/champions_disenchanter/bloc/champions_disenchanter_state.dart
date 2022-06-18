@@ -4,6 +4,8 @@ abstract class ChampionsDisenchanterState {}
 
 class LoadingChampionsDisenchanterState extends ChampionsDisenchanterState {}
 
+class EmptyChampionsDisenchanterState extends ChampionsDisenchanterState {}
+
 class SelectChampionsDisenchanterState extends ChampionsDisenchanterState with EquatableMixin {
   final List<SelectedLootCount> loots;
   final SortField sortField;

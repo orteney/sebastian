@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -48,8 +50,6 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
       }
     }
 
-    loots.where((element) => element.type == 'CHAMPION_RENTAL');
-
     if (championsLoots.isEmpty) {
       return emit(EmptyChampionsDisenchanterState());
     }
@@ -63,25 +63,18 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
         masteryLevel = champion.first.mastery.championLevel;
       }
 
-      int? nextLevelTokensCount;
-      if (masteryLevel >= 5 && masteryLevel < 7) {
-        for (var tokenLoot in tokenLoots) {
-          if (tokenLoot.refId == championLoot.storeItemId.toString()) {
-            nextLevelTokensCount = tokenLoot.count;
-            tokenLoots.remove(tokenLoot);
-            break;
-          }
-        }
-      }
-
       selectableLoots.add(
         SelectedLootCount(
           loot: championLoot,
-          count: 0,
+          count: _calcSafeToDisenchantCount(championLoot.count, masteryLevel),
           image: _lcu.getLcuImage(championLoot.tilePath),
           purchased: championLoot.redeemableStatus == 'ALREADY_OWNED',
           masteryLevel: masteryLevel,
-          nextLevelTokensCount: nextLevelTokensCount,
+          nextLevelTokensCount: _calcNextLevelTokensCount(
+            tokenLoots,
+            masteryLevel,
+            championLoot.storeItemId.toString(),
+          ),
         ),
       );
     }
@@ -91,6 +84,34 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
       sortField: SortField.name,
       summary: _calcSummary(selectableLoots),
     ));
+  }
+
+  int? _calcNextLevelTokensCount(List<Loot> tokenLoots, int masteryLevel, String championId) {
+    if (masteryLevel >= 5 && masteryLevel < 7) {
+      for (var tokenLoot in tokenLoots) {
+        if (tokenLoot.refId == championId) {
+          tokenLoots.remove(tokenLoot);
+          return tokenLoot.count;
+        }
+      }
+
+      return 0;
+    }
+
+    return null;
+  }
+
+  int _calcSafeToDisenchantCount(int lootCount, int masteryLevel) {
+    switch (masteryLevel) {
+      case 7:
+        return lootCount;
+      case 6:
+        return max(0, lootCount - 1);
+      case 5:
+        return max(0, lootCount - 2);
+      default:
+        return 0;
+    }
   }
 
   void _onIncreaseCountChampionsDisenchanterEvent(

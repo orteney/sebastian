@@ -1,3 +1,4 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -68,14 +69,14 @@ class _ChampionsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
 
-    return SingleChildScrollView(
-      child: DataTable(
-        sortColumnIndex: sortColumnIndex,
-        sortAscending: sortAscending,
-        headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-        columns: _buildChampionColumns(onSortColumn),
-        rows: champions.map((champion) => _buildChampionRow(appLocalizations, champion, _ChampionType.none)).toList(),
-      ),
+    return DataTable2(
+      minWidth: 700,
+      fixedLeftColumns: 1,
+      sortColumnIndex: sortColumnIndex,
+      sortAscending: sortAscending,
+      headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+      columns: _buildChampionColumns(onSortColumn),
+      rows: champions.map((champion) => _buildChampionRow(appLocalizations, champion, _ChampionType.none)).toList(),
     );
   }
 }
@@ -95,48 +96,55 @@ class _PickTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
 
-    return SingleChildScrollView(
-      child: DataTable(
-        headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-        columns: _buildChampionColumns(),
-        rows: [
-          if (myChampion != null) _buildChampionRow(appLocalizations, myChampion!, _ChampionType.my),
-          ...benchChampions.map((e) => _buildChampionRow(appLocalizations, e, _ChampionType.bench)),
-          ...teamChampions.map((e) => _buildChampionRow(appLocalizations, e, _ChampionType.teamMate)),
-        ],
-      ),
+    return DataTable2(
+      minWidth: 700,
+      fixedLeftColumns: 1,
+      headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+      columns: _buildChampionColumns(),
+      rows: [
+        if (myChampion != null) _buildChampionRow(appLocalizations, myChampion!, _ChampionType.my),
+        ...benchChampions.map((e) => _buildChampionRow(appLocalizations, e, _ChampionType.bench)),
+        ...teamChampions.map((e) => _buildChampionRow(appLocalizations, e, _ChampionType.teamMate)),
+      ],
     );
   }
 }
 
+/// Do not forget change order in [ChampionsTableColumn]
 List<DataColumn> _buildChampionColumns([DataColumnSortCallback? onSortColumn]) {
   return <DataColumn>[
-    DataColumn(
+    DataColumn2(
       onSort: onSortColumn,
       label: const Text('Чемпион'),
+      size: ColumnSize.M,
     ),
-    DataColumn(
+    DataColumn2(
       onSort: onSortColumn,
       numeric: true,
-      label: const Text('Уровень'),
+      label: const Text('Ур.'),
+      size: ColumnSize.S,
     ),
-    DataColumn(
+    DataColumn2(
       onSort: onSortColumn,
       numeric: true,
       label: const Text('Очков'),
+      size: ColumnSize.M,
     ),
-    DataColumn(
+    DataColumn2(
       onSort: onSortColumn,
       numeric: true,
       label: const Text('Прогресс'),
+      size: ColumnSize.M,
     ),
-    DataColumn(
-      onSort: onSortColumn,
-      label: const Text('Сундук?'),
-    ),
-    DataColumn(
+    DataColumn2(
       onSort: onSortColumn,
       label: const Text('Вечные'),
+      size: ColumnSize.M,
+    ),
+    DataColumn2(
+      onSort: onSortColumn,
+      label: const Text('Сундук?'),
+      size: ColumnSize.S,
     ),
   ];
 }
@@ -184,10 +192,10 @@ DataRow _buildChampionRow(AppLocalizations appLocalizations, Champion champion, 
       DataCell(Text(champion.mastery.championLevel.toString())),
       DataCell(Text(champion.mastery.championPoints.toString())),
       DataCell(progressRowData),
-      DataCell(Checkbox(value: champion.mastery.chestGranted, onChanged: null)),
       DataCell(Text(
-        '${appLocalizations.championsTableStonesCount(champion.statStones.stonesOwned)}\n${appLocalizations.championsTableMilestonesCount(champion.statStones.milestonesPassed)}',
+        '${appLocalizations.championsTableMilestonesCount(champion.statStones.milestonesPassed)}\n${appLocalizations.championsTableStonesCount(champion.statStones.stonesOwned)}',
       )),
+      DataCell(Checkbox(value: champion.mastery.chestGranted, onChanged: null)),
     ],
   );
 }

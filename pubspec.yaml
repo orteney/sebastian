@@ -1,7 +1,7 @@
 name: champmastery
 description: A new Flutter project.
 publish_to: "none"
-version: 2.2.0+1
+version: 2.3.0+1
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -17,6 +17,9 @@ dependencies:
 
   rxdart: ^0.27.3
   get_it: ^7.2.0
+
+  #UI
+  data_table_2: ^2.3.5
 
   #Utils
   path: ^1.8.1

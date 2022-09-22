@@ -154,8 +154,8 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     }
 
     final List<Champion> benchChampions = [];
-    for (var championId in pickSession.benchChampionIds) {
-      final champion = _findChampion(championId, summaryState.champions);
+    for (var benchChampion in pickSession.benchChampions) {
+      final champion = _findChampion(benchChampion.championId, summaryState.champions);
       if (champion != null) {
         benchChampions.add(champion);
       }

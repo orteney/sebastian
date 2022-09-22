@@ -1,80 +1,90 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
 class PickSession {
-  final List<int> benchChampionIds;
+  final List<BenchChampion> benchChampions;
   final List<TeamPick> myTeam;
   final bool isCustomGame;
   final bool benchEnabled;
 
   PickSession({
-    required this.benchChampionIds,
+    required this.benchChampions,
     required this.myTeam,
     required this.isCustomGame,
     required this.benchEnabled,
   });
 
   PickSession copyWith({
-    List<int>? benchChampionIds,
+    List<BenchChampion>? benchChampions,
     List<TeamPick>? myTeam,
     bool? isCustomGame,
     bool? benchEnabled,
   }) {
     return PickSession(
-      benchChampionIds: benchChampionIds ?? this.benchChampionIds,
+      benchChampions: benchChampions ?? this.benchChampions,
       myTeam: myTeam ?? this.myTeam,
       isCustomGame: isCustomGame ?? this.isCustomGame,
       benchEnabled: benchEnabled ?? this.benchEnabled,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'benchChampionIds': benchChampionIds,
-      'myTeam': myTeam.map((x) => x.toMap()).toList(),
-      'isCustomGame': isCustomGame,
-      'benchEnabled': benchEnabled,
-    };
-  }
-
   factory PickSession.fromMap(Map<String, dynamic> map) {
     return PickSession(
-      benchChampionIds: List<int>.from(map['benchChampionIds']),
-      myTeam: List<TeamPick>.from(map['myTeam']?.map((x) => TeamPick.fromMap(x))),
-      isCustomGame: map['isCustomGame'] ?? false,
-      benchEnabled: map['benchEnabled'] ?? false,
+      benchChampions: List<BenchChampion>.from(
+        (map['benchChampions'] as List).map<BenchChampion>(
+          (x) => BenchChampion.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      myTeam: List<TeamPick>.from(
+        (map['myTeam'] as List).map<TeamPick>(
+          (x) => TeamPick.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      isCustomGame: map['isCustomGame'] as bool,
+      benchEnabled: map['benchEnabled'] as bool,
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory PickSession.fromJson(String source) =>
-      PickSession.fromMap(json.decode(source));
+  factory PickSession.fromJson(String source) => PickSession.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'PickSession(benchChampionIds: $benchChampionIds, myTeam: $myTeam, isCustomGame: $isCustomGame, benchEnabled: $benchEnabled)';
+    return 'PickSession(benchChampions: $benchChampions, myTeam: $myTeam, isCustomGame: $isCustomGame, benchEnabled: $benchEnabled)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is PickSession &&
-      listEquals(other.benchChampionIds, benchChampionIds) &&
-      listEquals(other.myTeam, myTeam) &&
-      other.isCustomGame == isCustomGame &&
-      other.benchEnabled == benchEnabled;
+        listEquals(other.benchChampions, benchChampions) &&
+        listEquals(other.myTeam, myTeam) &&
+        other.isCustomGame == isCustomGame &&
+        other.benchEnabled == benchEnabled;
   }
 
   @override
   int get hashCode {
-    return benchChampionIds.hashCode ^
-      myTeam.hashCode ^
-      isCustomGame.hashCode ^
-      benchEnabled.hashCode;
+    return benchChampions.hashCode ^ myTeam.hashCode ^ isCustomGame.hashCode ^ benchEnabled.hashCode;
   }
+}
+
+class BenchChampion {
+  final int championId;
+
+  BenchChampion({
+    required this.championId,
+  });
+
+  factory BenchChampion.fromMap(Map<String, dynamic> map) {
+    return BenchChampion(
+      championId: map['championId'] as int,
+    );
+  }
+
+  factory BenchChampion.fromJson(String source) => BenchChampion.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class TeamPick {
@@ -112,20 +122,16 @@ class TeamPick {
 
   String toJson() => json.encode(toMap());
 
-  factory TeamPick.fromJson(String source) =>
-      TeamPick.fromMap(json.decode(source));
+  factory TeamPick.fromJson(String source) => TeamPick.fromMap(json.decode(source));
 
   @override
-  String toString() =>
-      'TeamPick(summonerId: $summonerId, championId: $championId)';
+  String toString() => 'TeamPick(summonerId: $summonerId, championId: $championId)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is TeamPick &&
-        other.summonerId == summonerId &&
-        other.championId == championId;
+    return other is TeamPick && other.summonerId == summonerId && other.championId == championId;
   }
 
   @override

@@ -2,14 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:champmastery/data/models/lcu_image.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+
 import 'package:path/path.dart' as path;
 
 import 'package:champmastery/data/lcu_store.dart';
 import 'package:champmastery/data/models/champion_mastery.dart';
 import 'package:champmastery/data/models/champion_stat_stones.dart';
 import 'package:champmastery/data/models/chest_eligibility.dart';
+import 'package:champmastery/data/models/lcu_image.dart';
 import 'package:champmastery/data/models/loot.dart';
 import 'package:champmastery/data/models/summoner.dart';
 import 'package:champmastery/data/utils/proccess.dart';
@@ -135,6 +136,11 @@ class LCU {
     return _broadcastWebsocket
         .map((event) {
           if (event.isEmpty) return null;
+
+          if (kDebugMode) {
+            print("LCUEvent: $event");
+          }
+
           final jsonEvent = json.decode(event);
 
           if (jsonEvent is! List) return null;

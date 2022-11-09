@@ -10,6 +10,8 @@ import 'package:champmastery/presentation/core/theme.dart';
 import 'package:champmastery/presentation/home/home_page.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await initDi();
 
   HttpOverrides.global = DisableCertificateCheckHttpOverrides();

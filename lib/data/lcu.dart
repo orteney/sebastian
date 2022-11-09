@@ -72,17 +72,21 @@ class LCU {
   }
 
   Future<bool> _tryFindRunningLolDirectory() async {
-    if (!Platform.isWindows) return false;
+    if (Platform.isWindows) {
+      final lolExeFile = await findExePathByProcessName('LeagueClientUx.exe');
+      if (lolExeFile == null) return false;
 
-    final lolExeFile = await findExePathByProcessName('LeagueClientUx.exe');
+      final lockfile = await getLockfileFromLolDirectory(lolExeFile.parent);
+      if (lockfile != null) {
+        await _lcuStore.putLcuLockfilePath(lockfile.path);
+        return true;
+      }
+    } else if (Platform.isMacOS) {
+      final defaultLolDirectory = Directory('/Applications/League of Legends.app/Contents/LoL');
 
-    if (lolExeFile == null) return false;
+      if (!defaultLolDirectory.existsSync()) return false;
 
-    final lolDirectory = lolExeFile.parent;
-
-    final lockfile = await getLockfileFromLolDirectory(lolDirectory);
-
-    if (lockfile != null) {
+      final lockfile = File(path.join(defaultLolDirectory.path, 'lockfile'));
       await _lcuStore.putLcuLockfilePath(lockfile.path);
       return true;
     }

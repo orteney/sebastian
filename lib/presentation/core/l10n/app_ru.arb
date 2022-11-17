@@ -10,5 +10,22 @@
         "placeholders": {
             "count": {}
         }
+    },
+    "matchesCount": "{count, plural, one{{count} матч} few{{count} матча} many{{count} матчей} other{{count} матчей}}",
+    "@matchesCount": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "winrate": "{winrate}% побед",
+    "@winrate": {
+        "placeholders": {
+            "winrate": {
+                "type": "double",
+                "format": "decimalPattern",
+                "example": "100.00",
+                "description": "Winrate caption"
+            }
+        }
     }
 }

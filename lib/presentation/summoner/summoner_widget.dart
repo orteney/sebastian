@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:champmastery/data/models/chest_eligibility.dart';
-import 'package:champmastery/data/models/summoner.dart';
-import 'package:champmastery/di/di.dart';
+import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
+import 'package:sebastian/data/models/summoner.dart';
+import 'package:sebastian/di/di.dart';
 
 import 'bloc/summoner_bloc.dart';
 
@@ -51,7 +51,7 @@ class _SummonerInfo extends StatelessWidget {
           untilNextLvlExp: summoner.xpUntilNextLevel,
         ),
         const SizedBox(height: 24),
-        if (summoner.chestEligibility != null) _AvailableChests(chests: summoner.chestEligibility!),
+        _AvailableChests(chests: summoner.chestEligibility),
       ],
     );
   }

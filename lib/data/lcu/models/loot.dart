@@ -1,5 +1,8 @@
-import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'loot.g.dart';
+
+@JsonSerializable(createToJson: false)
 class Loot {
   final int count;
   final String itemDesc;
@@ -59,44 +62,6 @@ class Loot {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'count': count,
-      'itemDesc': itemDesc,
-      'disenchantLootName': disenchantLootName,
-      'disenchantValue': disenchantValue,
-      'itemStatus': itemStatus,
-      'lootId': lootId,
-      'lootName': lootName,
-      'refId': refId,
-      'storeItemId': storeItemId,
-      'redeemableStatus': redeemableStatus,
-      'type': type,
-      'tilePath': tilePath,
-    };
-  }
-
-  factory Loot.fromMap(Map<String, dynamic> map) {
-    return Loot(
-      count: map['count']?.toInt() ?? 0,
-      itemDesc: map['itemDesc'] ?? '',
-      disenchantLootName: map['disenchantLootName'] ?? '',
-      disenchantValue: map['disenchantValue']?.toInt() ?? 0,
-      itemStatus: map['itemStatus'] ?? '',
-      lootId: map['lootId'] ?? '',
-      lootName: map['lootName'] ?? '',
-      refId: map['refId'] ?? '',
-      storeItemId: map['storeItemId']?.toInt() ?? 0,
-      redeemableStatus: map['redeemableStatus'] ?? '',
-      type: map['type'] ?? '',
-      tilePath: map['tilePath'] ?? '',
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Loot.fromJson(String source) => Loot.fromMap(json.decode(source));
-
   @override
   String toString() {
     return 'Loot(count: $count, itemDesc: $itemDesc, disenchantLootName: $disenchantLootName, disenchantValue: $disenchantValue, itemStatus: $itemStatus, lootId: $lootId, lootName: $lootName, refId: $refId, storeItemId: $storeItemId, redeemableStatus: $redeemableStatus, type: $type, tilePath: $tilePath)';
@@ -136,4 +101,6 @@ class Loot {
         type.hashCode ^
         tilePath.hashCode;
   }
+
+  factory Loot.fromJson(Map<String, dynamic> json) => _$LootFromJson(json);
 }

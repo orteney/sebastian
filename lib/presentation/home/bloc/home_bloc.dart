@@ -3,21 +3,27 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:champmastery/data/lcu.dart';
-import 'package:champmastery/data/lcu_store.dart';
-import 'package:champmastery/data/repositories/champion_repository.dart';
-import 'package:champmastery/data/repositories/league_client_event_repository.dart';
-import 'package:champmastery/data/repositories/summoner_repository.dart';
+import 'package:sebastian/data/lcu/lcu.dart';
+import 'package:sebastian/data/lcu/lcu_path_storage.dart';
+import 'package:sebastian/data/repositories/champion_repository.dart';
+import 'package:sebastian/data/repositories/items_repository.dart';
+import 'package:sebastian/data/repositories/league_client_event_repository.dart';
+import 'package:sebastian/data/repositories/perks_repository.dart';
+import 'package:sebastian/data/repositories/spells_repository.dart';
+import 'package:sebastian/data/repositories/summoner_repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 part 'home_models.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final LcuStore _lcuStore;
+  final LcuPathStorage _lcuStore;
   final LCU _lcu;
   final SummonerRepository _summonerRepository;
   final ChampionRepository _championRepository;
+  final PerksRepository _perksRepository;
+  final ItemsRepository _itemsRepository;
+  final SpellsRepository _spellsRepository;
   final LeagueClientEventRepository _leagueClientEventRepository;
 
   HomeBloc(
@@ -25,6 +31,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     this._lcu,
     this._summonerRepository,
     this._championRepository,
+    this._perksRepository,
+    this._itemsRepository,
+    this._spellsRepository,
     this._leagueClientEventRepository,
   ) : super(InitialHomeState()) {
     on<StartHomeEvent>(_onStartHomeEvent);
@@ -72,17 +81,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     emit(LoadingSummonerInfoHomeState());
 
-    final summoner = await _summonerRepository.getCurrentSummoner();
-    await _championRepository.updateChampions(summoner.summonerId);
+    try {
+      final summoner = await _summonerRepository.getCurrentSummoner();
+      await _championRepository.updateChampions(summoner.summonerId);
+      await _perksRepository.updatePerks();
+      await _itemsRepository.updateItems();
+      await _spellsRepository.updateSpells();
 
-    emit(LoadedHomeState(
-      summonerId: summoner.summonerId,
-      destination: Destination.mastery,
-    ));
+      emit(LoadedHomeState(
+        summonerId: summoner.summonerId,
+        destination: Destination.mastery,
+      ));
 
-    _gameEndEventSubscription ??= _leagueClientEventRepository.observeGameEndEvent().listen((event) {
-      add(EndGameHomeEvent());
-    });
+      _gameEndEventSubscription ??= _leagueClientEventRepository.observeGameEndEvent().listen((event) {
+        add(EndGameHomeEvent());
+      });
+    } catch (e) {
+      emit(ErrorHomeState(message: e.toString()));
+    }
   }
 
   Future<void> _onEndGameHomeEvent(EndGameHomeEvent event, Emitter<HomeState> emit) async {
@@ -103,6 +119,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   Future<void> close() {
     _pickSessionSubscription?.cancel();
+    _gameEndEventSubscription?.cancel();
     _lcu.close();
     return super.close();
   }

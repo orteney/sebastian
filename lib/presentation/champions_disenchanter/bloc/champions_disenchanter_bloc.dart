@@ -4,11 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:champmastery/data/lcu.dart';
-import 'package:champmastery/data/models/lcu_image.dart';
-import 'package:champmastery/data/models/loot.dart';
-import 'package:champmastery/data/repositories/champion_repository.dart';
-import 'package:champmastery/data/utils/cyrillic_comparator.dart';
+import 'package:sebastian/data/lcu/lcu.dart';
+import 'package:sebastian/data/models/lcu_image.dart';
+import 'package:sebastian/data/lcu/models/loot.dart';
+import 'package:sebastian/data/repositories/champion_repository.dart';
+import 'package:sebastian/data/utils/cyrillic_comparator.dart';
 
 part 'champions_disenchanter_event.dart';
 part 'champions_disenchanter_models.dart';
@@ -34,7 +34,7 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
     LoadLootChampionsDisenchanterEvent event,
     Emitter<ChampionsDisenchanterState> emit,
   ) async {
-    final loots = await _lcu.getPlayerLoot();
+    final loots = await _lcu.service.getPlayerLoot();
 
     final tokenLoots = <Loot>[];
     final championsLoots = <Loot>[];
@@ -67,7 +67,7 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
         SelectedLootCount(
           loot: championLoot,
           count: _calcSafeToDisenchantCount(championLoot.count, masteryLevel),
-          image: _lcu.getLcuImage(championLoot.tilePath),
+          image: _lcu.service.getLcuImage(championLoot.tilePath),
           purchased: championLoot.redeemableStatus == 'ALREADY_OWNED',
           masteryLevel: masteryLevel,
           nextLevelTokensCount: _calcNextLevelTokensCount(
@@ -227,7 +227,7 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
 
     for (var loot in disenchantableLoots) {
       try {
-        await _lcu.disenchantChampion(loot.loot.lootId, loot.count);
+        await _lcu.service.disenchantChampion(loot.loot.lootId, loot.count);
       } catch (e) {
         if (kDebugMode) {
           print(e);

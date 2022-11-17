@@ -1,12 +1,10 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:champmastery/data/lcu.dart';
-import 'package:champmastery/data/models/champion.dart';
-import 'package:champmastery/data/models/champion_mastery.dart';
-import 'package:champmastery/data/models/champion_stat_stones.dart';
+import 'package:sebastian/data/lcu/lcu.dart';
+import 'package:sebastian/data/models/champion.dart';
+import 'package:sebastian/data/lcu/models/champion_mastery.dart';
+import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
+import 'package:sebastian/data/utils/cyrillic_comparator.dart';
 
 class ChampionRepository {
   final LCU lcu;
@@ -20,12 +18,33 @@ class ChampionRepository {
   Future<List<Champion>> updateChampions(int summonerId) async {
     var champions = _championsSubject.valueOrNull ?? await _loadRawChampions();
 
-    final masteries = await lcu.getChampionMasteryList(summonerId);
-    final statStones = await lcu.getChampionStatStones();
+    final masteries = await lcu.service.getChampionMasteryList(summonerId);
+    final statStones = await lcu.service.getChampionStatStones();
 
     champions = _merge(champions, masteries, statStones).toList();
     _championsSubject.add(champions);
     return champions;
+  }
+
+  Future<List<Champion>> _loadRawChampions() async {
+    final dtos = await lcu.service.getChampionsSummary();
+
+    final champions = <Champion>[];
+
+    for (var dto in dtos) {
+      if (dto.id == -1) continue;
+
+      champions.add(
+        Champion(
+          id: dto.id,
+          name: dto.name,
+          mastery: ChampionMastery.empty(dto.id),
+          statStones: ChampionStatStones.empty(dto.id),
+        ),
+      );
+    }
+
+    return champions..sort((a, b) => cyrillicCompare(a.name, b.name));
   }
 
   Iterable<Champion> _merge(
@@ -54,29 +73,11 @@ class ChampionRepository {
     }
   }
 
-  Future<List<Champion>> _loadRawChampions() async {
-    final jsonString = await rootBundle.loadString('assets/champions_ru.json');
-    final json = jsonDecode(jsonString);
-
-    final champions = <Champion>[];
-
-    for (var value in json) {
-      final championId = value['id'] as int;
-
-      champions.add(
-        Champion(
-          id: championId,
-          name: value['name'],
-          mastery: ChampionMastery.empty(championId),
-          statStones: ChampionStatStones.empty(championId),
-        ),
-      );
-    }
-
-    return champions;
-  }
-
   Stream<List<Champion>> get stream => _championsSubject.stream;
 
   List<Champion> get champions => _championsSubject.valueOrNull ?? const [];
+
+  Champion getChampion(int championId) {
+    return champions.firstWhere((element) => element.id == championId);
+  }
 }

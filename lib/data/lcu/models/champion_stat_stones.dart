@@ -1,5 +1,8 @@
-import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'champion_stat_stones.g.dart';
+
+@JsonSerializable(createToJson: false)
 class ChampionStatStones {
   final int championId;
   final int milestonesPassed;
@@ -39,30 +42,6 @@ class ChampionStatStones {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'championId': championId,
-      'milestonesPassed': milestonesPassed,
-      'stonesAvailable': stonesAvailable,
-      'stonesIlluminated': stonesIlluminated,
-      'stonesOwned': stonesOwned,
-    };
-  }
-
-  factory ChampionStatStones.fromMap(Map<String, dynamic> map) {
-    return ChampionStatStones(
-      championId: map['championId']?.toInt() ?? 0,
-      milestonesPassed: map['milestonesPassed']?.toInt() ?? 0,
-      stonesAvailable: map['stonesAvailable']?.toInt() ?? 0,
-      stonesIlluminated: map['stonesIlluminated']?.toInt() ?? 0,
-      stonesOwned: map['stonesOwned']?.toInt() ?? 0,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory ChampionStatStones.fromJson(String source) => ChampionStatStones.fromMap(json.decode(source));
-
   @override
   String toString() {
     return 'ChampionStatStones(championId: $championId, milestonesPassed: $milestonesPassed, stonesAvailable: $stonesAvailable, stonesIlluminated: $stonesIlluminated, stonesOwned: $stonesOwned)';
@@ -88,4 +67,6 @@ class ChampionStatStones {
         stonesIlluminated.hashCode ^
         stonesOwned.hashCode;
   }
+
+  factory ChampionStatStones.fromJson(Map<String, dynamic> json) => _$ChampionStatStonesFromJson(json);
 }

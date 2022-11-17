@@ -1,5 +1,8 @@
-import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'champion_mastery.g.dart';
+
+@JsonSerializable(createToJson: false)
 class ChampionMastery {
   final int championId;
   final int championLevel;
@@ -44,32 +47,6 @@ class ChampionMastery {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'championId': championId,
-      'championLevel': championLevel,
-      'championPoints': championPoints,
-      'championPointsUntilNextLevel': championPointsUntilNextLevel,
-      'chestGranted': chestGranted,
-      'tokensEarned': tokensEarned,
-    };
-  }
-
-  factory ChampionMastery.fromMap(Map<String, dynamic> map) {
-    return ChampionMastery(
-      championId: map['championId']?.toInt() ?? 0,
-      championLevel: map['championLevel']?.toInt() ?? 0,
-      championPoints: map['championPoints']?.toInt() ?? 0,
-      championPointsUntilNextLevel: map['championPointsUntilNextLevel']?.toInt() ?? 0,
-      chestGranted: map['chestGranted'] ?? false,
-      tokensEarned: map['tokensEarned']?.toInt() ?? 0,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory ChampionMastery.fromJson(String source) => ChampionMastery.fromMap(json.decode(source));
-
   @override
   String toString() {
     return 'ChampionMastery(championId: $championId, championLevel: $championLevel, championPoints: $championPoints, championPointsUntilNextLevel: $championPointsUntilNextLevel, chestGranted: $chestGranted, tokensEarned: $tokensEarned)';
@@ -97,4 +74,6 @@ class ChampionMastery {
         chestGranted.hashCode ^
         tokensEarned.hashCode;
   }
+
+  factory ChampionMastery.fromJson(Map<String, dynamic> json) => _$ChampionMasteryFromJson(json);
 }

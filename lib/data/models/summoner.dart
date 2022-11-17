@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:champmastery/data/models/chest_eligibility.dart';
+import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
 
 class Summoner {
   final int accountId;
@@ -9,7 +7,7 @@ class Summoner {
   final int summonerLevel;
   final int xpSinceLastLevel;
   final int xpUntilNextLevel;
-  final ChestEligibility? chestEligibility;
+  final ChestEligibility chestEligibility;
 
   Summoner({
     required this.accountId,
@@ -18,36 +16,8 @@ class Summoner {
     required this.summonerLevel,
     required this.xpSinceLastLevel,
     required this.xpUntilNextLevel,
-    this.chestEligibility,
+    required this.chestEligibility,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'accountId': accountId,
-      'displayName': displayName,
-      'summonerId': summonerId,
-      'summonerLevel': summonerLevel,
-      'xpSinceLastLevel': xpSinceLastLevel,
-      'xpUntilNextLevel': xpUntilNextLevel,
-      'chestEligibility': chestEligibility?.toMap(),
-    };
-  }
-
-  factory Summoner.fromMap(Map<String, dynamic> map) {
-    return Summoner(
-      accountId: map['accountId']?.toInt() ?? 0,
-      displayName: map['displayName'] ?? '',
-      summonerId: map['summonerId']?.toInt() ?? 0,
-      summonerLevel: map['summonerLevel']?.toInt() ?? 0,
-      xpSinceLastLevel: map['xpSinceLastLevel']?.toInt() ?? 0,
-      xpUntilNextLevel: map['xpUntilNextLevel']?.toInt() ?? 0,
-      chestEligibility: map['chestEligibility'] != null ? ChestEligibility.fromMap(map['chestEligibility']) : null,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Summoner.fromJson(String source) => Summoner.fromMap(json.decode(source));
 
   Summoner copyWith({
     int? accountId,

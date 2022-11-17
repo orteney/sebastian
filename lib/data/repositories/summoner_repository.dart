@@ -1,5 +1,5 @@
-import 'package:champmastery/data/lcu.dart';
-import 'package:champmastery/data/models/summoner.dart';
+import 'package:sebastian/data/lcu/lcu.dart';
+import 'package:sebastian/data/models/summoner.dart';
 import 'package:rxdart/subjects.dart';
 
 class SummonerRepository {
@@ -12,10 +12,18 @@ class SummonerRepository {
   final _summonerSubject = BehaviorSubject<Summoner>();
 
   Future<Summoner> getCurrentSummoner() async {
-    final summoner = await lcu.getCurrentSummoner();
-    final chestEligibility = await lcu.getChestEligibility();
+    final dto = await lcu.service.getCurrentSummoner();
+    final chestEligibility = await lcu.service.getChestEligibility();
 
-    final updatedSummoner = summoner.copyWith(chestEligibility: chestEligibility);
+    final updatedSummoner = Summoner(
+      accountId: dto.accountId,
+      displayName: dto.displayName,
+      summonerId: dto.summonerId,
+      summonerLevel: dto.summonerLevel,
+      xpSinceLastLevel: dto.xpSinceLastLevel,
+      xpUntilNextLevel: dto.xpUntilNextLevel,
+      chestEligibility: chestEligibility,
+    );
 
     _summonerSubject.add(updatedSummoner);
 

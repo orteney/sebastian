@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import 'package:champmastery/di/di.dart';
-import 'package:champmastery/presentation/core/widgets/collection_tag.dart';
-import 'package:champmastery/presentation/core/widgets/mastery_tag.dart';
-import 'package:champmastery/presentation/core/widgets/unknown_bloc_state.dart';
+import 'package:sebastian/di/di.dart';
+import 'package:sebastian/presentation/core/widgets/collection_tag.dart';
+import 'package:sebastian/presentation/core/widgets/mastery_tag.dart';
+import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_disenchanter_bloc.dart';
 
@@ -284,11 +284,6 @@ class _SummaryDisenchantWidget extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                ),
-              ),
               onPressed: () =>
                   context.read<ChampionsDisenchanterBloc>().add(DisenchantSelectedChampionsDisenchanterEvent()),
               child: Column(

@@ -1,7 +1,7 @@
-name: champmastery
-description: A new Flutter project.
+name: sebastian
+description: League of legends assistant app.
 publish_to: "none"
-version: 2.4.0+1
+version: 3.0.0+1
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -13,37 +13,47 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  bloc: ^8.0.3
-  flutter_bloc: ^8.0.1
+  # DI
+  get_it: 7.2.0
 
-  rxdart: ^0.27.3
-  get_it: ^7.2.0
+  # Data
+  json_annotation: 4.7.0
 
-  #UI
-  data_table_2: ^2.3.5
+  # Presentation
+  bloc: 8.1.0
+  flutter_bloc: 8.1.1
 
-  #Utils
-  path: ^1.8.1
-  intl: ^0.17.0
-  meta: ^1.7.0
-  equatable: ^2.0.3
+  # UI
+  data_table_2: 2.3.8
 
-  #Plugins
-  shared_preferences: ^2.0.15
-  file_picker: ^5.0.0
-  package_info_plus: ^1.4.3+1
+  # Extensions
+  rxdart: 0.27.5
+
+  # Utils
+  intl: 0.17.0
+  path: 1.8.2
+  meta: 1.8.0
+  equatable: 2.0.5
+
+  # Plugins
+  shared_preferences: 2.0.15
+  file_picker: 5.2.2
+  package_info_plus: 3.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.0
-  build_runner: ^2.1.11
+  # Lints
+  flutter_lints: 2.0.1
+
+  # Codegen
+  build_runner: 2.3.2
+  json_serializable: 6.5.4
 
 flutter:
   generate: true
   uses-material-design: true
 
   assets:
-    - assets/champions_ru.json
     - assets/images/

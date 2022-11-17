@@ -1,5 +1,5 @@
-import 'package:champmastery/data/models/champion_mastery.dart';
-import 'package:champmastery/data/models/champion_stat_stones.dart';
+import 'package:sebastian/data/lcu/models/champion_mastery.dart';
+import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
 
 class Champion {
   final int id;

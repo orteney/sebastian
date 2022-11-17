@@ -4,10 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const _spLockfilePathKey = 'lockfilePath';
 
-class LcuStore {
+class LcuPathStorage {
   final SharedPreferences _sharedPreferences;
 
-  LcuStore(this._sharedPreferences);
+  LcuPathStorage(this._sharedPreferences);
 
   File? getLcuLockfile() {
     final path = _sharedPreferences.getString(_spLockfilePathKey);

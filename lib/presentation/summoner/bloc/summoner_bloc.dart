@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:champmastery/data/models/summoner.dart';
-import 'package:champmastery/data/repositories/summoner_repository.dart';
+import 'package:sebastian/data/models/summoner.dart';
+import 'package:sebastian/data/repositories/summoner_repository.dart';
 
 part 'summoner_event.dart';
 part 'summoner_state.dart';

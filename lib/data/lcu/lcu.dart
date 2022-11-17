@@ -2,27 +2,25 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:sebastian/data/lcu/lcu_service.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 import 'package:path/path.dart' as path;
 
-import 'package:champmastery/data/lcu_store.dart';
-import 'package:champmastery/data/models/champion_mastery.dart';
-import 'package:champmastery/data/models/champion_stat_stones.dart';
-import 'package:champmastery/data/models/chest_eligibility.dart';
-import 'package:champmastery/data/models/lcu_image.dart';
-import 'package:champmastery/data/models/loot.dart';
-import 'package:champmastery/data/models/summoner.dart';
-import 'package:champmastery/data/utils/proccess.dart';
+import 'package:sebastian/data/lcu/models/item_build.dart';
+import 'package:sebastian/data/lcu/lcu_path_storage.dart';
+import 'package:sebastian/data/utils/proccess.dart';
 
 class NoLockFilePathException implements Exception {}
 
 class LockFileNotFoundException implements Exception {}
 
 class LCU {
-  final LcuStore _lcuStore;
+  final LcuPathStorage _lcuStore;
 
   LCU(this._lcuStore);
+
+  LcuService? _service;
 
   late int _port;
   late HttpClient _restClient;
@@ -30,6 +28,9 @@ class LCU {
   late Stream<dynamic> _broadcastWebsocket;
 
   late String _authHeader;
+  late Directory _lolDirectory;
+
+  LcuService get service => _service != null ? _service! : throw Exception('Lcu unitialized');
 
   Future<void> init() async {
     var savedLockfile = _lcuStore.getLcuLockfile();
@@ -45,6 +46,8 @@ class LCU {
     if (!savedLockfile!.existsSync()) {
       throw LockFileNotFoundException();
     }
+
+    _lolDirectory = savedLockfile.parent;
 
     String content = savedLockfile.readAsStringSync();
     List<String> args = content.split(':');
@@ -69,6 +72,8 @@ class LCU {
     );
 
     _broadcastWebsocket = _websocket.asBroadcastStream();
+
+    _service = LcuService(_restClient, '127.0.0.1:$_port', _authHeader);
   }
 
   Future<bool> _tryFindRunningLolDirectory() async {
@@ -124,6 +129,16 @@ class LCU {
     return lockfileFile;
   }
 
+  Future<void> saveBuildFile(ItemBuild build) async {
+    final buildsFilePath = path.join(_lolDirectory.path, 'Config', 'Global', 'Recommended', '#sebastian_build.json');
+    final buildsFile = File(buildsFilePath);
+    if (!await buildsFile.exists()) {
+      await buildsFile.create(recursive: true);
+    }
+
+    await buildsFile.writeAsString(json.encode(build.toJson()));
+  }
+
   Stream<dynamic> subscribeToChampSelectEvent() {
     const eventName = 'OnJsonApiEvent_lol-champ-select_v1_session';
     _websocket.add('[5, "$eventName"]');
@@ -131,7 +146,7 @@ class LCU {
   }
 
   Stream<dynamic> subscribeToEndOfGameEvent() {
-    const eventName = 'OnJsonApiEvent_lol-end-of-game_v1_champion-mastery-updates';
+    const eventName = 'OnJsonApiEvent_lol-gameflow_v1_gameflow-phase';
     _websocket.add('[5, "$eventName"]');
     return _websocketEvent(eventName);
   }
@@ -153,96 +168,6 @@ class LCU {
         })
         .where((event) => event?.elementAt(1) == eventName)
         .map((event) => event?.elementAt(2));
-  }
-
-  Future<Summoner> getCurrentSummoner() async {
-    final response = await _request('GET', '/lol-summoner/v1/current-summoner');
-    return Summoner.fromMap(response);
-  }
-
-  Future<ChestEligibility> getChestEligibility() async {
-    final response = await _request('GET', '/lol-collections/v1/inventories/chest-eligibility');
-    return ChestEligibility.fromMap(response);
-  }
-
-  Future<List<ChampionMastery>> getChampionMasteryList(int summonerId) async {
-    final response = await _request(
-      'GET',
-      '/lol-collections/v1/inventories/$summonerId/champion-mastery',
-    );
-
-    if (response is List) {
-      return response.map((e) => ChampionMastery.fromMap(e)).toList();
-    } else {
-      return [];
-    }
-  }
-
-  Future<List<ChampionStatStones>> getChampionStatStones() async {
-    final response = await _request('GET', '/lol-statstones/v2/player-summary-self');
-
-    if (response is List) {
-      return response.map((e) => ChampionStatStones.fromMap(e)).toList();
-    } else {
-      return [];
-    }
-  }
-
-  Future<List<Loot>> getPlayerLoot() async {
-    final response = await _request('GET', '/lol-loot/v1/player-loot');
-
-    if (response is List) {
-      return response.map((e) => Loot.fromMap(e)).toList();
-    } else {
-      return [];
-    }
-  }
-
-  Future<void> disenchantChampion(String lootId, int count) async {
-    return _request(
-      'POST',
-      '/lol-loot/v1/recipes/CHAMPION_RENTAL_disenchant/craft?repeat=$count',
-      body: [lootId],
-    );
-  }
-
-  Future<dynamic> _request(
-    String method,
-    String endpoint, {
-    dynamic body,
-  }) async {
-    HttpClientRequest req = await _restClient.openUrl(method, Uri.parse('https://127.0.0.1:$_port$endpoint'));
-
-    req.headers.set(HttpHeaders.acceptHeader, 'application/json');
-    req.headers.set(HttpHeaders.contentTypeHeader, 'application/json');
-    req.headers.set(HttpHeaders.authorizationHeader, _authHeader);
-
-    if (body != null) req.add(json.fuse(utf8).encode(body));
-
-    final response = await req.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    _logRequest(req, response, responseBody);
-
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Lcu error (code: ${response.statusCode}): $responseBody');
-    }
-
-    return json.decode(responseBody.isEmpty ? '{}' : responseBody);
-  }
-
-  void _logRequest(HttpClientRequest request, HttpClientResponse response, String responseBody) {
-    if (kDebugMode) {
-      print('${request.method} ${request.uri}: ${response.statusCode}');
-      print(responseBody);
-    }
-  }
-
-  LcuImage getLcuImage(String path) {
-    return LcuImage(
-      url: 'https://127.0.0.1:$_port$path',
-      headers: {'Authorization': _authHeader},
-    );
   }
 
   void close() {

@@ -1,8 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'pick_session.g.dart';
+
+@JsonSerializable(createToJson: false)
 class PickSession {
   final List<BenchChampion> benchChampions;
   final List<TeamPick> myTeam;
@@ -30,25 +33,6 @@ class PickSession {
     );
   }
 
-  factory PickSession.fromMap(Map<String, dynamic> map) {
-    return PickSession(
-      benchChampions: List<BenchChampion>.from(
-        (map['benchChampions'] as List).map<BenchChampion>(
-          (x) => BenchChampion.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      myTeam: List<TeamPick>.from(
-        (map['myTeam'] as List).map<TeamPick>(
-          (x) => TeamPick.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      isCustomGame: map['isCustomGame'] as bool,
-      benchEnabled: map['benchEnabled'] as bool,
-    );
-  }
-
-  factory PickSession.fromJson(String source) => PickSession.fromMap(json.decode(source) as Map<String, dynamic>);
-
   @override
   String toString() {
     return 'PickSession(benchChampions: $benchChampions, myTeam: $myTeam, isCustomGame: $isCustomGame, benchEnabled: $benchEnabled)';
@@ -69,8 +53,11 @@ class PickSession {
   int get hashCode {
     return benchChampions.hashCode ^ myTeam.hashCode ^ isCustomGame.hashCode ^ benchEnabled.hashCode;
   }
+
+  factory PickSession.fromJson(Map<String, dynamic> json) => _$PickSessionFromJson(json);
 }
 
+@JsonSerializable(createToJson: false)
 class BenchChampion {
   final int championId;
 
@@ -78,62 +65,74 @@ class BenchChampion {
     required this.championId,
   });
 
-  factory BenchChampion.fromMap(Map<String, dynamic> map) {
-    return BenchChampion(
-      championId: map['championId'] as int,
-    );
+  @override
+  bool operator ==(covariant BenchChampion other) {
+    if (identical(this, other)) return true;
+
+    return other.championId == championId;
   }
 
-  factory BenchChampion.fromJson(String source) => BenchChampion.fromMap(json.decode(source) as Map<String, dynamic>);
+  @override
+  int get hashCode => championId.hashCode;
+
+  factory BenchChampion.fromJson(Map<String, dynamic> json) => _$BenchChampionFromJson(json);
 }
 
+///Example
+///{
+///     "assignedPosition": "bottom",
+///     "cellId": 5,
+///     "championId": 202,
+///     "championPickIntent": 0,
+///     "entitledFeatureType": "NONE",
+///     "nameVisibilityType": "VISIBLE",
+///     "puuid": "706b2484-6d02-5de3-906a-073f0b98fc2a",
+///     "selectedSkinId": 202000,
+///     "spell1Id": 4,
+///     "spell2Id": 3,
+///     "summonerId": 2649717133772256,
+///     "team": 2,
+///     "wardSkinId": -1
+///   }
+@JsonSerializable(createToJson: false)
 class TeamPick {
   final int summonerId;
   final int championId;
+  final String? assignedPosition;
 
-  TeamPick({
+  const TeamPick({
     required this.summonerId,
     required this.championId,
+    this.assignedPosition,
   });
 
   TeamPick copyWith({
     int? summonerId,
     int? championId,
+    String? assignedPosition,
   }) {
     return TeamPick(
       summonerId: summonerId ?? this.summonerId,
       championId: championId ?? this.championId,
+      assignedPosition: assignedPosition ?? this.assignedPosition,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'summonerId': summonerId,
-      'championId': championId,
-    };
-  }
-
-  factory TeamPick.fromMap(Map<String, dynamic> map) {
-    return TeamPick(
-      summonerId: map['summonerId']?.toInt() ?? 0,
-      championId: map['championId']?.toInt() ?? 0,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory TeamPick.fromJson(String source) => TeamPick.fromMap(json.decode(source));
+  @override
+  String toString() =>
+      'TeamPick(summonerId: $summonerId, championId: $championId, assignedPosition: $assignedPosition)';
 
   @override
-  String toString() => 'TeamPick(summonerId: $summonerId, championId: $championId)';
-
-  @override
-  bool operator ==(Object other) {
+  bool operator ==(covariant TeamPick other) {
     if (identical(this, other)) return true;
 
-    return other is TeamPick && other.summonerId == summonerId && other.championId == championId;
+    return other.summonerId == summonerId &&
+        other.championId == championId &&
+        other.assignedPosition == assignedPosition;
   }
 
   @override
-  int get hashCode => summonerId.hashCode ^ championId.hashCode;
+  int get hashCode => summonerId.hashCode ^ championId.hashCode ^ assignedPosition.hashCode;
+
+  factory TeamPick.fromJson(Map<String, dynamic> json) => _$TeamPickFromJson(json);
 }

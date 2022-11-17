@@ -24,10 +24,21 @@ class _AppVersionState extends State<AppVersion> {
 
   @override
   Widget build(BuildContext context) {
-    if (packageInfo == null) {
-      return const SizedBox.shrink();
-    } else {
-      return Text('Версия: ${packageInfo!.version}');
-    }
+    final theme = Theme.of(context);
+
+    return Stack(
+      children: [
+        Image.asset('assets/images/app_logo_version.png'),
+        if (packageInfo != null)
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Text(
+              'Версия: ${packageInfo!.version}',
+              style: theme.textTheme.bodySmall,
+            ),
+          ),
+      ],
+    );
   }
 }

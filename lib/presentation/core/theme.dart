@@ -4,15 +4,47 @@ ThemeData mainTheme() {
   final theme = ThemeData.from(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.red,
+      seedColor: const Color(0xFFF22222),
+      background: const Color(0xFF121212),
       brightness: Brightness.dark,
     ),
   );
 
   return theme.copyWith(
     progressIndicatorTheme: theme.progressIndicatorTheme.copyWith(
-      color: Colors.red,
+      color: const Color(0xFFF22222),
       linearTrackColor: theme.colorScheme.primary,
+    ),
+    snackBarTheme: theme.snackBarTheme.copyWith(
+      behavior: SnackBarBehavior.floating,
+    ),
+    popupMenuTheme: theme.popupMenuTheme.copyWith(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),
+    ),
+
+    // Button themes
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+      ),
     ),
   );
 }

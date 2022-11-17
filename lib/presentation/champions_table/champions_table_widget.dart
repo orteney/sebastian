@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:champmastery/data/models/champion.dart';
-import 'package:champmastery/di/di.dart';
-import 'package:champmastery/presentation/core/widgets/unknown_bloc_state.dart';
+import 'package:sebastian/data/models/champion.dart';
+import 'package:sebastian/di/di.dart';
+import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_table_bloc.dart';
 

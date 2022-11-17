@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "dev.orteney.champmastery" "\0"
-            VALUE "FileDescription", "champmastery" "\0"
+            VALUE "CompanyName", "dev.orteney.sebastian" "\0"
+            VALUE "FileDescription", "sebastian" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "champmastery" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 dev.orteney.champmastery. All rights reserved." "\0"
-            VALUE "OriginalFilename", "champmastery.exe" "\0"
-            VALUE "ProductName", "champmastery" "\0"
+            VALUE "InternalName", "sebastian" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 dev.orteney.sebastian. All rights reserved." "\0"
+            VALUE "OriginalFilename", "sebastian.exe" "\0"
+            VALUE "ProductName", "Sebastian" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

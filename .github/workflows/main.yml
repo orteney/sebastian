@@ -1,0 +1,51 @@
+name: Flutter CI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-release-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+          flutter-version: '3.3.8'
+      - name: Build artifacts
+        run: flutter build windows --release
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: Sebastian-${{github.ref_name}}-windows.zip
+          directory: build/windows/runner/Release
+      - name: Windows Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: build/windows/runner/Release/Sebastian-${{github.ref_name}}-windows.zip
+
+  build-and-release-macos:
+    runs-on: macos-12
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+          flutter-version: '3.3.8'
+      - name: Build artifacts
+        run: flutter build macos --release
+      - name: Archive Release
+        working-directory: build/macos/Build/Products/Release
+        run:  zip --symlinks -qr Sebastian-${{github.ref_name}}-macos.zip Sebastian.app
+      - name: macOS Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: build/macos/Build/Products/Release/Sebastian-${{github.ref_name}}-macos.zip

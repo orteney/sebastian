@@ -25,4 +25,5 @@ BenchChampion _$BenchChampionFromJson(Map<String, dynamic> json) =>
 TeamPick _$TeamPickFromJson(Map<String, dynamic> json) => TeamPick(
       summonerId: json['summonerId'] as int,
       championId: json['championId'] as int,
+      assignedPosition: json['assignedPosition'] as String?,
     );

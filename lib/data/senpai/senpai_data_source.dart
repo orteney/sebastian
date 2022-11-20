@@ -1,20 +1,13 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:sebastian/data/senpai/models/senpai_build.dart';
-import 'package:sebastian/data/senpai/models/senpai_champion.dart';
 import 'package:sebastian/data/utils/http_logger.dart';
 
 class SenpaiDataSource {
   final HttpClient _httpClient;
 
   SenpaiDataSource() : _httpClient = HttpClient();
-
-  Future<SenpaiChampion> fetchChampion(int championId) async {
-    final responseJson = await _request("api/v1/lol/champions/$championId/");
-    return SenpaiChampion.fromJson(responseJson);
-  }
 
   Future<SenpaiBuild> fetchAramBuild(int championId) async {
     final responseJson = await _request("api/v1/lol/champions/$championId/build/", {'queue_id': '450'});

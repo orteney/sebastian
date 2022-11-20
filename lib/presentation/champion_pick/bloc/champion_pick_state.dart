@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'champion_pick_bloc.dart';
 
 @immutable

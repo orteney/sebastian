@@ -25,5 +25,15 @@ BenchChampion _$BenchChampionFromJson(Map<String, dynamic> json) =>
 TeamPick _$TeamPickFromJson(Map<String, dynamic> json) => TeamPick(
       summonerId: json['summonerId'] as int,
       championId: json['championId'] as int,
-      assignedPosition: json['assignedPosition'] as String?,
+      championPickIntent: json['championPickIntent'] as int?,
+      assignedPosition:
+          $enumDecodeNullable(_$PickPositionEnumMap, json['assignedPosition']),
     );
+
+const _$PickPositionEnumMap = {
+  PickPosition.top: 'top',
+  PickPosition.jungle: 'jungle',
+  PickPosition.middle: 'middle',
+  PickPosition.bottom: 'bottom',
+  PickPosition.support: 'utility',
+};

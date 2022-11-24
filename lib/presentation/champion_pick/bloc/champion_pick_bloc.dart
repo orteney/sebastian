@@ -73,33 +73,33 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
       }
     }
 
-    if (myPick == null || myPick.championId <= 0) {
+    final championId = ((myPick?.championId ?? 0) > 0) ? myPick?.championId : myPick?.championPickIntent;
+    if (championId == null || championId <= 0) {
       return emit(NoPickedChampionPickState());
     }
 
     final state = this.state;
-
-    if (state is ActiveChampionPickState && myPick.championId == state.pickedChampion.id) {
+    if (state is ActiveChampionPickState && championId == state.pickedChampion.id) {
       //We are looking on same pick
       return;
     }
 
-    final champion = _championRepository.getChampion(myPick.championId);
+    final champion = _championRepository.getChampion(championId);
 
     SenpaiBuild? build;
     Role role;
 
     if (pickSession.benchEnabled) {
       //Aram flow
-      build = await _senpaiDataSource.fetchAramBuild(myPick.championId);
+      build = await _senpaiDataSource.fetchAramBuild(champion.id);
       role = Role.aram;
     } else {
-      Role? assignedRole = Role.fromPosition(myPick.assignedPosition);
+      Role? assignedRole = Role.fromPosition(myPick!.assignedPosition);
       try {
-        build = await _senpaiDataSource.fetchRoleBuild(myPick.championId, roleId: assignedRole?.roleId);
+        build = await _senpaiDataSource.fetchRoleBuild(champion.id, roleId: assignedRole?.roleId);
       } catch (e) {
         // Guard: no available build for pair champion - role
-        build = await _senpaiDataSource.fetchRoleBuild(myPick.championId);
+        build = await _senpaiDataSource.fetchRoleBuild(champion.id);
       }
       role = Role.fromId(build.numMatches.roleId);
     }

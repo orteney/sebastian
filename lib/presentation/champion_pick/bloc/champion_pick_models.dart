@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:sebastian/data/lcu/pick_session.dart';
+
 enum Role {
   toplane(4),
   jungler(3),
@@ -21,17 +23,17 @@ enum Role {
     return Role.aram;
   }
 
-  static Role? fromPosition(String? position) {
+  static Role? fromPosition(PickPosition? position) {
     switch (position) {
-      case 'top':
+      case PickPosition.top:
         return Role.toplane;
-      case 'jungle':
+      case PickPosition.jungle:
         return Role.jungler;
-      case 'middle':
+      case PickPosition.middle:
         return Role.midlane;
-      case 'bottom':
+      case PickPosition.bottom:
         return Role.botlane;
-      case 'support':
+      case PickPosition.support:
         return Role.support;
       default:
         return null;

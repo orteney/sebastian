@@ -97,29 +97,15 @@ class BenchChampion {
 class TeamPick {
   final int summonerId;
   final int championId;
-  final String? assignedPosition;
+  final int? championPickIntent;
+  final PickPosition? assignedPosition;
 
   const TeamPick({
     required this.summonerId,
     required this.championId,
+    required this.championPickIntent,
     this.assignedPosition,
   });
-
-  TeamPick copyWith({
-    int? summonerId,
-    int? championId,
-    String? assignedPosition,
-  }) {
-    return TeamPick(
-      summonerId: summonerId ?? this.summonerId,
-      championId: championId ?? this.championId,
-      assignedPosition: assignedPosition ?? this.assignedPosition,
-    );
-  }
-
-  @override
-  String toString() =>
-      'TeamPick(summonerId: $summonerId, championId: $championId, assignedPosition: $assignedPosition)';
 
   @override
   bool operator ==(covariant TeamPick other) {
@@ -127,11 +113,31 @@ class TeamPick {
 
     return other.summonerId == summonerId &&
         other.championId == championId &&
+        other.championPickIntent == championPickIntent &&
         other.assignedPosition == assignedPosition;
   }
 
   @override
-  int get hashCode => summonerId.hashCode ^ championId.hashCode ^ assignedPosition.hashCode;
+  int get hashCode {
+    return summonerId.hashCode ^ championId.hashCode ^ championPickIntent.hashCode ^ assignedPosition.hashCode;
+  }
 
   factory TeamPick.fromJson(Map<String, dynamic> json) => _$TeamPickFromJson(json);
+}
+
+enum PickPosition {
+  @JsonValue('top')
+  top,
+
+  @JsonValue('jungle')
+  jungle,
+
+  @JsonValue('middle')
+  middle,
+
+  @JsonValue('bottom')
+  bottom,
+
+  @JsonValue('utility')
+  support,
 }

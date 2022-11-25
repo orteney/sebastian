@@ -26,8 +26,9 @@ TeamPick _$TeamPickFromJson(Map<String, dynamic> json) => TeamPick(
       summonerId: json['summonerId'] as int,
       championId: json['championId'] as int,
       championPickIntent: json['championPickIntent'] as int?,
-      assignedPosition:
-          $enumDecodeNullable(_$PickPositionEnumMap, json['assignedPosition']),
+      assignedPosition: $enumDecodeNullable(
+          _$PickPositionEnumMap, json['assignedPosition'],
+          unknownValue: PickPosition.unknown),
     );
 
 const _$PickPositionEnumMap = {
@@ -36,4 +37,5 @@ const _$PickPositionEnumMap = {
   PickPosition.middle: 'middle',
   PickPosition.bottom: 'bottom',
   PickPosition.support: 'utility',
+  PickPosition.unknown: 'unknown',
 };

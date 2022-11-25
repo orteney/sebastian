@@ -98,6 +98,7 @@ class TeamPick {
   final int summonerId;
   final int championId;
   final int? championPickIntent;
+  @JsonKey(unknownEnumValue: PickPosition.unknown)
   final PickPosition? assignedPosition;
 
   const TeamPick({
@@ -140,4 +141,6 @@ enum PickPosition {
 
   @JsonValue('utility')
   support,
+
+  unknown,
 }

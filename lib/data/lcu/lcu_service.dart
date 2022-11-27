@@ -1,20 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:sebastian/data/lcu/models/item.dart';
-import 'package:sebastian/data/lcu/models/perk.dart';
-import 'package:sebastian/data/lcu/models/summoner_dto.dart';
-import 'package:sebastian/data/lcu/models/summoner_spell.dart';
 import 'package:flutter/foundation.dart' show compute;
 
 import 'package:sebastian/data/lcu/models/champion_dto.dart';
-import 'package:sebastian/data/lcu/models/lcu_error.dart';
-import 'package:sebastian/data/lcu/models/rune_page.dart';
 import 'package:sebastian/data/lcu/models/champion_mastery.dart';
 import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
 import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
-import 'package:sebastian/data/models/lcu_image.dart';
+import 'package:sebastian/data/lcu/models/item.dart';
+import 'package:sebastian/data/lcu/models/lcu_error.dart';
 import 'package:sebastian/data/lcu/models/loot.dart';
+import 'package:sebastian/data/lcu/models/perk.dart';
+import 'package:sebastian/data/lcu/models/rune_page.dart';
+import 'package:sebastian/data/lcu/models/summoner_dto.dart';
+import 'package:sebastian/data/lcu/models/summoner_spell.dart';
+import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/data/utils/http_logger.dart';
 
 class LcuService {
@@ -100,9 +100,12 @@ class LcuService {
     return _request('POST', '/lol-perks/v1/pages', body: page.toJson());
   }
 
-  Future<void> deleteCurrentPage() async {
-    final currentPage = await _request('GET', '/lol-perks/v1/currentpage');
-    return _request('DELETE', '/lol-perks/v1/pages/${currentPage['id']}');
+  Future<dynamic> getCurrentRunePage() {
+    return _request('GET', '/lol-perks/v1/currentpage');
+  }
+
+  Future<void> deleteRunePage(int id) async {
+    return _request('DELETE', '/lol-perks/v1/pages/$id');
   }
 
   Future<dynamic> _request(

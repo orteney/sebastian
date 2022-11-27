@@ -51,11 +51,18 @@ class LeagueClientEventRepository {
 
   Future<void> setRunePage(RunePage page) async {
     try {
+      final currentPage = await _lcu.service.getCurrentRunePage();
+      if ((currentPage['name'] as String).startsWith('[Sebby]')) {
+        await _lcu.service.deleteRunePage(currentPage['id']);
+      }
       await _lcu.service.postRunePage(page);
     } on LcuError catch (error) {
       if (error.message == 'Max pages reached') {
-        await _lcu.service.deleteCurrentPage();
+        final currentPage = await _lcu.service.getCurrentRunePage();
+        await _lcu.service.deleteRunePage(currentPage['id']);
         await _lcu.service.postRunePage(page);
+      } else {
+        rethrow;
       }
     }
   }

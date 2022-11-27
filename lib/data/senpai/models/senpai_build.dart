@@ -49,7 +49,7 @@ class SenpaiItemBuild {
   final List<int> finalBuild;
   final List<List<int>> buildPath;
   final List<int> spells;
-  final Runes runes;
+  final SenpaiRunes runes;
   final List<int> skillOrder;
   final List<int> skillPath;
   final List<int> situationalItems;
@@ -70,31 +70,31 @@ class SenpaiItemBuild {
 }
 
 @JsonSerializable(createToJson: false)
-class Runes {
+class SenpaiRunes {
   final int primaryPath;
   final int subPath;
-  final Tree tree;
+  final SenpaiRunesTree tree;
 
-  Runes({
+  SenpaiRunes({
     required this.primaryPath,
     required this.subPath,
     required this.tree,
   });
 
-  factory Runes.fromJson(Map<String, dynamic> json) => _$RunesFromJson(json);
+  factory SenpaiRunes.fromJson(Map<String, dynamic> json) => _$SenpaiRunesFromJson(json);
 }
 
 @JsonSerializable(createToJson: false)
-class Tree {
+class SenpaiRunesTree {
   final List<int> primary;
   final List<int> sub;
   final List<int> stat;
 
-  Tree({
+  SenpaiRunesTree({
     required this.primary,
     required this.sub,
     required this.stat,
   });
 
-  factory Tree.fromJson(Map<String, dynamic> json) => _$TreeFromJson(json);
+  factory SenpaiRunesTree.fromJson(Map<String, dynamic> json) => _$SenpaiRunesTreeFromJson(json);
 }

@@ -39,7 +39,7 @@ SenpaiItemBuild _$SenpaiItemBuildFromJson(Map<String, dynamic> json) =>
           .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
           .toList(),
       spells: (json['spells'] as List<dynamic>).map((e) => e as int).toList(),
-      runes: Runes.fromJson(json['runes'] as Map<String, dynamic>),
+      runes: SenpaiRunes.fromJson(json['runes'] as Map<String, dynamic>),
       skillOrder:
           (json['skillOrder'] as List<dynamic>).map((e) => e as int).toList(),
       skillPath:
@@ -49,13 +49,14 @@ SenpaiItemBuild _$SenpaiItemBuildFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Runes _$RunesFromJson(Map<String, dynamic> json) => Runes(
+SenpaiRunes _$SenpaiRunesFromJson(Map<String, dynamic> json) => SenpaiRunes(
       primaryPath: json['primaryPath'] as int,
       subPath: json['subPath'] as int,
-      tree: Tree.fromJson(json['tree'] as Map<String, dynamic>),
+      tree: SenpaiRunesTree.fromJson(json['tree'] as Map<String, dynamic>),
     );
 
-Tree _$TreeFromJson(Map<String, dynamic> json) => Tree(
+SenpaiRunesTree _$SenpaiRunesTreeFromJson(Map<String, dynamic> json) =>
+    SenpaiRunesTree(
       primary: (json['primary'] as List<dynamic>).map((e) => e as int).toList(),
       sub: (json['sub'] as List<dynamic>).map((e) => e as int).toList(),
       stat: (json['stat'] as List<dynamic>).map((e) => e as int).toList(),

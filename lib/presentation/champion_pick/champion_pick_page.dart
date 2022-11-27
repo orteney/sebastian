@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:sebastian/data/models/lcu_image.dart';
-import 'package:sebastian/data/senpai/models/senpai_build.dart';
+import 'package:sebastian/domain/builds/build_info.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_bloc.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_models.dart';
 import 'package:sebastian/presentation/core/widgets/blurry_container.dart';
@@ -221,7 +221,7 @@ class _BuildTab extends StatelessWidget {
     this.onTap,
   });
 
-  final SenpaiBuildInfo championBuild;
+  final BuildInfo championBuild;
   final LcuImage keyPerkIcon;
   final Color? color;
   final VoidCallback? onTap;

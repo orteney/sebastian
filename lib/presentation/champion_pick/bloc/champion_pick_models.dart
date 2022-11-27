@@ -9,9 +9,9 @@ enum Role {
   botlane(1),
   support(0),
 
-  aram(-1);
+  aram(null);
 
-  final int roleId;
+  final int? roleId;
 
   const Role(this.roleId);
 

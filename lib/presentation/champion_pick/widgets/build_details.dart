@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:sebastian/data/models/lcu_image.dart';
-import 'package:sebastian/data/senpai/models/senpai_build.dart';
+import 'package:sebastian/domain/builds/build_info.dart';
 import 'package:sebastian/presentation/core/widgets/blurry_container.dart';
 
 class BuildDetails extends StatelessWidget {
@@ -15,7 +15,7 @@ class BuildDetails extends StatelessWidget {
     required this.color,
   });
 
-  final SenpaiBuildInfo championBuild;
+  final BuildInfo championBuild;
   final Map<int, LcuImage> runesImages;
   final Map<int, LcuImage> itemImages;
   final Map<int, LcuImage> summonerSpellImages;
@@ -35,18 +35,18 @@ class BuildDetails extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _Runes(runes: championBuild.build.runes, runesImages: runesImages),
+                      _Runes(runes: championBuild.runes, runesImages: runesImages),
                       const SizedBox(width: 32),
-                      _SummonerSpells(spells: championBuild.build.spells, summonerSpellImages: summonerSpellImages),
+                      _SummonerSpells(spells: championBuild.summonerSpells, summonerSpellImages: summonerSpellImages),
                     ],
                   ),
                   const SizedBox(height: 32),
                   _SkillOrder(
-                    skillPath: championBuild.build.skillPath,
-                    skillOrder: championBuild.build.skillOrder,
+                    skillPath: championBuild.skillPath,
+                    skillOrder: championBuild.skillOrder,
                   ),
                   const SizedBox(height: 32),
-                  _Items(itemBuild: championBuild.build, itemImages: itemImages),
+                  _Items(itemBuild: championBuild.itemBuild, itemImages: itemImages),
                 ],
               )
             : Row(
@@ -60,23 +60,23 @@ class BuildDetails extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _Runes(runes: championBuild.build.runes, runesImages: runesImages),
+                            _Runes(runes: championBuild.runes, runesImages: runesImages),
                             const SizedBox(width: 32),
                             _SummonerSpells(
-                                spells: championBuild.build.spells, summonerSpellImages: summonerSpellImages),
+                                spells: championBuild.summonerSpells, summonerSpellImages: summonerSpellImages),
                           ],
                         ),
                         const SizedBox(height: 32),
                         _SkillOrder(
-                          skillPath: championBuild.build.skillPath,
-                          skillOrder: championBuild.build.skillOrder,
+                          skillPath: championBuild.skillPath,
+                          skillOrder: championBuild.skillOrder,
                         )
                       ],
                     ),
                   ),
                   Expanded(
                     flex: 4,
-                    child: _Items(itemBuild: championBuild.build, itemImages: itemImages),
+                    child: _Items(itemBuild: championBuild.itemBuild, itemImages: itemImages),
                   )
                 ],
               ),
@@ -116,15 +116,15 @@ class _Runes extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
-              children: runes.tree.primary.map(_getImage).toList(),
+              children: runes.primary.map(_getImage).toList(),
             ),
             const SizedBox(width: 8),
             Column(
-              children: runes.tree.sub.map(_getImage).toList(),
+              children: runes.sub.map(_getImage).toList(),
             ),
             const SizedBox(width: 8),
             Column(
-              children: runes.tree.stat.map(_getImage).toList(),
+              children: runes.stat.map(_getImage).toList(),
             ),
           ],
         ),
@@ -172,7 +172,7 @@ class _Items extends StatelessWidget {
     required this.itemImages,
   });
 
-  final SenpaiItemBuild itemBuild;
+  final ItemBuild itemBuild;
   final Map<int, LcuImage> itemImages;
 
   Widget _getImage(int itemId) {

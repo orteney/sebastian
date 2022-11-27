@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:sebastian/data/lcu/lcu.dart';
-import 'package:sebastian/data/lcu/models/item_build.dart';
+import 'package:sebastian/data/lcu/models/item_build.dart' as lcu;
 import 'package:sebastian/data/lcu/models/lcu_error.dart';
 import 'package:sebastian/data/lcu/models/rune_page.dart';
 import 'package:sebastian/data/lcu/pick_session.dart';
+import 'package:sebastian/domain/builds/build_info.dart';
 
 class LeagueClientEventRepository {
   final LCU _lcu;
@@ -49,7 +50,19 @@ class LeagueClientEventRepository {
     return _endGameSubject.stream;
   }
 
-  Future<void> setRunePage(RunePage page) async {
+  Future<void> setRunePage(String pageName, Runes runes) async {
+    final page = RunePage(
+      name: pageName,
+      primaryStyleId: runes.primaryPath,
+      subStyleId: runes.subPath,
+      current: true,
+      selectedPerkIds: [
+        ...runes.primary,
+        ...runes.sub,
+        ...runes.stat,
+      ],
+    );
+
     try {
       final currentPage = await _lcu.service.getCurrentRunePage();
       if ((currentPage['name'] as String).startsWith('[Sebby]')) {
@@ -67,14 +80,36 @@ class LeagueClientEventRepository {
     }
   }
 
-  Future<void> setItemBuild(ItemBuild build) async {
-    _clearUpgradableItems(build);
-    await _lcu.saveBuildFile(build);
+  Future<void> setItemBuild(String buildName, ItemBuild build) async {
+    final lcuBuild = lcu.ItemBuild(
+      title: buildName,
+      blocks: [
+        lcu.Block(
+          type: '[Sebby] Стартовые предметы',
+          items: build.startBuild.map((e) => lcu.Item(count: 1, id: e.toString())).toList(),
+        ),
+        lcu.Block(
+          type: '[Sebby] Основная сборка',
+          items: build.coreBuild.map((e) => lcu.Item(count: 1, id: e.toString())).toList(),
+        ),
+        lcu.Block(
+          type: '[Sebby] Финальная сборка',
+          items: build.finalBuild.map((e) => lcu.Item(count: 1, id: e.toString())).toList(),
+        ),
+        lcu.Block(
+          type: '[Sebby] Ситуативные предметы',
+          items: build.situationalItems.map((e) => lcu.Item(count: 1, id: e.toString())).toList(),
+        ),
+      ],
+    );
+
+    _clearUpgradableItems(lcuBuild);
+    await _lcu.saveBuildFile(lcuBuild);
   }
 
   /// Some items in builds appears in their final form which cannot be bought from the store
   /// so we shound replace them with
-  void _clearUpgradableItems(ItemBuild build) {
+  void _clearUpgradableItems(lcu.ItemBuild build) {
     for (var block in build.blocks) {
       for (var i = 0; i < block.items.length; i++) {
         final dowgradeItemId = _downgradeItemsMap[block.items[i].id];

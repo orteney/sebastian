@@ -11,7 +11,7 @@
             "count": {}
         }
     },
-    "matchesCount": "{count, plural, one{{count} матч} few{{count} матча} many{{count} матчей} other{{count} матчей}}",
+    "matchesCount": "{count, plural, one{{count} игра} few{{count} игры} many{{count} игр} other{{count} игр}}",
     "@matchesCount": {
         "placeholders": {
             "count": {}

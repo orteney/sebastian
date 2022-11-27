@@ -9,18 +9,22 @@ class NoPickedChampionPickState extends ChampionPickState {}
 
 class ActiveChampionPickState extends ChampionPickState with EquatableMixin {
   final Champion pickedChampion;
+  final LcuImage splashImage;
   final Role role;
   final List<SenpaiBuildInfo> builds;
   final int selectedBuildIndex;
+  final PerkStyle selectedPerkStyle;
   final Map<int, LcuImage> runesImages;
   final Map<int, LcuImage> itemImages;
   final Map<int, LcuImage> summonerSpellImages;
 
   ActiveChampionPickState({
     required this.pickedChampion,
+    required this.splashImage,
     required this.role,
     required this.builds,
     required this.selectedBuildIndex,
+    required this.selectedPerkStyle,
     required this.runesImages,
     required this.itemImages,
     required this.summonerSpellImages,
@@ -29,9 +33,11 @@ class ActiveChampionPickState extends ChampionPickState with EquatableMixin {
   @override
   List<Object?> get props => [
         pickedChampion,
+        splashImage,
         role,
         builds,
         selectedBuildIndex,
+        selectedPerkStyle,
         runesImages,
         itemImages,
         summonerSpellImages,
@@ -39,18 +45,22 @@ class ActiveChampionPickState extends ChampionPickState with EquatableMixin {
 
   ActiveChampionPickState copyWith({
     Champion? pickedChampion,
+    LcuImage? splashImage,
     Role? role,
     List<SenpaiBuildInfo>? builds,
     int? selectedBuildIndex,
+    PerkStyle? selectedPerkStyle,
     Map<int, LcuImage>? runesImages,
     Map<int, LcuImage>? itemImages,
     Map<int, LcuImage>? summonerSpellImages,
   }) {
     return ActiveChampionPickState(
       pickedChampion: pickedChampion ?? this.pickedChampion,
+      splashImage: splashImage ?? this.splashImage,
       role: role ?? this.role,
       builds: builds ?? this.builds,
       selectedBuildIndex: selectedBuildIndex ?? this.selectedBuildIndex,
+      selectedPerkStyle: selectedPerkStyle ?? this.selectedPerkStyle,
       runesImages: runesImages ?? this.runesImages,
       itemImages: itemImages ?? this.itemImages,
       summonerSpellImages: summonerSpellImages ?? this.summonerSpellImages,

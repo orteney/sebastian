@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart' show listEquals;
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'pick_session.g.dart';

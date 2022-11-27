@@ -1,9 +1,10 @@
 import 'package:rxdart/rxdart.dart';
 
 import 'package:sebastian/data/lcu/lcu.dart';
-import 'package:sebastian/data/models/champion.dart';
 import 'package:sebastian/data/lcu/models/champion_mastery.dart';
 import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
+import 'package:sebastian/data/models/champion.dart';
+import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/data/utils/cyrillic_comparator.dart';
 
 class ChampionRepository {
@@ -79,5 +80,11 @@ class ChampionRepository {
 
   Champion getChampion(int championId) {
     return champions.firstWhere((element) => element.id == championId);
+  }
+
+  LcuImage getSplashImage(int championId) {
+    return lcu.service.getLcuImage(
+      '/lol-game-data/assets/v1/champion-splashes/$championId/${championId}000.jpg',
+    );
   }
 }

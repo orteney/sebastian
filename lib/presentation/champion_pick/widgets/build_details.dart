@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/data/senpai/models/senpai_build.dart';
+import 'package:sebastian/presentation/core/widgets/blurry_container.dart';
 
 class BuildDetails extends StatelessWidget {
   const BuildDetails({
@@ -23,7 +24,7 @@ class BuildDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return BlurryContainer(
       color: color,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -31,14 +32,19 @@ class BuildDetails extends StatelessWidget {
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _Runes(runes: championBuild.build.runes, runesImages: runesImages),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _Runes(runes: championBuild.build.runes, runesImages: runesImages),
+                      const SizedBox(width: 32),
+                      _SummonerSpells(spells: championBuild.build.spells, summonerSpellImages: summonerSpellImages),
+                    ],
+                  ),
                   const SizedBox(height: 32),
                   _SkillOrder(
                     skillPath: championBuild.build.skillPath,
                     skillOrder: championBuild.build.skillOrder,
                   ),
-                  const SizedBox(height: 32),
-                  _SummonerSpells(spells: championBuild.build.spells, summonerSpellImages: summonerSpellImages),
                   const SizedBox(height: 32),
                   _Items(itemBuild: championBuild.build, itemImages: itemImages),
                 ],
@@ -51,7 +57,15 @@ class BuildDetails extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _Runes(runes: championBuild.build.runes, runesImages: runesImages),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _Runes(runes: championBuild.build.runes, runesImages: runesImages),
+                            const SizedBox(width: 32),
+                            _SummonerSpells(
+                                spells: championBuild.build.spells, summonerSpellImages: summonerSpellImages),
+                          ],
+                        ),
                         const SizedBox(height: 32),
                         _SkillOrder(
                           skillPath: championBuild.build.skillPath,
@@ -62,14 +76,7 @@ class BuildDetails extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 4,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _SummonerSpells(spells: championBuild.build.spells, summonerSpellImages: summonerSpellImages),
-                        const SizedBox(height: 32),
-                        _Items(itemBuild: championBuild.build, itemImages: itemImages),
-                      ],
-                    ),
+                    child: _Items(itemBuild: championBuild.build, itemImages: itemImages),
                   )
                 ],
               ),
@@ -149,7 +156,7 @@ class _SummonerSpells extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Заклинания призывателя', style: Theme.of(context).textTheme.titleMedium),
+        Text('Самонерки', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 12),
         Row(
           children: spells.map((e) => _getImage(summonerSpellImages[e]!)).toList(),
@@ -294,7 +301,7 @@ class _SkillContainer extends StatelessWidget {
           ? Center(
               child: Text(
                 skillKey,
-                style: const TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false),
               ),
             )

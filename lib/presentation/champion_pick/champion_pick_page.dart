@@ -7,6 +7,7 @@ import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/data/senpai/models/senpai_build.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_bloc.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_models.dart';
+import 'package:sebastian/presentation/core/widgets/blurry_container.dart';
 import 'package:sebastian/presentation/core/widgets/role_tag.dart';
 import 'package:sebastian/presentation/core/widgets/snackbar_presenter.dart';
 import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
@@ -64,66 +65,82 @@ class _ActiveChampionPickWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedBuild = state.builds[state.selectedBuildIndex];
-    final selectedPerkStyle = PerkStyle.fromId(selectedBuild.build.runes.primaryPath);
+    return Ink(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          colorFilter: const ColorFilter.mode(
+            Color(0x80000000),
+            BlendMode.srcOver,
+          ),
+          image: NetworkImage(
+            state.splashImage.url,
+            headers: state.splashImage.headers,
+          ),
+        ),
+      ),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      state.pickedChampion.name,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(width: 16),
+                    _RoleTag(role: state.role),
+                    const SizedBox(width: 16),
+                    OutlinedButton.icon(
+                      onPressed: () => context.read<ChampionPickBloc>().add(TapImportBuildChampionPickEvent()),
+                      icon: const Icon(Icons.file_upload_rounded),
+                      label: const Text('ИМПОРТИРОВАТЬ'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: List.generate(
+                    state.builds.length,
+                    (index) {
+                      final build = state.builds[index];
 
-    return Align(
-      alignment: Alignment.topLeft,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    state.pickedChampion.name,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: _BuildTab(
+                          keyPerkIcon: state.runesImages[build.keystoneId]!,
+                          championBuild: build,
+                          color: index == state.selectedBuildIndex ? state.selectedPerkStyle.color : null,
+                          onTap: () =>
+                              context.read<ChampionPickBloc>().add(TapAvailableBuildTabChampionPickEvent(index)),
+                        ),
+                      );
+                    },
                   ),
-                  const SizedBox(width: 16),
-                  _RoleTag(role: state.role),
-                  const SizedBox(width: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => context.read<ChampionPickBloc>().add(TapImportBuildChampionPickEvent()),
-                    icon: const Icon(Icons.file_upload_rounded),
-                    label: const Text('ИМПОРТИРОВАТЬ'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: List.generate(
-                  state.builds.length,
-                  (index) {
-                    final build = state.builds[index];
-
-                    return _BuildTab(
-                      keyPerkIcon: state.runesImages[build.keystoneId]!,
-                      championBuild: build,
-                      color: index == state.selectedBuildIndex ? selectedPerkStyle.color : null,
-                      onTap: () => context.read<ChampionPickBloc>().add(TapAvailableBuildTabChampionPickEvent(index)),
+                ),
+                const SizedBox(height: 8),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    return BuildDetails(
+                      singleColumn: constraints.maxWidth < 720,
+                      championBuild: state.builds[state.selectedBuildIndex],
+                      runesImages: state.runesImages,
+                      itemImages: state.itemImages,
+                      summonerSpellImages: state.summonerSpellImages,
+                      color: state.selectedPerkStyle.color,
                     );
                   },
                 ),
-              ),
-              const SizedBox(height: 8),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  return BuildDetails(
-                    singleColumn: constraints.maxWidth < 720,
-                    championBuild: state.builds[state.selectedBuildIndex],
-                    runesImages: state.runesImages,
-                    itemImages: state.itemImages,
-                    summonerSpellImages: state.summonerSpellImages,
-                    color: selectedPerkStyle.color,
-                  );
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -148,7 +165,7 @@ class _RoleTag extends StatelessWidget {
       );
     }
 
-    const iconSize = Size(32, 32);
+    const iconSize = Size(24, 24);
 
     return DropdownButton<Role>(
       value: role,
@@ -214,10 +231,13 @@ class _BuildTab extends StatelessWidget {
     final appLocalizations = AppLocalizations.of(context)!;
     final textStyle = Theme.of(context).textTheme.bodyMedium;
 
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      color: color,
+    const borderRadius = BorderRadius.all(Radius.circular(12));
+
+    return BlurryContainer(
+      color: color ?? Colors.transparent,
+      borderRadius: borderRadius,
       child: InkWell(
+        borderRadius: borderRadius,
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 8, left: 8, right: 12),

@@ -111,9 +111,11 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
 
     emit(ActiveChampionPickState(
       pickedChampion: champion,
+      splashImage: _championRepository.getSplashImage(champion.id),
       role: role,
       builds: builds,
       selectedBuildIndex: 0,
+      selectedPerkStyle: PerkStyle.fromId(builds[0].build.runes.primaryPath),
       runesImages: _getPerksImages(builds),
       itemImages: _getItemImages(builds),
       summonerSpellImages: _getSummonerSpellImages(builds),
@@ -206,7 +208,10 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     final state = this.state as ActiveChampionPickState;
     if (state.selectedBuildIndex == event.pickedIndex) return;
 
-    emit(state.copyWith(selectedBuildIndex: event.pickedIndex));
+    emit(state.copyWith(
+      selectedBuildIndex: event.pickedIndex,
+      selectedPerkStyle: PerkStyle.fromId(state.builds[event.pickedIndex].build.runes.primaryPath),
+    ));
   }
 
   Future<void> _onTapImportBuildChampionPickEvent(

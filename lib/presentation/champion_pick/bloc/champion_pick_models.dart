@@ -42,12 +42,30 @@ enum Role {
 }
 
 enum PerkStyle {
-  precision(8000, Color(0xFF362A1B)),
-  domination(8100, Color(0xFF35191E)),
-  sorcery(8200, Color(0xFF1D1A2C)),
-  inspiration(8300, Color(0xFF1F2E2F)),
-  resolve(8400, Color(0xFF1F221A)),
-  unknown(0, Color(0xFF363030));
+  precision(
+    8000,
+    Color(0x1AFFC229),
+  ),
+  domination(
+    8100,
+    Color(0x1AF51849),
+  ),
+  sorcery(
+    8200,
+    Color(0x1A001CD5),
+  ),
+  inspiration(
+    8300,
+    Color(0x1A14E7F3),
+  ),
+  resolve(
+    8400,
+    Color(0x1A34FD5F),
+  ),
+  unknown(
+    0,
+    Color(0x1AFFFFFF),
+  );
 
   const PerkStyle(this.id, this.color);
 

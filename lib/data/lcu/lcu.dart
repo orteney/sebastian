@@ -151,6 +151,12 @@ class LCU {
     return _websocketEvent(eventName);
   }
 
+  Stream<dynamic> subscribeToReadyCheckEvent() {
+    const eventName = 'OnJsonApiEvent_lol-matchmaking_v1_ready-check';
+    _websocket.add('[5, "$eventName"]');
+    return _websocketEvent(eventName);
+  }
+
   Stream<dynamic> _websocketEvent(String eventName) {
     return _broadcastWebsocket
         .map((event) {

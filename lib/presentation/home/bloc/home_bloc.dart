@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 
 import 'package:sebastian/data/lcu/lcu.dart';
 import 'package:sebastian/data/lcu/lcu_path_storage.dart';
@@ -39,11 +40,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<StartHomeEvent>(_onStartHomeEvent);
     on<PickLolPathHomeEvent>(_onPickLolPathHomeEvent);
     on<LoadCurrentSummonerInfoHomeEvent>(_onLoadCurrentSummonerInfoHomeEvent);
-    on<EndGameHomeEvent>(_onEndGameHomeEvent);
     on<TapDestinationHomeEvent>(_onTapDestinationHomeEvent);
+    on<ToggleAutoAcceptHomeEvent>(_onToggleAutoAcceptHomeEvent);
   }
 
-  StreamSubscription? _pickSessionSubscription;
+  StreamSubscription? _readyCheckEventSubscription;
   StreamSubscription? _gameEndEventSubscription;
 
   Future<void> _onStartHomeEvent(StartHomeEvent event, Emitter<HomeState> emit) async {
@@ -91,19 +92,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(LoadedHomeState(
         summonerId: summoner.summonerId,
         destination: Destination.mastery,
+        autoAcceptEnabled: false,
       ));
 
-      _gameEndEventSubscription ??= _leagueClientEventRepository.observeGameEndEvent().listen((event) {
-        add(EndGameHomeEvent());
-      });
+      _subscribeToEvents();
     } catch (e) {
       emit(ErrorHomeState(message: e.toString()));
     }
   }
 
-  Future<void> _onEndGameHomeEvent(EndGameHomeEvent event, Emitter<HomeState> emit) async {
-    final summoner = await _summonerRepository.getCurrentSummoner();
-    await _championRepository.updateChampions(summoner.summonerId);
+  void _subscribeToEvents() {
+    _gameEndEventSubscription ??= _leagueClientEventRepository.observeGameEndEvent().listen((event) async {
+      if (state is! LoadedHomeState) return;
+
+      final summoner = await _summonerRepository.getCurrentSummoner();
+      await _championRepository.updateChampions(summoner.summonerId);
+    });
+
+    _readyCheckEventSubscription ??= _leagueClientEventRepository.observeReadyCheckEvent().listen((event) async {
+      if (state is! LoadedHomeState) return;
+
+      if ((state as LoadedHomeState).autoAcceptEnabled) {
+        if (event.timer >= 2 && event.state == 'InProgress' && event.playerResponse == 'None') {
+          await _lcu.service.acceptReadyCheck();
+        }
+      }
+    });
   }
 
   void _onTapDestinationHomeEvent(TapDestinationHomeEvent event, Emitter<HomeState> emit) {
@@ -116,9 +130,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(state.copyWith(destination: event.destination));
   }
 
+  void _onToggleAutoAcceptHomeEvent(ToggleAutoAcceptHomeEvent event, Emitter<HomeState> emit) {
+    if (this.state is! LoadedHomeState) return;
+
+    final state = this.state as LoadedHomeState;
+    emit(state.copyWith(autoAcceptEnabled: !state.autoAcceptEnabled));
+  }
+
   @override
   Future<void> close() {
-    _pickSessionSubscription?.cancel();
+    _readyCheckEventSubscription?.cancel();
     _gameEndEventSubscription?.cancel();
     _lcu.close();
     return super.close();

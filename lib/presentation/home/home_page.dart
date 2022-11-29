@@ -93,7 +93,10 @@ class HomePage extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    NavigationDrawer(currentDestination: state.destination),
+                    NavigationDrawer(
+                      currentDestination: state.destination,
+                      autoAcceptGame: state.autoAcceptEnabled,
+                    ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8),
@@ -122,9 +125,11 @@ class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({
     super.key,
     required this.currentDestination,
+    required this.autoAcceptGame,
   });
 
   final Destination currentDestination;
+  final bool autoAcceptGame;
 
   @override
   Widget build(BuildContext context) {
@@ -143,9 +148,25 @@ class NavigationDrawer extends StatelessWidget {
           Card(
             elevation: 0,
             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: NavigationMenuItem(
-              destination: Destination.championPick,
-              isChecked: Destination.championPick == currentDestination,
+            child: Column(
+              children: [
+                NavigationMenuItem(
+                  destination: Destination.championPick,
+                  isChecked: Destination.championPick == currentDestination,
+                ),
+                ListTile(
+                  contentPadding: const EdgeInsets.only(left: 16),
+                  title: const Tooltip(
+                    message: 'Себастьян постарается нажать кнопку "Принять" вместо вас',
+                    child: Text('Принять игру ?'),
+                  ),
+                  style: ListTileStyle.drawer,
+                  trailing: Switch(
+                    value: autoAcceptGame,
+                    onChanged: (value) => context.read<HomeBloc>().add(ToggleAutoAcceptHomeEvent()),
+                  ),
+                ),
+              ],
             ),
           ),
           Card(

@@ -24,6 +24,23 @@ ThemeData mainTheme() {
       ),
     ),
 
+    switchTheme: theme.switchTheme.copyWith(
+      thumbColor: MaterialStateProperty.resolveWith(
+        (states) {
+          if (states.contains(MaterialState.selected)) {
+            return theme.colorScheme.primary;
+          }
+          return null;
+        },
+      ),
+      trackColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return theme.colorScheme.primary.withAlpha(0x80);
+        }
+        return null;
+      }),
+    ),
+
     // Button themes
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(

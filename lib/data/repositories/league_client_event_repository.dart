@@ -5,6 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sebastian/data/lcu/lcu.dart';
 import 'package:sebastian/data/lcu/models/item_build.dart' as lcu;
 import 'package:sebastian/data/lcu/models/lcu_error.dart';
+import 'package:sebastian/data/lcu/models/ready_check_event.dart';
 import 'package:sebastian/data/lcu/models/rune_page.dart';
 import 'package:sebastian/data/lcu/pick_session.dart';
 import 'package:sebastian/domain/builds/build_info.dart';
@@ -16,9 +17,11 @@ class LeagueClientEventRepository {
 
   final _pickSessionSubject = BehaviorSubject<PickSession?>.seeded(null);
   final _endGameSubject = PublishSubject<bool>();
+  final _readyCheckSubject = PublishSubject<ReadyCheckEvent>();
 
   StreamSubscription? _pickSessionSubcription;
   StreamSubscription? _endGameSubscription;
+  StreamSubscription? _readyCheckSubscription;
 
   Stream<PickSession?> observePickSession() {
     _pickSessionSubcription ??= _lcu
@@ -48,6 +51,17 @@ class LeagueClientEventRepository {
     });
 
     return _endGameSubject.stream;
+  }
+
+  Stream<ReadyCheckEvent> observeReadyCheckEvent() {
+    _readyCheckSubscription ??= _lcu.subscribeToReadyCheckEvent().listen((event) {
+      if (event['eventType'] != 'Update') return;
+
+      final readyCheckEvent = ReadyCheckEvent.fromJson(event['data']);
+      _readyCheckSubject.add(readyCheckEvent);
+    });
+
+    return _readyCheckSubject.stream;
   }
 
   Future<void> setRunePage(String pageName, Runes runes) async {

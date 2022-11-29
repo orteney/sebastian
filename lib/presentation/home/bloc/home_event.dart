@@ -14,10 +14,10 @@ class PickLolPathHomeEvent extends HomeEvent {
 
 class LoadCurrentSummonerInfoHomeEvent extends HomeEvent {}
 
-class EndGameHomeEvent extends HomeEvent {}
-
 class TapDestinationHomeEvent extends HomeEvent {
   final Destination destination;
 
   TapDestinationHomeEvent(this.destination);
 }
+
+class ToggleAutoAcceptHomeEvent extends HomeEvent {}

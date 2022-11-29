@@ -108,6 +108,10 @@ class LcuService {
     return _request('DELETE', '/lol-perks/v1/pages/$id');
   }
 
+  Future<void> acceptReadyCheck() {
+    return _request('POST', '/lol-matchmaking/v1/ready-check/accept');
+  }
+
   Future<dynamic> _request(
     String method,
     String endpoint, {

@@ -122,9 +122,11 @@ class _AvailableChests extends StatelessWidget {
         children: [
           for (int i = 0; i < chests.maximumChests; i++)
             CustomPaint(
-              size: const Size(30, 30),
+              size: const Size(24, 24),
               painter: ChestIconPainter(
-                color: i + 1 > chests.earnableChests ? theme.disabledColor : const Color(0xFFCDBE91),
+                color: i + 1 > chests.earnableChests
+                    ? theme.colorScheme.onSurface.withOpacity(0.38)
+                    : const Color(0xFFCDBE91),
               ),
             ),
         ],

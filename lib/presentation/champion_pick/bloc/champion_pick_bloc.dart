@@ -20,7 +20,7 @@ import 'package:sebastian/presentation/core/bloc/bloc_mixins.dart';
 part 'champion_pick_event.dart';
 part 'champion_pick_state.dart';
 
-class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with ErrorStream {
+class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with ErrorStream, StreamSubscriptions {
   final int _summonerId;
   final LeagueClientEventRepository _leagueClientEventRepository;
 
@@ -29,8 +29,6 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
   final ItemsRepository _itemsRepository;
   final SpellsRepository _spellsRepository;
   final BuildRepository _buildRepository;
-
-  StreamSubscription? _pickSessionSubscription;
 
   ChampionPickBloc(
     this._summonerId,
@@ -46,9 +44,10 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     on<TapImportBuildChampionPickEvent>(_onTapImportBuildChampionPickEvent);
     on<SelectRoleChampionPickEvent>(_onSelectRoleChampionPickEvent);
 
-    _pickSessionSubscription ??= _leagueClientEventRepository.observePickSession().listen((event) {
-      add(PickSessionUpdatedChampionPickEvent(pickSession: event));
-    });
+    _leagueClientEventRepository
+        .observePickSession()
+        .listen((event) => add(PickSessionUpdatedChampionPickEvent(pickSession: event)))
+        .addTo(subscriptions);
   }
 
   Future<void> _onPickSessionUpdatedChampionPickEvent(
@@ -56,9 +55,8 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     Emitter<ChampionPickState> emit,
   ) async {
     if (event.pickSession == null) {
+      // Continue display current build until new pick session arrives
       return;
-      //TODO
-      return emit(NoActiveChampionPickState());
     }
 
     final pickSession = event.pickSession!;
@@ -77,37 +75,58 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     }
 
     final state = this.state;
-    if (state is ActiveChampionPickState && championId == state.pickedChampion.id) {
-      //We are looking on same pick
-      return;
+    Role? previousRole;
+    if (state is ActiveChampionPickState) {
+      if (championId == state.pickedChampion.id) {
+        //We are looking on same pick
+        return;
+      }
+
+      previousRole = state.role;
     }
 
     final champion = _championRepository.getChampion(championId);
 
-    List<BuildInfo>? builds;
-    Role role;
-
-    if (pickSession.benchEnabled || pickSession.isCustomGame) {
+    Builds builds;
+    if (pickSession.benchEnabled) {
       //Aram flow
       builds = await _buildRepository.getAramBuilds(champion.id);
-      role = Role.aram;
     } else {
-      Role? assignedRole = Role.fromPosition(myPick!.assignedPosition);
-      builds = await _buildRepository.getBuilds(champion.id, roleId: assignedRole?.roleId);
-      role = Role.fromId(builds.first.roleId);
+      builds = await _buildRepository.getBuilds(
+        champion.id,
+        role: previousRole ?? _getRoleFromPickPosition(myPick?.assignedPosition),
+      );
     }
 
     emit(ActiveChampionPickState(
       pickedChampion: champion,
       splashImage: _championRepository.getSplashImage(champion.id),
-      role: role,
-      builds: builds,
+      role: builds.role,
+      builds: builds.builds,
       selectedBuildIndex: 0,
-      selectedPerkStyle: PerkStyle.fromId(builds[0].runes.primaryPath),
-      runesImages: _getPerksImages(builds),
-      itemImages: _getItemImages(builds),
-      summonerSpellImages: _getSummonerSpellImages(builds),
+      selectedPerkStyle: PerkStyle.fromId(builds.builds[0].runes.primaryPath),
+      runesImages: _getPerksImages(builds.builds),
+      itemImages: _getItemImages(builds.builds),
+      summonerSpellImages: _getSummonerSpellImages(builds.builds),
     ));
+  }
+
+  Role? _getRoleFromPickPosition(PickPosition? position) {
+    switch (position) {
+      case PickPosition.top:
+        return Role.top;
+      case PickPosition.jungle:
+        return Role.jungle;
+      case PickPosition.middle:
+        return Role.mid;
+      case PickPosition.bottom:
+        return Role.adc;
+      case PickPosition.support:
+        return Role.support;
+      case PickPosition.unknown:
+      default:
+        return null;
+    }
   }
 
   Future<void> _onSelectRoleChampionPickEvent(
@@ -123,16 +142,16 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     try {
       final builds = await _buildRepository.getBuilds(
         state.pickedChampion.id,
-        roleId: event.pickedRole.roleId,
+        role: event.pickedRole,
       );
 
       emit(state.copyWith(
-        role: event.pickedRole,
-        builds: builds,
+        role: builds.role,
+        builds: builds.builds,
         selectedBuildIndex: 0,
-        runesImages: _getPerksImages(builds),
-        itemImages: _getItemImages(builds),
-        summonerSpellImages: _getSummonerSpellImages(builds),
+        runesImages: _getPerksImages(builds.builds),
+        itemImages: _getItemImages(builds.builds),
+        summonerSpellImages: _getSummonerSpellImages(builds.builds),
       ));
     } catch (e, stackTrace) {
       // Бывает такое, что для выбранной пары чемпион-роль нету билда
@@ -210,11 +229,5 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     final name = '[Sebby] ${state.pickedChampion.name}';
     _leagueClientEventRepository.setRunePage(name, build.runes);
     _leagueClientEventRepository.setItemBuild(name, build.itemBuild);
-  }
-
-  @override
-  Future<void> close() {
-    _pickSessionSubscription?.cancel();
-    return super.close();
   }
 }

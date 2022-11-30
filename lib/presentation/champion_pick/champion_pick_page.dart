@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/domain/builds/build_info.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_bloc.dart';
-import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_models.dart';
 import 'package:sebastian/presentation/core/widgets/blurry_container.dart';
 import 'package:sebastian/presentation/core/widgets/role_tag.dart';
 import 'package:sebastian/presentation/core/widgets/snackbar_presenter.dart';
@@ -149,7 +148,7 @@ class _ActiveChampionPickWidget extends StatelessWidget {
 }
 
 class _RoleTag extends StatelessWidget {
-  final Role role;
+  final Role? role;
 
   const _RoleTag({
     required this.role,
@@ -158,7 +157,7 @@ class _RoleTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    if (role == Role.aram) {
+    if (role == null) {
       return Text(
         'ARAM',
         style: TextStyle(color: theme.colorScheme.primary),
@@ -174,28 +173,28 @@ class _RoleTag extends StatelessWidget {
       onChanged: (role) => context.read<ChampionPickBloc>().add(SelectRoleChampionPickEvent(role!)),
       items: const [
         DropdownMenuItem(
-          value: Role.toplane,
+          value: Role.top,
           child: CustomPaint(
             size: iconSize,
             painter: PositionTopPainter(),
           ),
         ),
         DropdownMenuItem(
-          value: Role.jungler,
+          value: Role.jungle,
           child: CustomPaint(
             size: iconSize,
             painter: PositionJunglePainter(),
           ),
         ),
         DropdownMenuItem(
-          value: Role.midlane,
+          value: Role.mid,
           child: CustomPaint(
             size: iconSize,
             painter: PositionMidPainter(),
           ),
         ),
         DropdownMenuItem(
-          value: Role.botlane,
+          value: Role.adc,
           child: CustomPaint(
             size: iconSize,
             painter: PositionBotPainter(),

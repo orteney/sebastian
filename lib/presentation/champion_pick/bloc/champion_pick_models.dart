@@ -1,46 +1,5 @@
 import 'dart:ui';
 
-import 'package:sebastian/data/lcu/pick_session.dart';
-
-enum Role {
-  toplane(4),
-  jungler(3),
-  midlane(2),
-  botlane(1),
-  support(0),
-
-  aram(null);
-
-  final int? roleId;
-
-  const Role(this.roleId);
-
-  static Role fromId(int? id) {
-    for (var role in Role.values) {
-      if (role.roleId == id) return role;
-    }
-
-    return Role.aram;
-  }
-
-  static Role? fromPosition(PickPosition? position) {
-    switch (position) {
-      case PickPosition.top:
-        return Role.toplane;
-      case PickPosition.jungle:
-        return Role.jungler;
-      case PickPosition.middle:
-        return Role.midlane;
-      case PickPosition.bottom:
-        return Role.botlane;
-      case PickPosition.support:
-        return Role.support;
-      default:
-        return null;
-    }
-  }
-}
-
 enum PerkStyle {
   precision(
     8000,

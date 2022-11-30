@@ -10,7 +10,7 @@ class NoPickedChampionPickState extends ChampionPickState {}
 class ActiveChampionPickState extends ChampionPickState with EquatableMixin {
   final Champion pickedChampion;
   final LcuImage splashImage;
-  final Role role;
+  final Role? role;
   final List<BuildInfo> builds;
   final int selectedBuildIndex;
   final PerkStyle selectedPerkStyle;

@@ -1,43 +1,60 @@
-import 'package:sebastian/data/senpai/models/senpai_build.dart';
-import 'package:sebastian/data/senpai/senpai_build_mapper.dart';
-import 'package:sebastian/data/senpai/senpai_data_source.dart';
+import 'package:sebastian/data/blitz/blitz_build_mapper.dart';
+import 'package:sebastian/data/blitz/blitz_data_source.dart';
+import 'package:sebastian/data/blitz/models/request_variables.dart';
 import 'package:sebastian/domain/builds/build_info.dart';
 
 class BuildRepository {
-  final SenpaiDataSource _senpaiDataSource;
-  final SenpaiBuildMapper _senpaiBuildMapper;
+  final BlitzDataSource _blitzDataSource;
+  final BlitzBuildMapper _blitzBuildMapper;
 
   BuildRepository(
-    this._senpaiDataSource,
-    this._senpaiBuildMapper,
+    this._blitzDataSource,
+    this._blitzBuildMapper,
   );
 
-  Future<List<BuildInfo>> getBuilds(int championId, {int? roleId}) async {
+  Future<Builds> getBuilds(int championId, {Role? role}) async {
     final builds = <BuildInfo>[];
 
-    List<SenpaiBuildInfo> senpaiBuilds;
+    BlitzRole? blitzRole = _blitzRoleMap[role];
+    blitzRole ??= await _blitzDataSource.getPrimaryRole(championId);
 
-    try {
-      senpaiBuilds = await _senpaiDataSource.fetchRoleBuild(championId, roleId: roleId);
-    } catch (e) {
-      if (roleId != null) {
-        // No available build for pair champion - role, request without specified role
-        senpaiBuilds = await _senpaiDataSource.fetchRoleBuild(championId);
-      } else {
-        // Senpai or network error
-        senpaiBuilds = [];
-      }
-    }
+    final blitzBuilds = await _blitzDataSource.getBuilds(
+      RequestVariables(
+        queue: Queue.rankedSolo5X5,
+        role: blitzRole,
+        championId: championId,
+      ),
+    );
 
-    builds.addAll(senpaiBuilds.map<BuildInfo>(_senpaiBuildMapper));
-    return builds;
+    builds.addAll(blitzBuilds.data.championBuildStats.builds.map<BuildInfo>(_blitzBuildMapper));
+
+    return Builds(
+      role: role ?? _blitzRoleMap.entries.firstWhere((element) => element.value == blitzRole).key,
+      builds: builds,
+    );
   }
 
-  Future<List<BuildInfo>> getAramBuilds(int championId) async {
+  static const _blitzRoleMap = {
+    Role.top: BlitzRole.top,
+    Role.jungle: BlitzRole.jungle,
+    Role.mid: BlitzRole.mid,
+    Role.adc: BlitzRole.adc,
+    Role.support: BlitzRole.support,
+  };
+
+  Future<Builds> getAramBuilds(int championId) async {
     final builds = <BuildInfo>[];
 
-    final senpaiBuilds = await _senpaiDataSource.fetchAramBuild(championId);
-    builds.addAll(senpaiBuilds.map<BuildInfo>(_senpaiBuildMapper));
-    return builds;
+    final blitzBuilds = await _blitzDataSource.getAramBuilds(
+      RequestVariables(
+        queue: Queue.howlingAbyssAram,
+        championId: championId,
+      ),
+    );
+    builds.addAll(blitzBuilds.data.championBuildStats.builds.map<BuildInfo>(_blitzBuildMapper));
+
+    return Builds(
+      builds: builds,
+    );
   }
 }

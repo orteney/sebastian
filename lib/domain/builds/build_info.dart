@@ -1,5 +1,22 @@
+class Builds {
+  final Role? role;
+  final List<BuildInfo> builds;
+
+  Builds({
+    this.role,
+    required this.builds,
+  });
+}
+
+enum Role {
+  top,
+  jungle,
+  mid,
+  adc,
+  support,
+}
+
 class BuildInfo {
-  final int? roleId;
   final int keystoneId;
   final double winRate;
   final int numMatches;
@@ -10,7 +27,6 @@ class BuildInfo {
   final List<int> skillPath;
 
   BuildInfo({
-    this.roleId,
     required this.keystoneId,
     required this.winRate,
     required this.numMatches,

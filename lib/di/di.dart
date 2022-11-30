@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:sebastian/data/blitz/blitz_build_mapper.dart';
+import 'package:sebastian/data/blitz/blitz_data_source.dart';
 import 'package:sebastian/data/lcu/lcu.dart';
 import 'package:sebastian/data/lcu/lcu_path_storage.dart';
 import 'package:sebastian/data/repositories/build_repository.dart';
@@ -10,8 +12,6 @@ import 'package:sebastian/data/repositories/league_client_event_repository.dart'
 import 'package:sebastian/data/repositories/perks_repository.dart';
 import 'package:sebastian/data/repositories/spells_repository.dart';
 import 'package:sebastian/data/repositories/summoner_repository.dart';
-import 'package:sebastian/data/senpai/senpai_build_mapper.dart';
-import 'package:sebastian/data/senpai/senpai_data_source.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -22,8 +22,8 @@ Future<void> initDi() async {
 
   getIt.registerLazySingleton<LCU>(() => LCU(getIt()));
 
-  getIt.registerFactory(() => SenpaiDataSource());
-  getIt.registerFactory(() => SenpaiBuildMapper());
+  getIt.registerFactory(() => BlitzDataSource());
+  getIt.registerFactory(() => BlitzBuildMapper());
 
   getIt.registerLazySingleton<SummonerRepository>(() => SummonerRepository(lcu: getIt()));
   getIt.registerLazySingleton<ChampionRepository>(() => ChampionRepository(lcu: getIt()));

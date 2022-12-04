@@ -28,19 +28,19 @@ dependencies:
   data_table_2: 2.3.8
 
   # Extensions
-  rxdart: 0.27.5
+  rxdart: 0.27.7
 
   # Utils
-  intl: 0.17.0
-  path: 1.8.2
-  meta: 1.8.0
   equatable: 2.0.5
+  intl: #Resolved by flutter_localizations
+  path: #Resolved by Flutter
+  meta: #Resolved by Flutter
   collection: #Resolved by Flutter
 
   # Plugins
   shared_preferences: 2.0.15
-  file_picker: 5.2.2
-  package_info_plus: 3.0.1
+  file_picker: 5.2.3
+  package_info_plus: 3.0.2
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,5 @@
+import 'package:sebastian/domain/core/role.dart';
+
 class Builds {
   final Role? role;
   final List<BuildInfo> builds;
@@ -6,14 +8,6 @@ class Builds {
     this.role,
     required this.builds,
   });
-}
-
-enum Role {
-  top,
-  jungle,
-  mid,
-  adc,
-  support,
 }
 
 class BuildInfo {

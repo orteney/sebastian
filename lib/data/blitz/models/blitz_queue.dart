@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-enum Queue {
+enum BlitzQueue {
   @JsonValue('CLASH_SR')
   clashSr,
 

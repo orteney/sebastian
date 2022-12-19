@@ -4,4 +4,5 @@ enum Destination {
   championPick,
   mastery,
   disenchanter,
+  stats,
 }

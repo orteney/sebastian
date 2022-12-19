@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
 import 'package:sebastian/data/models/summoner.dart';
 import 'package:sebastian/di/di.dart';
-import 'package:sebastian/presentation/core/widgets/chest_icon.dart';
+import 'package:sebastian/presentation/core/widgets/icons/chest_icon.dart';
 
 import 'bloc/summoner_bloc.dart';
 
@@ -121,13 +121,11 @@ class _AvailableChests extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           for (int i = 0; i < chests.maximumChests; i++)
-            CustomPaint(
+            ChestIcon(
               size: const Size(24, 24),
-              painter: ChestIconPainter(
-                color: i + 1 > chests.earnableChests
-                    ? theme.colorScheme.onSurface.withOpacity(0.38)
-                    : const Color(0xFFCDBE91),
-              ),
+              color: i + 1 > chests.earnableChests
+                  ? theme.colorScheme.onSurface.withOpacity(0.38)
+                  : const Color(0xFFCDBE91),
             ),
         ],
       ),

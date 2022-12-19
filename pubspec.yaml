@@ -25,7 +25,7 @@ dependencies:
   flutter_bloc: 8.1.1
 
   # UI
-  data_table_2: 2.3.8
+  data_table_2: 2.3.10
 
   # Extensions
   rxdart: 0.27.7
@@ -39,7 +39,7 @@ dependencies:
 
   # Plugins
   shared_preferences: 2.0.15
-  file_picker: 5.2.3
+  file_picker: 5.2.4
   package_info_plus: 3.0.2
 
 dev_dependencies:

@@ -6,7 +6,7 @@ part of 'request_variables.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Map<String, dynamic> _$RequestVariablesToJson(RequestVariables instance) {
+Map<String, dynamic> _$BuildRequestVariablesToJson(BuildRequestVariables instance) {
   final val = <String, dynamic>{
     'queue': _$QueueEnumMap[instance.queue]!,
     'region': instance.region,
@@ -26,15 +26,15 @@ Map<String, dynamic> _$RequestVariablesToJson(RequestVariables instance) {
 }
 
 const _$QueueEnumMap = {
-  Queue.clashSr: 'CLASH_SR',
-  Queue.howlingAbyssAram: 'HOWLING_ABYSS_ARAM',
-  Queue.howlingAbyssPoroKing: 'HOWLING_ABYSS_PORO_KING',
-  Queue.rankedFlexSr: 'RANKED_FLEX_SR',
-  Queue.rankedSolo5X5: 'RANKED_SOLO_5X5',
-  Queue.summonersRiftArurf: 'SUMMONERS_RIFT_ARURF',
-  Queue.summonersRiftBlindPick: 'SUMMONERS_RIFT_BLIND_PICK',
-  Queue.summonersRiftDraftPick: 'SUMMONERS_RIFT_DRAFT_PICK',
-  Queue.summonersRiftUrf: 'SUMMONERS_RIFT_URF',
+  BlitzQueue.clashSr: 'CLASH_SR',
+  BlitzQueue.howlingAbyssAram: 'HOWLING_ABYSS_ARAM',
+  BlitzQueue.howlingAbyssPoroKing: 'HOWLING_ABYSS_PORO_KING',
+  BlitzQueue.rankedFlexSr: 'RANKED_FLEX_SR',
+  BlitzQueue.rankedSolo5X5: 'RANKED_SOLO_5X5',
+  BlitzQueue.summonersRiftArurf: 'SUMMONERS_RIFT_ARURF',
+  BlitzQueue.summonersRiftBlindPick: 'SUMMONERS_RIFT_BLIND_PICK',
+  BlitzQueue.summonersRiftDraftPick: 'SUMMONERS_RIFT_DRAFT_PICK',
+  BlitzQueue.summonersRiftUrf: 'SUMMONERS_RIFT_URF',
 };
 
 const _$BlitzRoleEnumMap = {
@@ -44,3 +44,8 @@ const _$BlitzRoleEnumMap = {
   BlitzRole.support: 'SUPPORT',
   BlitzRole.top: 'TOP',
 };
+
+Map<String, dynamic> _$AllChampionsStatsRequestVariablesToJson(AllChampionsStatsRequestVariables instance) =>
+    <String, dynamic>{
+      'queue': _$QueueEnumMap[instance.queue]!,
+    };

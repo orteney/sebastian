@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sebastian/domain/core/role.dart';
 
 part 'pick_session.g.dart';
 
@@ -127,19 +128,23 @@ class TeamPick {
 
 enum PickPosition {
   @JsonValue('top')
-  top,
+  top(Role.top),
 
   @JsonValue('jungle')
-  jungle,
+  jungle(Role.jungle),
 
   @JsonValue('middle')
-  middle,
+  middle(Role.mid),
 
   @JsonValue('bottom')
-  bottom,
+  bottom(Role.adc),
 
   @JsonValue('utility')
-  support,
+  support(Role.support),
 
-  unknown,
+  unknown(null);
+
+  final Role? role;
+
+  const PickPosition(this.role);
 }

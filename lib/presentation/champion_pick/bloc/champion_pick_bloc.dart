@@ -14,6 +14,7 @@ import 'package:sebastian/data/repositories/league_client_event_repository.dart'
 import 'package:sebastian/data/repositories/perks_repository.dart';
 import 'package:sebastian/data/repositories/spells_repository.dart';
 import 'package:sebastian/domain/builds/build_info.dart';
+import 'package:sebastian/domain/core/role.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_models.dart';
 import 'package:sebastian/presentation/core/bloc/bloc_mixins.dart';
 
@@ -94,7 +95,7 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     } else {
       builds = await _buildRepository.getBuilds(
         champion.id,
-        role: previousRole ?? _getRoleFromPickPosition(myPick?.assignedPosition),
+        role: previousRole ?? myPick?.assignedPosition?.role,
       );
     }
 
@@ -109,24 +110,6 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
       itemImages: _getItemImages(builds.builds),
       summonerSpellImages: _getSummonerSpellImages(builds.builds),
     ));
-  }
-
-  Role? _getRoleFromPickPosition(PickPosition? position) {
-    switch (position) {
-      case PickPosition.top:
-        return Role.top;
-      case PickPosition.jungle:
-        return Role.jungle;
-      case PickPosition.middle:
-        return Role.mid;
-      case PickPosition.bottom:
-        return Role.adc;
-      case PickPosition.support:
-        return Role.support;
-      case PickPosition.unknown:
-      default:
-        return null;
-    }
   }
 
   Future<void> _onSelectRoleChampionPickEvent(

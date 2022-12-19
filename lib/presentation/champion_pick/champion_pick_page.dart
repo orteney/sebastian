@@ -5,9 +5,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/domain/builds/build_info.dart';
+import 'package:sebastian/domain/core/role.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_bloc.dart';
 import 'package:sebastian/presentation/core/widgets/blurry_container.dart';
-import 'package:sebastian/presentation/core/widgets/role_tag.dart';
+import 'package:sebastian/presentation/core/widgets/icons/role_icon.dart';
 import 'package:sebastian/presentation/core/widgets/snackbar_presenter.dart';
 import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
@@ -164,49 +165,17 @@ class _RoleTag extends StatelessWidget {
       );
     }
 
-    const iconSize = Size(24, 24);
-
     return DropdownButton<Role>(
       value: role,
       underline: const SizedBox.shrink(),
       borderRadius: const BorderRadius.all(Radius.circular(8)),
       onChanged: (role) => context.read<ChampionPickBloc>().add(SelectRoleChampionPickEvent(role!)),
-      items: const [
-        DropdownMenuItem(
-          value: Role.top,
-          child: CustomPaint(
-            size: iconSize,
-            painter: PositionTopPainter(),
+      items: [
+        for (var role in Role.values)
+          DropdownMenuItem(
+            value: role,
+            child: RoleIcon(role: role),
           ),
-        ),
-        DropdownMenuItem(
-          value: Role.jungle,
-          child: CustomPaint(
-            size: iconSize,
-            painter: PositionJunglePainter(),
-          ),
-        ),
-        DropdownMenuItem(
-          value: Role.mid,
-          child: CustomPaint(
-            size: iconSize,
-            painter: PositionMidPainter(),
-          ),
-        ),
-        DropdownMenuItem(
-          value: Role.adc,
-          child: CustomPaint(
-            size: iconSize,
-            painter: PositionBotPainter(),
-          ),
-        ),
-        DropdownMenuItem(
-          value: Role.support,
-          child: CustomPaint(
-            size: iconSize,
-            painter: PositionSupportPainter(),
-          ),
-        ),
       ],
     );
   }

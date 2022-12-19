@@ -1,18 +1,28 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:sebastian/domain/core/role.dart';
+
 enum BlitzRole {
   @JsonValue('ADC')
-  adc,
+  adc(Role.adc),
 
   @JsonValue('JUNGLE')
-  jungle,
+  jungle(Role.jungle),
 
   @JsonValue('MID')
-  mid,
+  mid(Role.mid),
 
   @JsonValue('SUPPORT')
-  support,
+  support(Role.support),
 
   @JsonValue('TOP')
-  top,
+  top(Role.top);
+
+  final Role role;
+
+  const BlitzRole(this.role);
+
+  factory BlitzRole.fromRole(Role role) {
+    return BlitzRole.values.firstWhere((element) => element.role == role);
+  }
 }

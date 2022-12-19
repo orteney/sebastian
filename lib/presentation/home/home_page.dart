@@ -7,6 +7,7 @@ import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_bloc.dar
 import 'package:sebastian/presentation/champion_pick/champion_pick_page.dart';
 import 'package:sebastian/presentation/champions_disenchanter/champions_disenchanter_widget.dart';
 import 'package:sebastian/presentation/champions_table/champions_table_widget.dart';
+import 'package:sebastian/presentation/champions_tier_list/champions_tier_list_widget.dart';
 import 'package:sebastian/presentation/core/widgets/app_version.dart';
 import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 import 'package:sebastian/presentation/summoner/summoner_widget.dart';
@@ -77,6 +78,9 @@ class HomePage extends StatelessWidget {
                   break;
                 case Destination.disenchanter:
                   body = const ChampionsDisenchanterWidget();
+                  break;
+                case Destination.stats:
+                  body = const ChampionsTierListWidget();
                   break;
               }
 
@@ -179,6 +183,10 @@ class NavigationDrawer extends StatelessWidget {
                   isChecked: Destination.mastery == currentDestination,
                 ),
                 NavigationMenuItem(
+                  destination: Destination.stats,
+                  isChecked: Destination.stats == currentDestination,
+                ),
+                NavigationMenuItem(
                   destination: Destination.disenchanter,
                   isChecked: Destination.disenchanter == currentDestination,
                 ),
@@ -219,6 +227,8 @@ class NavigationMenuItem extends StatelessWidget {
       case Destination.championPick:
         name = 'ТЕКУЩАЯ ИГРА';
         break;
+      case Destination.stats:
+        name = 'СТАТИСТИКА';
     }
 
     return ListTile(

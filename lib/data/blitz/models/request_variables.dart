@@ -1,23 +1,23 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'package:sebastian/data/blitz/models/queue.dart';
+import 'package:sebastian/data/blitz/models/blitz_queue.dart';
 import 'package:sebastian/data/blitz/models/role.dart';
 
-export 'package:sebastian/data/blitz/models/queue.dart';
+export 'package:sebastian/data/blitz/models/blitz_queue.dart';
 export 'package:sebastian/data/blitz/models/role.dart';
 
 part 'request_variables.g.dart';
 
 @JsonSerializable(createFactory: false, includeIfNull: false)
-class RequestVariables {
-  final Queue queue;
+class BuildRequestVariables {
+  final BlitzQueue queue;
   final String region;
   final String tier;
   final BlitzRole? role;
   final int championId;
   final int? opponentChampionId;
 
-  RequestVariables({
+  BuildRequestVariables({
     required this.queue,
     this.region = 'WORLD',
     this.tier = 'PLATINUM_PLUS',
@@ -26,5 +26,14 @@ class RequestVariables {
     this.opponentChampionId,
   });
 
-  Map<String, dynamic> toJson() => _$RequestVariablesToJson(this);
+  Map<String, dynamic> toJson() => _$BuildRequestVariablesToJson(this);
+}
+
+@JsonSerializable(createFactory: false, includeIfNull: false)
+class AllChampionsStatsRequestVariables {
+  final BlitzQueue queue;
+
+  AllChampionsStatsRequestVariables(this.queue);
+
+  Map<String, dynamic> toJson() => _$AllChampionsStatsRequestVariablesToJson(this);
 }

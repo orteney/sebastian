@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import 'package:sebastian/di/di.dart';
-import 'package:sebastian/presentation/core/widgets/collection_tag.dart';
-import 'package:sebastian/presentation/core/widgets/mastery_tag.dart';
+import 'package:sebastian/presentation/core/widgets/icons/collection_tag.dart';
+import 'package:sebastian/presentation/core/widgets/icons/mastery_tag.dart';
 import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_disenchanter_bloc.dart';

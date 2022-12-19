@@ -1,16 +1,4 @@
 {
-    "championsTableStonesCount": "{count, plural, one{{count} вечный} few{{count} вечных} many{{count} вечных} other{{count} вечных}}",
-    "@championsTableStonesCount": {
-        "placeholders": {
-            "count": {}
-        }
-    },
-    "championsTableMilestonesCount": "{count, plural, one{{count} веха} few{{count} вехи} many{{count} вех} other{{count} вех}}",
-    "@championsTableMilestonesCount": {
-        "placeholders": {
-            "count": {}
-        }
-    },
     "matchesCount": "{count, plural, one{{count} игра} few{{count} игры} many{{count} игр} other{{count} игр}}",
     "@matchesCount": {
         "placeholders": {

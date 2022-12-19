@@ -1,8 +1,48 @@
 import 'package:flutter/widgets.dart';
 
-//Copy this CustomPainter code to the Bottom of the File
-class PositionTopPainter extends CustomPainter {
-  const PositionTopPainter();
+import 'package:sebastian/domain/core/role.dart';
+
+class RoleIcon extends StatelessWidget {
+  const RoleIcon({
+    super.key,
+    required this.role,
+    this.size = const Size(24, 24),
+  });
+
+  final Role role;
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    final CustomPainter painter;
+
+    switch (role) {
+      case Role.top:
+        painter = const _PositionTopPainter();
+        break;
+      case Role.jungle:
+        painter = const _PositionJunglePainter();
+        break;
+      case Role.mid:
+        painter = const _PositionMidPainter();
+        break;
+      case Role.adc:
+        painter = const _PositionBotPainter();
+        break;
+      case Role.support:
+        painter = const _PositionSupportPainter();
+        break;
+    }
+
+    return CustomPaint(
+      size: size,
+      painter: painter,
+    );
+  }
+}
+
+class _PositionTopPainter extends CustomPainter {
+  const _PositionTopPainter();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -46,8 +86,8 @@ class PositionTopPainter extends CustomPainter {
   }
 }
 
-class PositionJunglePainter extends CustomPainter {
-  const PositionJunglePainter();
+class _PositionJunglePainter extends CustomPainter {
+  const _PositionJunglePainter();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -105,8 +145,8 @@ class PositionJunglePainter extends CustomPainter {
   }
 }
 
-class PositionMidPainter extends CustomPainter {
-  const PositionMidPainter();
+class _PositionMidPainter extends CustomPainter {
+  const _PositionMidPainter();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -152,8 +192,8 @@ class PositionMidPainter extends CustomPainter {
   }
 }
 
-class PositionSupportPainter extends CustomPainter {
-  const PositionSupportPainter();
+class _PositionSupportPainter extends CustomPainter {
+  const _PositionSupportPainter();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -202,8 +242,8 @@ class PositionSupportPainter extends CustomPainter {
   }
 }
 
-class PositionBotPainter extends CustomPainter {
-  const PositionBotPainter();
+class _PositionBotPainter extends CustomPainter {
+  const _PositionBotPainter();
 
   @override
   void paint(Canvas canvas, Size size) {

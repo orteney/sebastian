@@ -2,6 +2,7 @@ import 'package:sebastian/data/blitz/blitz_build_mapper.dart';
 import 'package:sebastian/data/blitz/blitz_data_source.dart';
 import 'package:sebastian/data/blitz/models/request_variables.dart';
 import 'package:sebastian/domain/builds/build_info.dart';
+import 'package:sebastian/domain/core/role.dart';
 
 class BuildRepository {
   final BlitzDataSource _blitzDataSource;
@@ -15,43 +16,35 @@ class BuildRepository {
   Future<Builds> getBuilds(int championId, {Role? role}) async {
     final builds = <BuildInfo>[];
 
-    BlitzRole? blitzRole = _blitzRoleMap[role];
+    BlitzRole? blitzRole = role != null ? BlitzRole.fromRole(role) : null;
     blitzRole ??= await _blitzDataSource.getPrimaryRole(championId);
 
     final blitzBuilds = await _blitzDataSource.getBuilds(
-      RequestVariables(
-        queue: Queue.rankedSolo5X5,
+      BuildRequestVariables(
+        queue: BlitzQueue.rankedSolo5X5,
         role: blitzRole,
         championId: championId,
       ),
     );
 
-    builds.addAll(blitzBuilds.data.championBuildStats.builds.map<BuildInfo>(_blitzBuildMapper));
+    builds.addAll(blitzBuilds.map<BuildInfo>(_blitzBuildMapper));
 
     return Builds(
-      role: role ?? _blitzRoleMap.entries.firstWhere((element) => element.value == blitzRole).key,
+      role: role ?? blitzRole.role,
       builds: builds,
     );
   }
-
-  static const _blitzRoleMap = {
-    Role.top: BlitzRole.top,
-    Role.jungle: BlitzRole.jungle,
-    Role.mid: BlitzRole.mid,
-    Role.adc: BlitzRole.adc,
-    Role.support: BlitzRole.support,
-  };
 
   Future<Builds> getAramBuilds(int championId) async {
     final builds = <BuildInfo>[];
 
     final blitzBuilds = await _blitzDataSource.getAramBuilds(
-      RequestVariables(
-        queue: Queue.howlingAbyssAram,
+      BuildRequestVariables(
+        queue: BlitzQueue.howlingAbyssAram,
         championId: championId,
       ),
     );
-    builds.addAll(blitzBuilds.data.championBuildStats.builds.map<BuildInfo>(_blitzBuildMapper));
+    builds.addAll(blitzBuilds.map<BuildInfo>(_blitzBuildMapper));
 
     return Builds(
       builds: builds,

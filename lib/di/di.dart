@@ -7,6 +7,7 @@ import 'package:sebastian/data/lcu/lcu.dart';
 import 'package:sebastian/data/lcu/lcu_path_storage.dart';
 import 'package:sebastian/data/repositories/build_repository.dart';
 import 'package:sebastian/data/repositories/champion_repository.dart';
+import 'package:sebastian/data/repositories/champion_tier_repository.dart';
 import 'package:sebastian/data/repositories/items_repository.dart';
 import 'package:sebastian/data/repositories/league_client_event_repository.dart';
 import 'package:sebastian/data/repositories/perks_repository.dart';
@@ -30,6 +31,7 @@ Future<void> initDi() async {
   getIt.registerLazySingleton<PerksRepository>(() => PerksRepository(getIt()));
   getIt.registerLazySingleton<ItemsRepository>(() => ItemsRepository(getIt()));
   getIt.registerLazySingleton<SpellsRepository>(() => SpellsRepository(getIt()));
+  getIt.registerLazySingleton<ChampionTierRepository>(() => ChampionTierRepository(getIt(), getIt()));
   getIt.registerLazySingleton<LeagueClientEventRepository>(() => LeagueClientEventRepository(getIt()));
   getIt.registerFactory<BuildRepository>(() => BuildRepository(getIt(), getIt()));
 }

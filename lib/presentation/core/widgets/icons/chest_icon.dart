@@ -1,9 +1,30 @@
 import 'package:flutter/widgets.dart';
 
-class ChestIconPainter extends CustomPainter {
+class ChestIcon extends StatelessWidget {
+  const ChestIcon({
+    super.key,
+    this.size = const Size(24, 24),
+    this.color = const Color(0xFFCDBE91),
+  });
+
+  final Color color;
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: size,
+      painter: _ChestIconPainter(
+        color: color,
+      ),
+    );
+  }
+}
+
+class _ChestIconPainter extends CustomPainter {
   final Color color;
 
-  ChestIconPainter({
+  _ChestIconPainter({
     required this.color,
   });
 

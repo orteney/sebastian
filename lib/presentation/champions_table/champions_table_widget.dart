@@ -1,10 +1,15 @@
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:sebastian/data/models/champion.dart';
 import 'package:sebastian/di/di.dart';
+import 'package:sebastian/presentation/core/colors.dart';
+import 'package:sebastian/presentation/core/widgets/icons/chest_icon.dart';
+import 'package:sebastian/presentation/core/widgets/icons/eternal_bonfire_icon.dart';
+import 'package:sebastian/presentation/core/widgets/icons/mastery_icon.dart';
 import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_table_bloc.dart';
@@ -51,6 +56,9 @@ class ChampionsTableWidget extends StatelessWidget {
   }
 }
 
+const _kTableMinWidth = 700.0;
+const _kTableColumnSpacing = 24.0;
+
 class _ChampionsTable extends StatelessWidget {
   const _ChampionsTable({
     Key? key,
@@ -70,13 +78,14 @@ class _ChampionsTable extends StatelessWidget {
     final appLocalizations = AppLocalizations.of(context)!;
 
     return DataTable2(
-      minWidth: 700,
+      minWidth: _kTableMinWidth,
+      columnSpacing: _kTableColumnSpacing,
       fixedLeftColumns: 1,
       sortColumnIndex: sortColumnIndex,
       sortAscending: sortAscending,
       headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
       columns: _buildChampionColumns(onSortColumn),
-      rows: champions.map((champion) => _buildChampionRow(appLocalizations, champion, _ChampionType.none)).toList(),
+      rows: champions.map((champion) => _buildChampionRow(appLocalizations, champion)).toList(),
     );
   }
 }
@@ -97,14 +106,14 @@ class _PickTable extends StatelessWidget {
     final appLocalizations = AppLocalizations.of(context)!;
 
     return DataTable2(
-      minWidth: 700,
-      fixedLeftColumns: 1,
+      minWidth: _kTableMinWidth,
+      columnSpacing: _kTableColumnSpacing,
       headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
       columns: _buildChampionColumns(),
       rows: [
-        if (myChampion != null) _buildChampionRow(appLocalizations, myChampion!, _ChampionType.my),
-        ...benchChampions.map((e) => _buildChampionRow(appLocalizations, e, _ChampionType.bench)),
-        ...teamChampions.map((e) => _buildChampionRow(appLocalizations, e, _ChampionType.teamMate)),
+        ...benchChampions.map((e) => _buildChampionRow(appLocalizations, e)),
+        if (myChampion != null) _buildChampionRow(appLocalizations, myChampion!, SebastianColors.myChampionRowColor),
+        ...teamChampions.map((e) => _buildChampionRow(appLocalizations, e, SebastianColors.myTeamChampionRowColor)),
       ],
     );
   }
@@ -115,66 +124,54 @@ List<DataColumn> _buildChampionColumns([DataColumnSortCallback? onSortColumn]) {
   return <DataColumn>[
     DataColumn2(
       onSort: onSortColumn,
+      size: ColumnSize.M,
       label: const Text('Чемпион'),
+    ),
+    DataColumn2(
+      onSort: onSortColumn,
+      fixedWidth: 85,
+      label: Center(
+        child: Padding(
+          padding: EdgeInsets.only(left: onSortColumn != null ? 18 : 0),
+          child: const MasteryIcon(
+            size: Size(24, 24),
+            color: Colors.white,
+          ),
+        ),
+      ),
+    ),
+    DataColumn2(
+      onSort: onSortColumn,
+      numeric: true,
       size: ColumnSize.M,
-    ),
-    DataColumn2(
-      onSort: onSortColumn,
-      numeric: true,
-      label: const Text('Ур.'),
-      size: ColumnSize.S,
-    ),
-    DataColumn2(
-      onSort: onSortColumn,
-      numeric: true,
       label: const Text('Очков'),
-      size: ColumnSize.M,
     ),
     DataColumn2(
       onSort: onSortColumn,
       numeric: true,
+      size: ColumnSize.M,
       label: const Text('Прогресс'),
-      size: ColumnSize.M,
     ),
     DataColumn2(
       onSort: onSortColumn,
+      size: ColumnSize.M,
+      numeric: true,
       label: const Text('Вечные'),
-      size: ColumnSize.M,
     ),
-    DataColumn2(
-      onSort: onSortColumn,
-      label: const Text('Сундук?'),
-      size: ColumnSize.S,
+    const DataColumn2(
+      fixedWidth: 60,
+      label: Center(
+        child: ChestIcon(
+          size: Size(20, 20),
+          color: Colors.white,
+        ),
+      ),
     ),
   ];
 }
 
-enum _ChampionType {
-  none,
-  my,
-  bench,
-  teamMate,
-}
-
-DataRow _buildChampionRow(AppLocalizations appLocalizations, Champion champion, _ChampionType type) {
-  MaterialStateProperty<Color>? rowColor;
-
-  switch (type) {
-    case _ChampionType.none:
-      break;
-    case _ChampionType.my:
-      rowColor = MaterialStateProperty.all(const Color(0xFF14460F));
-      break;
-    case _ChampionType.bench:
-      rowColor = MaterialStateProperty.all(const Color(0xFF4A460F));
-      break;
-    case _ChampionType.teamMate:
-      rowColor = MaterialStateProperty.all(const Color(0xFF141045));
-      break;
-  }
-
+DataRow _buildChampionRow(AppLocalizations appLocalizations, Champion champion, [Color? color]) {
   Widget progressRowData;
-
   if (champion.mastery.championLevel == 7) {
     progressRowData = const Text('Мастер');
   } else if (champion.mastery.championLevel == 6) {
@@ -186,16 +183,23 @@ DataRow _buildChampionRow(AppLocalizations appLocalizations, Champion champion, 
   }
 
   return DataRow(
-    color: rowColor,
+    color: color != null ? MaterialStateProperty.all(color) : null,
     cells: <DataCell>[
       DataCell(Text(champion.name)),
-      DataCell(Text(champion.mastery.championLevel.toString())),
+      DataCell(Center(child: Text(champion.mastery.championLevel.toString()))),
       DataCell(Text(champion.mastery.championPoints.toString())),
       DataCell(progressRowData),
-      DataCell(Text(
-        '${appLocalizations.championsTableMilestonesCount(champion.statStones.milestonesPassed)}\n${appLocalizations.championsTableStonesCount(champion.statStones.stonesOwned)}',
+      DataCell(Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(champion.statStones.milestonesPassed.toString()),
+          const SizedBox(width: 4),
+          const EternalBonfireIcon(size: Size(16, 16)),
+          const SizedBox(width: 12),
+          Text('${champion.statStones.stonesOwned} шт.')
+        ],
       )),
-      DataCell(Checkbox(value: champion.mastery.chestGranted, onChanged: null)),
+      DataCell(Center(child: Checkbox(value: champion.mastery.chestGranted, onChanged: null))),
     ],
   );
 }

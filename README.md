@@ -32,5 +32,8 @@
 ![Idle](docs/screenshots/current_game.png)
 #### Таблица с мастерством чемпионов
 ![Idle](docs/screenshots/mastery.png)
+
+#### Таблица с глобальной статистикой чемпионов
+![Idle](docs/screenshots/tier_list.png)
 #### Распылитель осколков
 ![Disenchater](docs/screenshots/disenchanter.png)

@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:sebastian/data/lcu/lcu.dart';
+import 'package:sebastian/data/lcu/lcu_errors.dart';
 import 'package:sebastian/data/lcu/lcu_path_storage.dart';
 import 'package:sebastian/data/repositories/champion_repository.dart';
 import 'package:sebastian/data/repositories/items_repository.dart';
@@ -14,8 +15,8 @@ import 'package:sebastian/data/repositories/spells_repository.dart';
 import 'package:sebastian/data/repositories/summoner_repository.dart';
 
 part 'home_event.dart';
-part 'home_state.dart';
 part 'home_models.dart';
+part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final LcuPathStorage _lcuStore;
@@ -38,6 +39,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     this._leagueClientEventRepository,
   ) : super(InitialHomeState()) {
     on<StartHomeEvent>(_onStartHomeEvent);
+    on<LcuDisconnectedHomeEvent>(_onLcuDisconnectedHomeEvent);
     on<PickLolPathHomeEvent>(_onPickLolPathHomeEvent);
     on<LoadCurrentSummonerInfoHomeEvent>(_onLoadCurrentSummonerInfoHomeEvent);
     on<TapDestinationHomeEvent>(_onTapDestinationHomeEvent);
@@ -53,7 +55,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     try {
-      await _lcu.init();
+      await _lcu.init(onDisconect: () => add(LcuDisconnectedHomeEvent()));
       add(LoadCurrentSummonerInfoHomeEvent());
     } on NoLockFilePathException {
       emit(LolPathUnspecifiedHomeState());
@@ -61,6 +63,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(LolNotLaunchedOrWrongPathProvidedHomeState());
     } catch (e) {
       emit(ErrorHomeState(message: e.toString()));
+    }
+  }
+
+  void _onLcuDisconnectedHomeEvent(LcuDisconnectedHomeEvent event, Emitter<HomeState> emit) {
+    if (state is LoadedHomeState) {
+      emit(LolNotLaunchedOrWrongPathProvidedHomeState());
     }
   }
 

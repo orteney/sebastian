@@ -2,18 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:sebastian/data/lcu/lcu_service.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
-
 import 'package:path/path.dart' as path;
+import 'package:rxdart/rxdart.dart';
 
-import 'package:sebastian/data/lcu/models/item_build.dart';
+import 'package:sebastian/data/lcu/lcu_errors.dart';
 import 'package:sebastian/data/lcu/lcu_path_storage.dart';
+import 'package:sebastian/data/lcu/lcu_service.dart';
+import 'package:sebastian/data/lcu/models/item_build.dart';
 import 'package:sebastian/data/utils/proccess.dart';
 
-class NoLockFilePathException implements Exception {}
-
-class LockFileNotFoundException implements Exception {}
+const _pickSessionEvent = 'OnJsonApiEvent_lol-champ-select_v1_session';
+const _gameFlowStateEvent = 'OnJsonApiEvent_lol-gameflow_v1_gameflow-phase';
+const _matchmakingEvent = 'OnJsonApiEvent_lol-matchmaking_v1_ready-check';
 
 class LCU {
   final LcuPathStorage _lcuStore;
@@ -25,14 +26,16 @@ class LCU {
   late int _port;
   late HttpClient _restClient;
   late WebSocket _websocket;
-  late Stream<dynamic> _broadcastWebsocket;
+  late StreamSubscription _webSocketSubscripion;
 
   late String _authHeader;
   late Directory _lolDirectory;
 
+  final Subject<List<dynamic>> _websocketEventSubject = PublishSubject();
+
   LcuService get service => _service != null ? _service! : throw Exception('Lcu unitialized');
 
-  Future<void> init() async {
+  Future<void> init({void Function()? onDisconect}) async {
     var savedLockfile = _lcuStore.getLcuLockfile();
 
     if (savedLockfile == null) {
@@ -71,9 +74,30 @@ class LCU {
       customClient: _restClient,
     );
 
-    _broadcastWebsocket = _websocket.asBroadcastStream();
+    _webSocketSubscripion = _websocket.listen(
+      _onWebsocketData,
+      onDone: onDisconect,
+    );
+
+    _websocket.add('[5, "$_pickSessionEvent"]');
+    _websocket.add('[5, "$_gameFlowStateEvent"]');
+    _websocket.add('[5, "$_matchmakingEvent"]');
 
     _service = LcuService(_restClient, '127.0.0.1:$_port', _authHeader);
+  }
+
+  void _onWebsocketData(dynamic data) {
+    if (data.isEmpty) return;
+
+    if (kDebugMode) {
+      print("LCUEvent: $data");
+    }
+
+    final jsonEvent = json.decode(data);
+
+    if (jsonEvent is! List) return;
+
+    _websocketEventSubject.add(jsonEvent);
   }
 
   Future<bool> _tryFindRunningLolDirectory() async {
@@ -139,44 +163,16 @@ class LCU {
     await buildsFile.writeAsString(json.encode(build.toJson()));
   }
 
-  Stream<dynamic> subscribeToChampSelectEvent() {
-    const eventName = 'OnJsonApiEvent_lol-champ-select_v1_session';
-    _websocket.add('[5, "$eventName"]');
-    return _websocketEvent(eventName);
-  }
+  Stream<dynamic> subscribeToChampSelectEvent() => _subscribeToWebsocketEvent(_pickSessionEvent);
+  Stream<dynamic> subscribeToEndOfGameEvent() => _subscribeToWebsocketEvent(_gameFlowStateEvent);
+  Stream<dynamic> subscribeToReadyCheckEvent() => _subscribeToWebsocketEvent(_matchmakingEvent);
 
-  Stream<dynamic> subscribeToEndOfGameEvent() {
-    const eventName = 'OnJsonApiEvent_lol-gameflow_v1_gameflow-phase';
-    _websocket.add('[5, "$eventName"]');
-    return _websocketEvent(eventName);
-  }
-
-  Stream<dynamic> subscribeToReadyCheckEvent() {
-    const eventName = 'OnJsonApiEvent_lol-matchmaking_v1_ready-check';
-    _websocket.add('[5, "$eventName"]');
-    return _websocketEvent(eventName);
-  }
-
-  Stream<dynamic> _websocketEvent(String eventName) {
-    return _broadcastWebsocket
-        .map((event) {
-          if (event.isEmpty) return null;
-
-          if (kDebugMode) {
-            print("LCUEvent: $event");
-          }
-
-          final jsonEvent = json.decode(event);
-
-          if (jsonEvent is! List) return null;
-
-          return jsonEvent;
-        })
-        .where((event) => event?.elementAt(1) == eventName)
-        .map((event) => event?.elementAt(2));
+  Stream<dynamic> _subscribeToWebsocketEvent(String eventName) {
+    return _websocketEventSubject.where((event) => eventName == event.elementAt(1)).map((event) => event.elementAt(2));
   }
 
   void close() {
+    _webSocketSubscripion.cancel();
     _websocket.close();
     _restClient.close();
   }

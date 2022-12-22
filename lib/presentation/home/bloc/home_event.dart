@@ -21,3 +21,5 @@ class TapDestinationHomeEvent extends HomeEvent {
 }
 
 class ToggleAutoAcceptHomeEvent extends HomeEvent {}
+
+class LcuDisconnectedHomeEvent extends HomeEvent {}

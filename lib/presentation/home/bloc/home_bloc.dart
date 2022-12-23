@@ -117,13 +117,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       await _championRepository.updateChampions(summoner.summonerId);
     });
 
-    _readyCheckEventSubscription ??= _leagueClientEventRepository.observeReadyCheckEvent().listen((event) async {
+    _readyCheckEventSubscription ??= _leagueClientEventRepository.observeReadyCheckEvent().listen((event) {
       if (state is! LoadedHomeState) return;
 
-      if ((state as LoadedHomeState).autoAcceptEnabled) {
-        if (event.timer >= 2 && event.state == 'InProgress' && event.playerResponse == 'None') {
-          await _lcu.service.acceptReadyCheck();
-        }
+      if ((state as LoadedHomeState).autoAcceptEnabled &&
+          event.timer >= 2 &&
+          event.state == 'InProgress' &&
+          event.playerResponse == 'None') {
+        _lcu.service.acceptReadyCheck().ignore();
       }
     });
   }

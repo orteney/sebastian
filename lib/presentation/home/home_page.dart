@@ -31,7 +31,6 @@ class HomePage extends StatelessWidget {
         getIt(),
         getIt(),
         getIt(),
-        getIt(),
       )..add(StartHomeEvent()),
       child: Scaffold(
         body: BlocBuilder<HomeBloc, HomeState>(

@@ -12,6 +12,8 @@ import 'package:sebastian/data/lcu/lcu_service.dart';
 import 'package:sebastian/data/lcu/models/item_build.dart';
 import 'package:sebastian/data/utils/proccess.dart';
 
+export 'lcu_errors.dart';
+
 const _pickSessionEvent = 'OnJsonApiEvent_lol-champ-select_v1_session';
 const _gameFlowStateEvent = 'OnJsonApiEvent_lol-gameflow_v1_gameflow-phase';
 const _matchmakingEvent = 'OnJsonApiEvent_lol-matchmaking_v1_ready-check';
@@ -55,7 +57,7 @@ class LCU {
     String content = savedLockfile.readAsStringSync();
     List<String> args = content.split(':');
     final authKey = args[3];
-    _port = int.parse(args[2]);
+    _port = int.tryParse(args[2]) ?? -1;
 
     if (authKey == '' || _port == -1) {
       throw 'Чота не удалось прочитать';
@@ -105,7 +107,7 @@ class LCU {
       final lolExeFile = await findExePathByProcessName('LeagueClientUx.exe');
       if (lolExeFile == null) return false;
 
-      final lockfile = await getLockfileFromLolDirectory(lolExeFile.parent);
+      final lockfile = await _getLockfileFromLolDirectory(lolExeFile.parent);
       if (lockfile != null) {
         await _lcuStore.putLcuLockfilePath(lockfile.path);
         return true;
@@ -123,7 +125,17 @@ class LCU {
     return false;
   }
 
-  Future<File?> getLockfileFromLolDirectory(Directory directory) async {
+  Future<bool> saveLockfileDirectory(Directory directory) async {
+    final lockfile = await _getLockfileFromLolDirectory(directory);
+    if (lockfile == null) {
+      return false;
+    }
+
+    await _lcuStore.putLcuLockfilePath(lockfile.path);
+    return true;
+  }
+
+  Future<File?> _getLockfileFromLolDirectory(Directory directory) async {
     bool foundLolClients = false;
     File? lockfileFile;
 

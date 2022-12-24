@@ -5,8 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:sebastian/data/lcu/lcu.dart';
-import 'package:sebastian/data/lcu/lcu_errors.dart';
-import 'package:sebastian/data/lcu/lcu_path_storage.dart';
 import 'package:sebastian/data/repositories/champion_repository.dart';
 import 'package:sebastian/data/repositories/items_repository.dart';
 import 'package:sebastian/data/repositories/league_client_event_repository.dart';
@@ -19,7 +17,6 @@ part 'home_models.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final LcuPathStorage _lcuStore;
   final LCU _lcu;
   final SummonerRepository _summonerRepository;
   final ChampionRepository _championRepository;
@@ -29,7 +26,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final LeagueClientEventRepository _leagueClientEventRepository;
 
   HomeBloc(
-    this._lcuStore,
     this._lcu,
     this._summonerRepository,
     this._championRepository,
@@ -73,15 +69,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _onPickLolPathHomeEvent(PickLolPathHomeEvent event, Emitter<HomeState> emit) async {
-    try {
-      final lockfile = await _lcu.getLockfileFromLolDirectory(Directory(event.pickedPath));
-      if (lockfile != null) {
-        _lcuStore.putLcuLockfilePath(lockfile.path);
-        return add(StartHomeEvent());
-      }
-    } catch (e) {/** Ommit error body */}
-
-    return emit(LolPathUnspecifiedHomeState(message: 'Что-то не удалось найти файлы лиги легенд, не обманываешь?'));
+    if (await _lcu.saveLockfileDirectory(Directory(event.pickedPath))) {
+      add(StartHomeEvent());
+    } else {
+      emit(LolPathUnspecifiedHomeState(message: 'Что-то не удалось найти файлы лиги легенд, не обманываешь?'));
+    }
   }
 
   Future<void> _onLoadCurrentSummonerInfoHomeEvent(

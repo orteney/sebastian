@@ -29,3 +29,11 @@ class ChangeQueueChampionsTierListEvent extends ChampionsTierListEvent {
     required this.pickedQueue,
   });
 }
+
+class ChangeRoleChampionsTierListEvent extends ChampionsTierListEvent {
+  final Role? pickedRole;
+
+  ChangeRoleChampionsTierListEvent({
+    required this.pickedRole,
+  });
+}

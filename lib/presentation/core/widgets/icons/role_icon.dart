@@ -9,7 +9,7 @@ class RoleIcon extends StatelessWidget {
     this.size = const Size(24, 24),
   });
 
-  final Role role;
+  final Role? role;
   final Size size;
 
   @override
@@ -31,6 +31,9 @@ class RoleIcon extends StatelessWidget {
         break;
       case Role.support:
         painter = const _PositionSupportPainter();
+        break;
+      case null:
+        painter = const _PositionAnyPainter();
         break;
     }
 
@@ -62,7 +65,7 @@ class _PositionTopPainter extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = const Color(0xff785a28).withOpacity(1.0);
+    paint0Fill.color = const Color(0xff785a28);
     canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
@@ -76,7 +79,7 @@ class _PositionTopPainter extends CustomPainter {
     path_1.close();
 
     Paint paint1Fill = Paint()..style = PaintingStyle.fill;
-    paint1Fill.color = const Color(0xffc8aa6e).withOpacity(1.0);
+    paint1Fill.color = const Color(0xffc8aa6e);
     canvas.drawPath(path_1, paint1Fill);
   }
 
@@ -135,7 +138,7 @@ class _PositionJunglePainter extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = const Color(0xffc8aa6e).withOpacity(1.0);
+    paint0Fill.color = const Color(0xffc8aa6e);
     canvas.drawPath(path_0, paint0Fill);
   }
 
@@ -168,7 +171,7 @@ class _PositionMidPainter extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = const Color(0xff785a28).withOpacity(1.0);
+    paint0Fill.color = const Color(0xff785a28);
     canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
@@ -182,7 +185,7 @@ class _PositionMidPainter extends CustomPainter {
     path_1.close();
 
     Paint paint1Fill = Paint()..style = PaintingStyle.fill;
-    paint1Fill.color = const Color(0xffc8aa6e).withOpacity(1.0);
+    paint1Fill.color = const Color(0xffc8aa6e);
     canvas.drawPath(path_1, paint1Fill);
   }
 
@@ -232,7 +235,7 @@ class _PositionSupportPainter extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = const Color(0xffc8aa6e).withOpacity(1.0);
+    paint0Fill.color = const Color(0xffc8aa6e);
     canvas.drawPath(path_0, paint0Fill);
   }
 
@@ -264,7 +267,7 @@ class _PositionBotPainter extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = const Color(0xff785a28).withOpacity(1.0);
+    paint0Fill.color = const Color(0xff785a28);
     canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
@@ -278,8 +281,60 @@ class _PositionBotPainter extends CustomPainter {
     path_1.close();
 
     Paint paint1Fill = Paint()..style = PaintingStyle.fill;
-    paint1Fill.color = const Color(0xffc8aa6e).withOpacity(1.0);
+    paint1Fill.color = const Color(0xffc8aa6e);
     canvas.drawPath(path_1, paint1Fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class _PositionAnyPainter extends CustomPainter {
+  const _PositionAnyPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(size.width * 0.2504082, size.height * 0.2012868);
+    path_0.lineTo(size.width * 0.2504082, size.height * 0.2251838);
+    path_0.lineTo(size.width * 0.3749765, size.height * 0.4366500);
+    path_0.lineTo(size.width * 0.1197391, size.height * 0.4366500);
+    path_0.lineTo(size.width * 0.05882353, size.height * 0.5000000);
+    path_0.lineTo(size.width * 0.05901059, size.height * 0.5000000);
+    path_0.lineTo(size.width * 0.1197391, size.height * 0.5633500);
+    path_0.lineTo(size.width * 0.3749765, size.height * 0.5637265);
+    path_0.lineTo(size.width * 0.2503921, size.height * 0.7748176);
+    path_0.lineTo(size.width * 0.2504082, size.height * 0.7987147);
+    path_0.lineTo(size.width * 0.2630212, size.height * 0.8398324);
+    path_0.lineTo(size.width * 0.2761741, size.height * 0.8823529);
+    path_0.lineTo(size.width * 0.3788882, size.height * 0.8531265);
+    path_0.lineTo(size.width * 0.4961824, size.height * 0.6513471);
+    path_0.lineTo(size.width * 0.5045529, size.height * 0.6513471);
+    path_0.lineTo(size.width * 0.6213000, size.height * 0.8531265);
+    path_0.lineTo(size.width * 0.7240118, size.height * 0.8823529);
+    path_0.lineTo(size.width * 0.7508735, size.height * 0.7987147);
+    path_0.lineTo(size.width * 0.7508735, size.height * 0.7748176);
+    path_0.lineTo(size.width * 0.6264382, size.height * 0.5637265);
+    path_0.lineTo(size.width * 0.8804471, size.height * 0.5633500);
+    path_0.lineTo(size.width * 0.9411765, size.height * 0.5000000);
+    path_0.lineTo(size.width * 0.8804471, size.height * 0.4366500);
+    path_0.lineTo(size.width * 0.6264382, size.height * 0.4366500);
+    path_0.lineTo(size.width * 0.7508735, size.height * 0.2251838);
+    path_0.lineTo(size.width * 0.7508735, size.height * 0.1933212);
+    path_0.lineTo(size.width * 0.7240118, size.height * 0.1176471);
+    path_0.lineTo(size.width * 0.6213000, size.height * 0.1468732);
+    path_0.lineTo(size.width * 0.5040029, size.height * 0.3486529);
+    path_0.lineTo(size.width * 0.4961824, size.height * 0.3486529);
+    path_0.lineTo(size.width * 0.3788882, size.height * 0.1468732);
+    path_0.lineTo(size.width * 0.2761741, size.height * 0.1176471);
+    path_0.lineTo(size.width * 0.2504082, size.height * 0.2012868);
+    path_0.close();
+
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xffC8AA6E);
+    canvas.drawPath(path_0, paint0Fill);
   }
 
   @override

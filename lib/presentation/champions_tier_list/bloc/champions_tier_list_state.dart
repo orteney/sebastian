@@ -9,12 +9,14 @@ class LoadedChampionsTierListState extends ChampionsTierListState {
   final ChampionTierTableColumn sortColumn;
   final bool ascending;
   final List<ChampionTier> championTiers;
+  final Role? roleFilter;
 
   LoadedChampionsTierListState({
     required this.currentQueue,
     required this.sortColumn,
     required this.ascending,
     required this.championTiers,
+    this.roleFilter,
   });
 
   LoadedChampionsTierListState copyWith({
@@ -22,12 +24,14 @@ class LoadedChampionsTierListState extends ChampionsTierListState {
     ChampionTierTableColumn? sortColumn,
     bool? ascending,
     List<ChampionTier>? championTiers,
+    Role? Function()? roleFilter,
   }) {
     return LoadedChampionsTierListState(
       currentQueue: currentQueue ?? this.currentQueue,
       sortColumn: sortColumn ?? this.sortColumn,
       ascending: ascending ?? this.ascending,
       championTiers: championTiers ?? this.championTiers,
+      roleFilter: roleFilter != null ? roleFilter() : this.roleFilter,
     );
   }
 }

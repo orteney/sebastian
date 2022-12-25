@@ -1,13 +1,17 @@
 import 'package:sebastian/data/blitz/models/blitz_queue.dart';
 
 enum ChampionTierTableColumn {
-  role,
-  champion,
-  tier,
-  winRate,
-  banRate,
-  pickRate,
-  games,
+  role(true),
+  champion(true),
+  tier(false),
+  winRate(false),
+  banRate(false),
+  pickRate(false),
+  games(false);
+
+  final bool initialSortAccending;
+
+  const ChampionTierTableColumn(this.initialSortAccending);
 }
 
 enum AvailableQueue {

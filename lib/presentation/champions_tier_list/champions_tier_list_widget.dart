@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:sebastian/di/di.dart';
 import 'package:sebastian/domain/champion_tier/champion_tier.dart';
+import 'package:sebastian/domain/core/role.dart';
 import 'package:sebastian/presentation/core/colors.dart';
 import 'package:sebastian/presentation/core/widgets/icons/role_icon.dart';
 import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
@@ -33,11 +34,25 @@ class ChampionsTierListWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: QueuePicker(
-                    currentQueue: state.currentQueue,
-                    onChanged: (value) => context.read<ChampionsTierListBloc>().add(
-                          ChangeQueueChampionsTierListEvent(pickedQueue: value),
+                  child: Row(
+                    children: [
+                      QueuePicker(
+                        currentQueue: state.currentQueue,
+                        onChanged: (value) => context
+                            .read<ChampionsTierListBloc>()
+                            .add(ChangeQueueChampionsTierListEvent(pickedQueue: value)),
+                      ),
+                      if (state.currentQueue != AvailableQueue.aram)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: _RolePicker(
+                            role: state.roleFilter,
+                            onChanged: (value) => context
+                                .read<ChampionsTierListBloc>()
+                                .add(ChangeRoleChampionsTierListEvent(pickedRole: value)),
+                          ),
                         ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -115,6 +130,37 @@ class QueuePicker extends StatelessWidget {
       borderRadius: const BorderRadius.all(Radius.circular(8)),
       onChanged: onChanged,
       items: items,
+    );
+  }
+}
+
+class _RolePicker extends StatelessWidget {
+  const _RolePicker({
+    required this.role,
+    this.onChanged,
+  });
+
+  final Role? role;
+  final ValueChanged<Role?>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<Role>(
+      value: role,
+      underline: const SizedBox.shrink(),
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      onChanged: onChanged,
+      items: [
+        const DropdownMenuItem(
+          value: null,
+          child: RoleIcon(role: null),
+        ),
+        for (var role in Role.values)
+          DropdownMenuItem(
+            value: role,
+            child: RoleIcon(role: role),
+          ),
+      ],
     );
   }
 }

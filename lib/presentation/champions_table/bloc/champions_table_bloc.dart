@@ -27,8 +27,8 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
   ) : super(SummaryChampionsTableState(
           currentSummonerId: summonerId,
           champions: _championRepository.champions,
-          ascending: true,
           sortColumn: ChampionsTableColumn.champion,
+          ascending: ChampionsTableColumn.champion.initialSortAccending,
         )) {
     on<UpdatedChampionsTableEvent>(_onUpdatedChampionsTableEvent);
     on<ChangeSortChampionsTableEvent>(_onChangeSortChampionsTableEvent);
@@ -68,10 +68,20 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
 
     final state = this.state as SummaryChampionsTableState;
 
+    if (state.sortColumn == event.column) {
+      if (state.ascending == event.ascending) return;
+
+      return emit(state.copyWith(
+        ascending: event.ascending,
+        sortColumn: event.column,
+        champions: state.champions.reversed.toList(),
+      ));
+    }
+
     emit(state.copyWith(
       sortColumn: event.column,
-      ascending: event.ascending,
-      champions: _sortChampions(state.champions, event.column, event.ascending),
+      ascending: event.column.initialSortAccending,
+      champions: _sortChampions(state.champions, event.column, event.column.initialSortAccending),
     ));
   }
 

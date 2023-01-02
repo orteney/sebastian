@@ -24,3 +24,5 @@ class SelectRoleChampionPickEvent extends ChampionPickEvent {
 
   SelectRoleChampionPickEvent(this.pickedRole);
 }
+
+class GameEndEventChampionPickEvent extends ChampionPickEvent {}

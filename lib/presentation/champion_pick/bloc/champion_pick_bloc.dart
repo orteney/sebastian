@@ -44,10 +44,16 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     on<TapAvailableBuildTabChampionPickEvent>(_onTapAvailableBuildTabChampionPickEvent);
     on<TapImportBuildChampionPickEvent>(_onTapImportBuildChampionPickEvent);
     on<SelectRoleChampionPickEvent>(_onSelectRoleChampionPickEvent);
+    on<GameEndEventChampionPickEvent>(_onGameEndEventChampionPickEvent);
 
     _leagueClientEventRepository
         .observePickSession()
         .listen((event) => add(PickSessionUpdatedChampionPickEvent(pickSession: event)))
+        .addTo(subscriptions);
+
+    _leagueClientEventRepository
+        .observeGameEndEvent()
+        .listen((event) => add(GameEndEventChampionPickEvent()))
         .addTo(subscriptions);
   }
 
@@ -56,7 +62,11 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     Emitter<ChampionPickState> emit,
   ) async {
     if (event.pickSession == null) {
-      // Continue display current build until new pick session arrives
+      if (this.state is NoPickedChampionPickState) {
+        return emit(NoActiveChampionPickState());
+      }
+
+      // Continue display current build until current game ends
       return;
     }
 
@@ -212,5 +222,14 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     final name = '[Sebby] ${state.pickedChampion.name}';
     _leagueClientEventRepository.setRunePage(name, build.runes);
     _leagueClientEventRepository.setItemBuild(name, build.itemBuild);
+  }
+
+  void _onGameEndEventChampionPickEvent(
+    GameEndEventChampionPickEvent event,
+    Emitter<ChampionPickState> emit,
+  ) {
+    if (state is ActiveChampionPickState) {
+      emit(NoActiveChampionPickState());
+    }
   }
 }

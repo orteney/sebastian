@@ -11,12 +11,13 @@ import 'package:sebastian/data/repositories/league_client_event_repository.dart'
 import 'package:sebastian/data/repositories/perks_repository.dart';
 import 'package:sebastian/data/repositories/spells_repository.dart';
 import 'package:sebastian/data/repositories/summoner_repository.dart';
+import 'package:sebastian/presentation/core/bloc/bloc_mixins.dart';
 
 part 'home_event.dart';
 part 'home_models.dart';
 part 'home_state.dart';
 
-class HomeBloc extends Bloc<HomeEvent, HomeState> {
+class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
   final LCU _lcu;
   final SummonerRepository _summonerRepository;
   final ChampionRepository _championRepository;
@@ -41,9 +42,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<TapDestinationHomeEvent>(_onTapDestinationHomeEvent);
     on<ToggleAutoAcceptHomeEvent>(_onToggleAutoAcceptHomeEvent);
   }
-
-  StreamSubscription? _readyCheckEventSubscription;
-  StreamSubscription? _gameEndEventSubscription;
 
   Future<void> _onStartHomeEvent(StartHomeEvent event, Emitter<HomeState> emit) async {
     if (state is! InitialHomeState) {
@@ -102,14 +100,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _subscribeToEvents() {
-    _gameEndEventSubscription ??= _leagueClientEventRepository.observeGameEndEvent().listen((event) async {
+    _leagueClientEventRepository.observeGameEndEvent().listen((event) async {
       if (state is! LoadedHomeState) return;
 
       final summoner = await _summonerRepository.getCurrentSummoner();
       await _championRepository.updateChampions(summoner.summonerId);
-    });
+    }).addTo(subscriptions);
 
-    _readyCheckEventSubscription ??= _leagueClientEventRepository.observeReadyCheckEvent().listen((event) {
+    _leagueClientEventRepository.observeReadyCheckEvent().listen((event) {
       if (state is! LoadedHomeState) return;
 
       if ((state as LoadedHomeState).autoAcceptEnabled &&
@@ -118,7 +116,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           event.playerResponse == 'None') {
         _lcu.service.acceptReadyCheck().ignore();
       }
-    });
+    }).addTo(subscriptions);
   }
 
   void _onTapDestinationHomeEvent(TapDestinationHomeEvent event, Emitter<HomeState> emit) {
@@ -140,8 +138,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   @override
   Future<void> close() {
-    _readyCheckEventSubscription?.cancel();
-    _gameEndEventSubscription?.cancel();
     _lcu.close();
     return super.close();
   }

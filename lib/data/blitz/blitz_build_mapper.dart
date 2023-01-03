@@ -29,18 +29,25 @@ class BlitzBuildMapper {
       sortedRunes[rune.index].add(rune);
     }
 
-    final primaryPath = sortedRunes[0].first.treeId;
+    final primaryPath = sortedRunes[0].first.treeId!;
     final primaryTree = <int>[
       primaryRune,
       sortedRunes[0].first.runeId,
       sortedRunes[1].first.runeId,
       sortedRunes[2].first.runeId,
     ];
-    final subPath = sortedRunes[3].first.treeId;
+
+    final subRune1 = sortedRunes[3].first;
+    final subRune2 = sortedRunes[4].firstWhere(
+      (rune) => rune.runeId != subRune1.runeId && rune.treeId == subRune1.treeId,
+      orElse: () => sortedRunes[4].first,
+    );
+    final subPath = subRune1.treeId!;
     final subTree = <int>[
-      sortedRunes[3].first.runeId,
-      sortedRunes[4].first.runeId,
+      subRune1.runeId,
+      subRune2.runeId,
     ];
+
     final statTree = <int>[
       sortedRunes[5].first.runeId,
       sortedRunes[6].first.runeId,
@@ -48,9 +55,9 @@ class BlitzBuildMapper {
     ];
 
     return Runes(
-      primaryPath: primaryPath!,
-      subPath: subPath!,
+      primaryPath: primaryPath,
       primary: primaryTree,
+      subPath: subPath,
       sub: subTree,
       stat: statTree,
     );

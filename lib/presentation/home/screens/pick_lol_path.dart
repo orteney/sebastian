@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
 
 class PickLolPathScreen extends StatelessWidget {
   const PickLolPathScreen({
@@ -28,27 +29,27 @@ class PickLolPathScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SebastianMessage(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             customMessage ??
-                'Привет!\n\nМне не удалось узнать где у тебя находится клиент лиги...\n\nЕсли она не запущена, то запусти и нажми "повторить".\nЕсли не получается, то, покажи мне путь до папки с файлом "LeagueClient.exe"',
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
+                'Привет, я Себастьян!\n\nМне не удалось узнать где у тебя находится клиент лиги...\n\nЕсли она не запущена, то запусти её и попробуй "повторить".\nЕсли всё равно не получается, тогда покажи мне путь до папки с файлом "LeagueClient.exe"',
           ),
           const SizedBox(height: 32),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (customMessage == null)
-                ElevatedButton(
+                OutlinedButton(
                   onPressed: onRetryTap,
                   child: const Text('ПОВТОРИТЬ'),
                 ),
               const SizedBox(width: 16),
-              ElevatedButton(
+              OutlinedButton(
                 onPressed: _onPickPathTap,
                 child: const Text('ПОКАЗАТЬ ПУТЬ'),
               ),

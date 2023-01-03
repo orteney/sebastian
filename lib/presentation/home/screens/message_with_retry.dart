@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
+
 class MessageWithRetryScreen extends StatelessWidget {
   const MessageWithRetryScreen({
     super.key,
@@ -12,17 +14,14 @@ class MessageWithRetryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SebastianMessage(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            message,
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-          ),
+          Text(message),
           const SizedBox(height: 32),
-          ElevatedButton(
+          OutlinedButton(
             onPressed: onTapRetry,
             child: const Text('ПОВТОРИТЬ'),
           ),

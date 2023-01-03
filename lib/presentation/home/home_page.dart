@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
 
             if (state is LolNotLaunchedOrWrongPathProvidedHomeState) {
               return MessageWithRetryScreen(
-                message: 'Похоже лига не запущена, нажми "повторить", когда запустится 🙃',
+                message: 'Похоже лига не запущена...\nНажми "повторить", когда запустится 🙃',
                 onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
               );
             }

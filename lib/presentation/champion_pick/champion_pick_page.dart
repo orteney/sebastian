@@ -9,6 +9,7 @@ import 'package:sebastian/domain/core/role.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_bloc.dart';
 import 'package:sebastian/presentation/core/widgets/blurry_container.dart';
 import 'package:sebastian/presentation/core/widgets/icons/role_icon.dart';
+import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
 import 'package:sebastian/presentation/core/widgets/snackbar_presenter.dart';
 import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
@@ -24,22 +25,14 @@ class ChampionPickPage extends StatelessWidget {
     return BlocBuilder<ChampionPickBloc, ChampionPickState>(
       builder: (context, state) {
         if (state is NoActiveChampionPickState) {
-          return Center(
-            child: Text(
-              'Похоже ты сейчас не в лобби 🤷‍♀️',
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
+          return const SebastianMessage(
+            child: Text('Похоже ты сейчас не в лобби 🤔'),
           );
         }
 
         if (state is NoPickedChampionPickState) {
-          return Center(
-            child: Text(
-              'Давай выбирай, ну...',
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
+          return const SebastianMessage(
+            child: Text('Давай выбирай, ну... 🙃'),
           );
         }
 

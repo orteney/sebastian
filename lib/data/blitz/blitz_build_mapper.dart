@@ -17,8 +17,8 @@ class BlitzBuildMapper {
       ),
       summonerSpells: blitzBuild.summonerSpells.first.summonerSpellIds,
       runes: _mapBlitzRunes(blitzBuild.primaryRune, blitzBuild.runes),
-      skillPath: blitzBuild.skillOrders.first.skillOrder,
-      skillOrder: [],
+      skillPath: blitzBuild.skillOrders.firstOrNull?.skillOrder,
+      skillOrder: null,
     );
   }
 

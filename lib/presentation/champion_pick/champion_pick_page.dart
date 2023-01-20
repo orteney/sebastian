@@ -25,14 +25,18 @@ class ChampionPickPage extends StatelessWidget {
     return BlocBuilder<ChampionPickBloc, ChampionPickState>(
       builder: (context, state) {
         if (state is NoActiveChampionPickState) {
-          return const SebastianMessage(
-            child: Text('Похоже ты сейчас не в лобби 🤔'),
+          return const Center(
+            child: SebastianMessage(
+              child: Text('Похоже ты сейчас не в лобби 🤔'),
+            ),
           );
         }
 
         if (state is NoPickedChampionPickState) {
-          return const SebastianMessage(
-            child: Text('Давай выбирай, ну... 🙃'),
+          return const Center(
+            child: SebastianMessage(
+              child: Text('Давай выбирай, ну... 🙃'),
+            ),
           );
         }
 
@@ -58,6 +62,8 @@ class _ActiveChampionPickWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool hasBuilds = state.builds.isNotEmpty;
+
     return Ink(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -93,45 +99,56 @@ class _ActiveChampionPickWidget extends StatelessWidget {
                     _RoleTag(role: state.role),
                     const SizedBox(width: 16),
                     OutlinedButton.icon(
-                      onPressed: () => context.read<ChampionPickBloc>().add(TapImportBuildChampionPickEvent()),
+                      onPressed: hasBuilds
+                          ? () => context.read<ChampionPickBloc>().add(TapImportBuildChampionPickEvent())
+                          : null,
                       icon: const Icon(Icons.file_upload_rounded),
                       label: const Text('ИМПОРТИРОВАТЬ'),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: List.generate(
-                    state.builds.length,
-                    (index) {
-                      final build = state.builds[index];
+                if (!hasBuilds)
+                  SebastianMessage(
+                    child: Text(
+                      'Для выбранной роли нет сборок 🥲',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  )
+                else ...[
+                  Row(
+                    children: List.generate(
+                      state.builds.length,
+                      (index) {
+                        final build = state.builds[index];
 
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: _BuildTab(
-                          keyPerkIcon: state.runesImages[build.keystoneId]!,
-                          championBuild: build,
-                          color: index == state.selectedBuildIndex ? state.selectedPerkStyle.color : null,
-                          onTap: () =>
-                              context.read<ChampionPickBloc>().add(TapAvailableBuildTabChampionPickEvent(index)),
-                        ),
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: _BuildTab(
+                            keyPerkIcon: state.runesImages[build.keystoneId]!,
+                            championBuild: build,
+                            color: index == state.selectedBuildIndex ? state.selectedPerkStyle.color : null,
+                            onTap: () =>
+                                context.read<ChampionPickBloc>().add(TapAvailableBuildTabChampionPickEvent(index)),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return BuildDetails(
+                        singleColumn: constraints.maxWidth < 720,
+                        championBuild: state.builds[state.selectedBuildIndex],
+                        runesImages: state.runesImages,
+                        itemImages: state.itemImages,
+                        summonerSpellImages: state.summonerSpellImages,
+                        color: state.selectedPerkStyle.color,
                       );
                     },
                   ),
-                ),
-                const SizedBox(height: 8),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    return BuildDetails(
-                      singleColumn: constraints.maxWidth < 720,
-                      championBuild: state.builds[state.selectedBuildIndex],
-                      runesImages: state.runesImages,
-                      itemImages: state.itemImages,
-                      summonerSpellImages: state.summonerSpellImages,
-                      color: state.selectedPerkStyle.color,
-                    );
-                  },
-                ),
+                ]
               ],
             ),
           ),

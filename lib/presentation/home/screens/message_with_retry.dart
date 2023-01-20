@@ -14,18 +14,20 @@ class MessageWithRetryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SebastianMessage(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(message),
-          const SizedBox(height: 32),
-          OutlinedButton(
-            onPressed: onTapRetry,
-            child: const Text('ПОВТОРИТЬ'),
-          ),
-        ],
+    return Center(
+      child: SebastianMessage(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(message),
+            const SizedBox(height: 32),
+            OutlinedButton(
+              onPressed: onTapRetry,
+              child: const Text('ПОВТОРИТЬ'),
+            ),
+          ],
+        ),
       ),
     );
   }

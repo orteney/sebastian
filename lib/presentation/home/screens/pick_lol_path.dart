@@ -29,33 +29,35 @@ class PickLolPathScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SebastianMessage(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            customMessage ??
-                'Привет, я Себастьян!\n\nМне не удалось узнать где у тебя находится клиент лиги...\n\nЕсли она не запущена, то запусти её и попробуй "повторить".\nЕсли всё равно не получается, тогда покажи мне путь до папки с файлом "LeagueClient.exe"',
-          ),
-          const SizedBox(height: 32),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (customMessage == null)
+    return Center(
+      child: SebastianMessage(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              customMessage ??
+                  'Привет, я Себастьян!\n\nМне не удалось узнать где у тебя находится клиент лиги...\n\nЕсли она не запущена, то запусти её и попробуй "повторить".\nЕсли всё равно не получается, тогда покажи мне путь до папки с файлом "LeagueClient.exe"',
+            ),
+            const SizedBox(height: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (customMessage == null)
+                  OutlinedButton(
+                    onPressed: onRetryTap,
+                    child: const Text('ПОВТОРИТЬ'),
+                  ),
+                const SizedBox(width: 16),
                 OutlinedButton(
-                  onPressed: onRetryTap,
-                  child: const Text('ПОВТОРИТЬ'),
+                  onPressed: _onPickPathTap,
+                  child: const Text('ПОКАЗАТЬ ПУТЬ'),
                 ),
-              const SizedBox(width: 16),
-              OutlinedButton(
-                onPressed: _onPickPathTap,
-                child: const Text('ПОКАЗАТЬ ПУТЬ'),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

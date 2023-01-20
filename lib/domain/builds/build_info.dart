@@ -17,8 +17,8 @@ class BuildInfo {
   final ItemBuild itemBuild;
   final List<int> summonerSpells;
   final Runes runes;
-  final List<int> skillOrder;
-  final List<int> skillPath;
+  final List<int>? skillOrder;
+  final List<int>? skillPath;
 
   BuildInfo({
     required this.keystoneId,

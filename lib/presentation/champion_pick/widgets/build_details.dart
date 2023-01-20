@@ -239,8 +239,8 @@ class _SkillOrder extends StatelessWidget {
     required this.skillOrder,
   });
 
-  final List<int> skillPath;
-  final List<int> skillOrder;
+  final List<int>? skillPath;
+  final List<int>? skillOrder;
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +251,7 @@ class _SkillOrder extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           children: List.generate(18, (index) {
-            final skillIndex = skillPath[index];
+            final skillIndex = skillPath?[index];
 
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),

@@ -4,8 +4,8 @@ publish_to: "none"
 version: 3.4.0+1
 
 environment:
-  sdk: ">=2.18.0 <3.0.0"
-  flutter: ">=3.3.0"
+  sdk: ">=2.19.0 <3.0.0"
+  flutter: ">=3.7.0"
 
 dependencies:
   flutter:
@@ -18,7 +18,7 @@ dependencies:
 
   # Data
   http: 0.13.5
-  json_annotation: 4.7.0
+  json_annotation: 4.8.0
 
   # Presentation
   bloc: 8.1.0
@@ -32,14 +32,14 @@ dependencies:
 
   # Utils
   equatable: 2.0.5
-  intl: #Resolved by flutter_localizations
-  path: #Resolved by Flutter
-  meta: #Resolved by Flutter
-  collection: #Resolved by Flutter
+  intl: any #Resolved by flutter_localizations
+  path: any #Resolved by Flutter
+  meta: any #Resolved by Flutter
+  collection: any #Resolved by Flutter
 
   # Plugins
-  shared_preferences: 2.0.15
-  file_picker: 5.2.4
+  shared_preferences: 2.0.17
+  file_picker: 5.2.5
   package_info_plus: 3.0.2
 
 dev_dependencies:
@@ -51,7 +51,7 @@ dev_dependencies:
 
   # Codegen
   build_runner: 2.3.2
-  json_serializable: 6.5.4
+  json_serializable: 6.6.0
 
 flutter:
   generate: true

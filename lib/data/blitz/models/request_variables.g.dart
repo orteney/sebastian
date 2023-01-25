@@ -6,9 +6,10 @@ part of 'request_variables.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Map<String, dynamic> _$BuildRequestVariablesToJson(BuildRequestVariables instance) {
+Map<String, dynamic> _$BuildRequestVariablesToJson(
+    BuildRequestVariables instance) {
   final val = <String, dynamic>{
-    'queue': _$QueueEnumMap[instance.queue]!,
+    'queue': _$BlitzQueueEnumMap[instance.queue]!,
     'region': instance.region,
     'tier': instance.tier,
   };
@@ -25,7 +26,7 @@ Map<String, dynamic> _$BuildRequestVariablesToJson(BuildRequestVariables instanc
   return val;
 }
 
-const _$QueueEnumMap = {
+const _$BlitzQueueEnumMap = {
   BlitzQueue.clashSr: 'CLASH_SR',
   BlitzQueue.howlingAbyssAram: 'HOWLING_ABYSS_ARAM',
   BlitzQueue.howlingAbyssPoroKing: 'HOWLING_ABYSS_PORO_KING',
@@ -45,7 +46,8 @@ const _$BlitzRoleEnumMap = {
   BlitzRole.top: 'TOP',
 };
 
-Map<String, dynamic> _$AllChampionsStatsRequestVariablesToJson(AllChampionsStatsRequestVariables instance) =>
+Map<String, dynamic> _$AllChampionsStatsRequestVariablesToJson(
+        AllChampionsStatsRequestVariables instance) =>
     <String, dynamic>{
-      'queue': _$QueueEnumMap[instance.queue]!,
+      'queue': _$BlitzQueueEnumMap[instance.queue]!,
     };

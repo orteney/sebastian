@@ -259,7 +259,7 @@ class _SkillOrder extends StatelessWidget {
                 children: [
                   Text(
                     '${index + 1}',
-                    style: Theme.of(context).textTheme.overline,
+                    style: Theme.of(context).textTheme.labelSmall,
                   ),
                   const SizedBox(height: 4),
                   _SkillContainer(skillKey: 'Q', selected: skillIndex == 1),

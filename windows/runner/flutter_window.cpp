@@ -27,9 +27,10 @@ bool FlutterWindow::OnCreate() {
   RegisterPlugins(flutter_controller_->engine());
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
-  flutter_controller_->engine()->SetNextFrameCallback([&]() {
-    this->Show();
-  });
+  //! Overrides flutter 3.7.0 behavior, win32_window.cpp[138] already shows window
+  // flutter_controller_->engine()->SetNextFrameCallback([&]() {
+  //   this->Show();
+  // });
 
   return true;
 }

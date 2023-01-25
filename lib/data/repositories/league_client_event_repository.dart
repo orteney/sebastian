@@ -95,6 +95,7 @@ class LeagueClientEventRepository {
   }
 
   Future<void> setItemBuild(String buildName, ItemBuild build) async {
+    //TODO l10n these strings :<
     final lcuBuild = lcu.ItemBuild(
       title: buildName,
       blocks: [

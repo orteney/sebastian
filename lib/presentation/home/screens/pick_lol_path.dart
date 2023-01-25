@@ -1,23 +1,26 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
 
 class PickLolPathScreen extends StatelessWidget {
   const PickLolPathScreen({
     super.key,
-    this.customMessage,
-    this.onRetryTap,
     required this.onPickedPath,
+    this.onRetryTap,
+    this.pickedWrongPath = false,
   });
 
-  final String? customMessage;
+  final bool pickedWrongPath;
   final VoidCallback? onRetryTap;
   final void Function(String) onPickedPath;
 
-  Future<void> _onPickPathTap() async {
+  Future<void> _onPickPathTap(String dialogTitle) async {
     final result = await FilePicker.platform.getDirectoryPath(
       lockParentWindow: true,
-      dialogTitle: 'Выбери папку «League of Legends»',
+      dialogTitle: dialogTitle,
     );
 
     if (result != null) {
@@ -29,6 +32,8 @@ class PickLolPathScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Center(
       child: SebastianMessage(
         child: Column(
@@ -36,23 +41,24 @@ class PickLolPathScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              customMessage ??
-                  'Привет, я Себастьян!\n\nМне не удалось узнать где у тебя находится клиент лиги...\n\nЕсли она не запущена, то запусти её и попробуй "повторить".\nЕсли всё равно не получается, тогда покажи мне путь до папки с файлом "LeagueClient.exe"',
+              !pickedWrongPath
+                  ? appLocalizations.lolPathPickerMessageInitial
+                  : appLocalizations.lolPathPickerMessageWrongPath,
             ),
             const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (customMessage == null)
+                if (!pickedWrongPath)
                   OutlinedButton(
                     onPressed: onRetryTap,
-                    child: const Text('ПОВТОРИТЬ'),
+                    child: Text(appLocalizations.buttonRetry),
                   ),
                 const SizedBox(width: 16),
                 OutlinedButton(
-                  onPressed: _onPickPathTap,
-                  child: const Text('ПОКАЗАТЬ ПУТЬ'),
+                  onPressed: () => _onPickPathTap(appLocalizations.lolPathPickerDialogTitle),
+                  child: Text(appLocalizations.lolPathPickerPickPathButton),
                 ),
               ],
             ),

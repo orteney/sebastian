@@ -70,7 +70,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
     if (await _lcu.saveLockfileDirectory(Directory(event.pickedPath))) {
       add(StartHomeEvent());
     } else {
-      emit(LolPathUnspecifiedHomeState(message: 'Что-то не удалось найти файлы лиги легенд, не обманываешь?'));
+      emit(PickedWrongLolPathHomeState());
     }
   }
 

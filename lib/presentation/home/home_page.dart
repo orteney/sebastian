@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:sebastian/di/di.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_bloc.dart';
@@ -22,6 +23,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return BlocProvider(
       create: (context) => HomeBloc(
         getIt(),
@@ -36,12 +39,19 @@ class HomePage extends StatelessWidget {
         body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             if (state is InitialHomeState) {
-              return const MessageWithLoading(message: 'Соединяюсь с League of Legends... 🤔');
+              return MessageWithLoading(message: appLocalizations.homeMessageConnecting);
             }
 
             if (state is LolPathUnspecifiedHomeState) {
               return PickLolPathScreen(
-                customMessage: state.message,
+                onRetryTap: () => context.read<HomeBloc>().add(StartHomeEvent()),
+                onPickedPath: (path) => context.read<HomeBloc>().add(PickLolPathHomeEvent(pickedPath: path)),
+              );
+            }
+
+            if (state is PickedWrongLolPathHomeState) {
+              return PickLolPathScreen(
+                pickedWrongPath: true,
                 onRetryTap: () => context.read<HomeBloc>().add(StartHomeEvent()),
                 onPickedPath: (path) => context.read<HomeBloc>().add(PickLolPathHomeEvent(pickedPath: path)),
               );
@@ -49,7 +59,7 @@ class HomePage extends StatelessWidget {
 
             if (state is LolNotLaunchedOrWrongPathProvidedHomeState) {
               return MessageWithRetryScreen(
-                message: 'Похоже лига не запущена...\nНажми "повторить", когда запустится 🙃',
+                message: appLocalizations.homeMessageLolOffline,
                 onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
               );
             }
@@ -62,7 +72,7 @@ class HomePage extends StatelessWidget {
             }
 
             if (state is LoadingSummonerInfoHomeState) {
-              return const MessageWithLoading(message: 'Загружаю информацию о призывателе');
+              return MessageWithLoading(message: appLocalizations.homeMessageLoadingData);
             }
 
             if (state is LoadedHomeState) {
@@ -136,6 +146,8 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return SizedBox(
       width: 216,
       child: Column(
@@ -159,9 +171,9 @@ class NavigationDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   contentPadding: const EdgeInsets.only(left: 16),
-                  title: const Tooltip(
-                    message: 'Себастьян постарается нажать кнопку "Принять" вместо вас',
-                    child: Text('Принять игру ?'),
+                  title: Tooltip(
+                    message: appLocalizations.homeAutoacceptTooltip,
+                    child: Text(appLocalizations.homeAutoaccept),
                   ),
                   style: ListTileStyle.drawer,
                   trailing: Switch(
@@ -214,20 +226,22 @@ class NavigationMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     String name;
 
     switch (destination) {
       case Destination.mastery:
-        name = 'МАСТЕРСТВО';
+        name = appLocalizations.homeNavigationMastery;
         break;
       case Destination.disenchanter:
-        name = 'РАСПЫЛИТЕЛЬ';
+        name = appLocalizations.homeNavigationDisenchanter;
         break;
       case Destination.championPick:
-        name = 'ТЕКУЩАЯ ИГРА';
+        name = appLocalizations.homeNavigationCurrentGame;
         break;
       case Destination.stats:
-        name = 'СТАТИСТИКА';
+        name = appLocalizations.homeNavigationTierList;
     }
 
     return ListTile(

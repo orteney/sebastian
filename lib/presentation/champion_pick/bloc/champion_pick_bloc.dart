@@ -132,24 +132,19 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
 
     if (state.role == event.pickedRole) return;
 
-    try {
-      final builds = await _buildRepository.getBuilds(
-        state.pickedChampion.id,
-        role: event.pickedRole,
-      );
+    final builds = await _buildRepository.getBuilds(
+      state.pickedChampion.id,
+      role: event.pickedRole,
+    );
 
-      emit(state.copyWith(
-        role: builds.role,
-        builds: builds.builds,
-        selectedBuildIndex: 0,
-        runesImages: _getPerksImages(builds.builds),
-        itemImages: _getItemImages(builds.builds),
-        summonerSpellImages: _getSummonerSpellImages(builds.builds),
-      ));
-    } catch (e, stackTrace) {
-      // Бывает такое, что для выбранной пары чемпион-роль нету билда
-      onError('Нет сборки для этой роли :<', stackTrace);
-    }
+    emit(state.copyWith(
+      role: builds.role,
+      builds: builds.builds,
+      selectedBuildIndex: 0,
+      runesImages: _getPerksImages(builds.builds),
+      itemImages: _getItemImages(builds.builds),
+      summonerSpellImages: _getSummonerSpellImages(builds.builds),
+    ));
   }
 
   Map<int, LcuImage> _getPerksImages(List<BuildInfo> builds) {

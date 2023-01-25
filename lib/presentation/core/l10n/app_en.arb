@@ -1,0 +1,135 @@
+{
+  "@@locale": "en",
+  "appVersion": "Version: {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "buildDetailsItems": "Items",
+  "buildDetailsItemsCore": "Core build",
+  "buildDetailsItemsFinal": "Final build",
+  "buildDetailsItemsSituational": "Situational items",
+  "buildDetailsItemsStart": "Starting build",
+  "buildDetailsRunes": "Runes",
+  "buildDetailsSkills": "Skills",
+  "buildDetailsSummonerSpells": "Summoner spells",
+  "buttonRetry": "RETRY",
+  "championPickImportButton": "IMPORT",
+  "championPickNoBuildsMessage": "There are no builds for the selected role 🥲",
+  "championPickNoPickedChampionMessage": "Pick champion 🙃",
+  "championPickNotInLobbyMessage": "Looks like you're not in the lobby right now 🤔",
+  "disenchanterAddAllButton": "Add All",
+  "disenchanterDisenchantButton": "DISENCHANT",
+  "disenchanterMasteryBadgeTooltip": "{level} mastery and {tokensCount} tokens",
+  "@disenchanterMasteryBadgeTooltip": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "tokensCount": {
+        "type": "int"
+      }
+    }
+  },
+  "disenchanterNoShardsMessage": "You have no champion's shards",
+  "disenchanterNotOwnedBadgeTooltip": "Not owned",
+  "disenchanterRemoveAllButton": "Remove All",
+  "disenchanterShardCount": "{count} of {totalCount}",
+  "@disenchanterShardCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "totalCount": {
+        "type": "int"
+      }
+    }
+  },
+  "disenchanterShardsCount": "{count} shards",
+  "@disenchanterShardsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "disenchanterSortByName": "Alphabetically",
+  "disenchanterSortByPrice": "By Price",
+  "disenchanterSortTooltip": "Sort",
+  "homeAutoaccept": "Autoaccept",
+  "homeAutoacceptTooltip": "Sebastian will try to push the button \"Accept\" instead of you",
+  "homeMessageConnecting": "Connecting to League of Legends... 🤔",
+  "homeMessageLoadingData": "Loading data about summoner",
+  "homeMessageLolOffline": "Looks like the league is offline...\nRetry when it starts 🙃",
+  "homeNavigationCurrentGame": "CURRENT GAME",
+  "homeNavigationDisenchanter": "DISENCHANTER",
+  "homeNavigationMastery": "MASTERY",
+  "homeNavigationTierList": "TIER LIST",
+  "lolPathPickerDialogTitle": "Pick «League of Legends» folder",
+  "lolPathPickerMessageInitial": "Hello, i'm Sebastian\n\\nI could not find where you find the league of legends client...\\n\\nIf it is not running then run it and retry.\\nIf it still doesn't work, then show me the path to the folder with the file \"LeagueClient.exe\"",
+  "lolPathPickerMessageWrongPath": "I can't find the league of legends files in the selected folder",
+  "lolPathPickerPickPathButton": "PICK PATH",
+  "masteryTableColumnChampion": "Champion",
+  "masteryTableColumnEternals": "Eternals",
+  "masteryTableColumnPoints": "Points",
+  "masteryTableColumnProgress": "Progress",
+  "masteryTableMaxProgress": "Master",
+  "masteryTableStatStonesCount": "{count} pcs",
+  "@masteryTableStatStonesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "matchesCount": "{count, plural, one{{count} game} other{{count} games}}",
+  "@matchesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summonerNextChestTooltip": "New chest will arrives in {timeUnit, select, days{{when} d.} hours{{when} h.} minutes{{when} m.} other{{when}}}",
+  "@summonerNextChestTooltip": {
+    "placeholders": {
+      "when": {
+        "type": "int"
+      },
+      "timeUnit": {
+        "type": "String"
+      }
+    }
+  },
+  "summonerNextLevelExpTooltip": "Until next level {count} experience",
+  "@summonerNextLevelExpTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tierListQueueFilterAram": "ARAM",
+  "tierListQueueFilterRanked": "Ranked",
+  "tierListTableColumnBanrate": "Ban Rate",
+  "tierListTableColumnChampion": "Champion",
+  "tierListTableColumnGames": "Games",
+  "tierListTableColumnPickrate": "Pick Rate",
+  "tierListTableColumnRole": "Role",
+  "tierListTableColumnTier": "Tier",
+  "tierListTableColumnWinrate": "Win Rate",
+  "winrate": "{winrate}% wins",
+  "@winrate": {
+    "placeholders": {
+      "winrate": {
+        "type": "double",
+        "format": "decimalPattern",
+        "example": "100.00",
+        "description": "Winrate caption"
+      }
+    }
+  }
+}

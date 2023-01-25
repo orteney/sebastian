@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:sebastian/di/di.dart';
 import 'package:sebastian/domain/champion_tier/champion_tier.dart';
@@ -100,16 +101,17 @@ class QueuePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final items = <DropdownMenuItem<AvailableQueue>>[];
 
     for (var queue in AvailableQueue.values) {
       final String text;
       switch (queue) {
         case AvailableQueue.aram:
-          text = 'ARAM';
+          text = appLocalizations.tierListQueueFilterAram;
           break;
         case AvailableQueue.rankedSolo5X5:
-          text = 'Ранговая';
+          text = appLocalizations.tierListQueueFilterRanked;
           break;
       }
 
@@ -181,13 +183,15 @@ class _ChampionsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return DataTable2(
       minWidth: 800,
       sortColumnIndex: sortColumnIndex,
       sortAscending: sortAscending,
       headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
       columnSpacing: 24,
-      columns: _buildDataColumns(onSortColumn),
+      columns: _buildDataColumns(appLocalizations, onSortColumn),
       rows: [
         for (var championTier in championTiers) _buildDataRow(championTier),
       ],
@@ -207,11 +211,13 @@ class _AramChampionsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return DataTable2(
       minWidth: 800,
       headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
       columnSpacing: 24,
-      columns: _buildDataColumns(),
+      columns: _buildDataColumns(appLocalizations),
       rows: [
         for (var championTier in benchChampionTiers)
           _buildDataRow(
@@ -227,43 +233,46 @@ class _AramChampionsTable extends StatelessWidget {
   }
 }
 
-List<DataColumn> _buildDataColumns([DataColumnSortCallback? onSortColumn]) {
+List<DataColumn> _buildDataColumns(
+  AppLocalizations appLocalizations, [
+  DataColumnSortCallback? onSortColumn,
+]) {
   return [
     DataColumn2(
-      label: const Text('Роль'),
+      label: Text(appLocalizations.tierListTableColumnRole),
       fixedWidth: 65,
       onSort: onSortColumn,
     ),
     DataColumn2(
-      label: const Text('Чемпион'),
+      label: Text(appLocalizations.tierListTableColumnChampion),
       size: ColumnSize.M,
       onSort: onSortColumn,
     ),
     DataColumn2(
-      label: const Text('Ранг'),
+      label: Text(appLocalizations.tierListTableColumnTier),
       fixedWidth: 75,
       onSort: onSortColumn,
     ),
     DataColumn2(
-      label: const Text('Побед'),
+      label: Text(appLocalizations.tierListTableColumnWinrate),
       size: ColumnSize.S,
       onSort: onSortColumn,
       numeric: true,
     ),
     DataColumn2(
-      label: const Text('Блокировок'),
+      label: Text(appLocalizations.tierListTableColumnBanrate),
       size: ColumnSize.S,
       onSort: onSortColumn,
       numeric: true,
     ),
     DataColumn2(
-      label: const Text('Выборов'),
+      label: Text(appLocalizations.tierListTableColumnPickrate),
       size: ColumnSize.S,
       onSort: onSortColumn,
       numeric: true,
     ),
     DataColumn2(
-      label: const Text('Игр'),
+      label: Text(appLocalizations.tierListTableColumnGames),
       size: ColumnSize.S,
       onSort: onSortColumn,
       numeric: true,

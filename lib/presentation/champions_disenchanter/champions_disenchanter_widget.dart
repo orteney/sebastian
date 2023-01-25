@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import 'package:sebastian/di/di.dart';
@@ -14,6 +16,8 @@ class ChampionsDisenchanterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return BlocProvider(
       create: (context) => ChampionsDisenchanterBloc(getIt(), getIt()),
       child: BlocBuilder<ChampionsDisenchanterBloc, ChampionsDisenchanterState>(
@@ -23,26 +27,29 @@ class ChampionsDisenchanterWidget extends StatelessWidget {
           }
 
           if (state is EmptyChampionsDisenchanterState) {
-            return const Center(child: Text('А нету у тебя осколков чемпионов'));
+            return Center(child: Text(appLocalizations.disenchanterNoShardsMessage));
           }
 
           if (state is SelectChampionsDisenchanterState) {
             return Stack(
               children: [
-                GridView.builder(
-                  padding: const EdgeInsets.only(left: 8, bottom: 8, top: 100, right: 8),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                  ),
-                  itemCount: state.loots.length,
-                  itemBuilder: (context, index) {
-                    final lootCount = state.loots[index];
+                Padding(
+                  padding: const EdgeInsets.only(top: 32),
+                  child: GridView.builder(
+                    padding: const EdgeInsets.only(left: 8, bottom: 8, top: 68, right: 8),
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                    ),
+                    itemCount: state.loots.length,
+                    itemBuilder: (context, index) {
+                      final lootCount = state.loots[index];
 
-                    return _LootCard(
-                      key: Key(lootCount.loot.lootId),
-                      lootCount: lootCount,
-                    );
-                  },
+                      return _LootCard(
+                        key: Key(lootCount.loot.lootId),
+                        lootCount: lootCount,
+                      );
+                    },
+                  ),
                 ),
                 Align(
                   alignment: Alignment.topCenter,
@@ -80,6 +87,8 @@ class _LootCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Card(
       clipBehavior: Clip.hardEdge,
       child: Container(
@@ -165,7 +174,7 @@ class _LootCard extends StatelessWidget {
                             child: const Icon(Icons.remove),
                           ),
                           Text(
-                            '${lootCount.count} из ${lootCount.loot.count}',
+                            appLocalizations.disenchanterShardCount(lootCount.count, lootCount.loot.count),
                             style: const TextStyle(fontSize: 16),
                           ),
                           OutlinedButton(
@@ -193,11 +202,13 @@ class NotOwnedBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Tooltip(
-      message: 'Не куплено',
-      child: Padding(
-        padding: EdgeInsets.only(left: 12),
-        child: CollectionTag(),
+    final appLocalizations = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 12),
+      child: Tooltip(
+        message: appLocalizations.disenchanterNotOwnedBadgeTooltip,
+        child: const CollectionTag(),
       ),
     );
   }
@@ -215,11 +226,13 @@ class MasteryBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: '$level ур. и $nextLevelTokensCount жетонов',
-      child: const Padding(
-        padding: EdgeInsets.only(left: 12),
-        child: MasteryTag(),
+    final appLocalizations = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 12),
+      child: Tooltip(
+        message: appLocalizations.disenchanterMasteryBadgeTooltip(level, nextLevelTokensCount),
+        child: const MasteryTag(),
       ),
     );
   }
@@ -236,12 +249,14 @@ class _SummaryDisenchantWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Card(
-      margin: const EdgeInsets.only(left: 12, top: 15, right: 12),
+      margin: const EdgeInsets.only(left: 12, top: 16, right: 12),
       elevation: 10,
       clipBehavior: Clip.antiAlias,
       child: Container(
-        height: 75,
+        height: 74,
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
@@ -250,7 +265,7 @@ class _SummaryDisenchantWidget extends StatelessWidget {
                 children: [
                   PopupMenuButton(
                     icon: const Icon(Icons.sort),
-                    tooltip: 'Сортировка',
+                    tooltip: appLocalizations.disenchanterSortTooltip,
                     onSelected: (SortField selectedSort) => context
                         .read<ChampionsDisenchanterBloc>()
                         .add(PickedSortFieldChampionsDisenchanterEvent(selectedSort)),
@@ -258,12 +273,12 @@ class _SummaryDisenchantWidget extends StatelessWidget {
                       CheckedPopupMenuItem(
                         checked: sortField == SortField.name,
                         value: SortField.name,
-                        child: const Text('По алфавиту'),
+                        child: Text(appLocalizations.disenchanterSortByName),
                       ),
                       CheckedPopupMenuItem(
                         checked: sortField == SortField.value,
                         value: SortField.value,
-                        child: const Text('По стоимости'),
+                        child: Text(appLocalizations.disenchanterSortByPrice),
                       ),
                     ],
                   ),
@@ -271,13 +286,13 @@ class _SummaryDisenchantWidget extends StatelessWidget {
                     onPressed: () =>
                         context.read<ChampionsDisenchanterBloc>().add(UnselectAllChampionsDisenchanterEvent()),
                     icon: const Icon(Icons.indeterminate_check_box),
-                    tooltip: 'Убрать все',
+                    tooltip: appLocalizations.disenchanterRemoveAllButton,
                   ),
                   IconButton(
                     onPressed: () =>
                         context.read<ChampionsDisenchanterBloc>().add(SelectAllChampionsDisenchanterEvent()),
                     icon: const Icon(Icons.add_box),
-                    tooltip: 'Добавить все',
+                    tooltip: appLocalizations.disenchanterAddAllButton,
                   ),
                 ],
               ),
@@ -290,10 +305,10 @@ class _SummaryDisenchantWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('РАСПЫЛИТЬ'),
+                  Text(appLocalizations.disenchanterDisenchantButton),
                   Row(
                     children: [
-                      Text('${summaryDisenchantLoot.totalCount} оск.'),
+                      Text(appLocalizations.disenchanterShardsCount(summaryDisenchantLoot.totalCount)),
                       const Icon(Icons.arrow_right_alt),
                       _BlueEssence(value: summaryDisenchantLoot.totalEssence)
                     ],

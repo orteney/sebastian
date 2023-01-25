@@ -60,7 +60,7 @@ class LCU {
     _port = int.tryParse(args[2]) ?? -1;
 
     if (authKey == '' || _port == -1) {
-      throw 'Чота не удалось прочитать';
+      throw UnknownLockfileFormatException();
     }
 
     if (kDebugMode) {

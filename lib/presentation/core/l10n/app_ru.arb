@@ -1,19 +1,60 @@
 {
-    "matchesCount": "{count, plural, one{{count} игра} few{{count} игры} many{{count} игр} other{{count} игр}}",
-    "@matchesCount": {
-        "placeholders": {
-            "count": {}
-        }
-    },
-    "winrate": "{winrate}% побед",
-    "@winrate": {
-        "placeholders": {
-            "winrate": {
-                "type": "double",
-                "format": "decimalPattern",
-                "example": "100.00",
-                "description": "Winrate caption"
-            }
-        }
-    }
+  "@@locale": "ru",
+  "appVersion": "Версия: {version}",
+  "buildDetailsItems": "Предметы",
+  "buildDetailsItemsCore": "Основная сборка",
+  "buildDetailsItemsFinal": "Финальная сборка",
+  "buildDetailsItemsSituational": "Ситуативные предметы",
+  "buildDetailsItemsStart": "Стартовая сборка",
+  "buildDetailsRunes": "Руны",
+  "buildDetailsSkills": "Заклинания",
+  "buildDetailsSummonerSpells": "Самонерки",
+  "buttonRetry": "ПОВТОРИТЬ",
+  "championPickImportButton": "ИМПОРТИРОВАТЬ",
+  "championPickNoBuildsMessage": "Для выбранной роли нет сборок 🥲",
+  "championPickNoPickedChampionMessage": "Давай выбирай, ну... 🙃",
+  "championPickNotInLobbyMessage": "Похоже ты сейчас не в лобби 🤔",
+  "disenchanterAddAllButton": "Добавить все",
+  "disenchanterDisenchantButton": "РАСПЫЛИТЬ",
+  "disenchanterMasteryBadgeTooltip": "{level} ур. и {tokensCount} жетонов",
+  "disenchanterNoShardsMessage": "А нету у тебя осколков чемпионов",
+  "disenchanterNotOwnedBadgeTooltip": "Не куплено",
+  "disenchanterRemoveAllButton": "Убрать все",
+  "disenchanterShardCount": "{count} из {totalCount}",
+  "disenchanterShardsCount": "{count} оск.",
+  "disenchanterSortByName": "По алфавиту",
+  "disenchanterSortByPrice": "По стоимости",
+  "disenchanterSortTooltip": "Сортировка",
+  "homeAutoaccept": "Автоприём",
+  "homeAutoacceptTooltip": "Себастьян постарается нажать кнопку \"Принять\" вместо вас",
+  "homeMessageConnecting": "Соединяюсь с League of Legends... 🤔",
+  "homeMessageLoadingData": "Загружаю информацию о призывателе",
+  "homeMessageLolOffline": "Похоже лига не запущена...\nНажми \"повторить\", когда запустится 🙃",
+  "homeNavigationCurrentGame": "ТЕКУЩАЯ ИГРА",
+  "homeNavigationDisenchanter": "РАСПЫЛИТЕЛЬ",
+  "homeNavigationMastery": "МАСТЕРСТВО",
+  "homeNavigationTierList": "СТАТИСТИКА",
+  "lolPathPickerDialogTitle": "Выбери папку «League of Legends»",
+  "lolPathPickerMessageInitial": "Привет, я Себстьян!\n\\nМне не удалось узнать где у тебя находится клиент лиги...\\n\\nЕсли она не запущена, то запусти её и попробуй \"повторить\".\\nЕсли всё равно не получается, тогда покажи мне путь до папки с файлом \"LeagueClient.exe\"",
+  "lolPathPickerMessageWrongPath": "Что-то не удалось найти файлы лиги легенд, не обманываешь?",
+  "lolPathPickerPickPathButton": "ПОКАЗАТЬ ПУТЬ",
+  "masteryTableColumnChampion": "Чемпион",
+  "masteryTableColumnEternals": "Вечные",
+  "masteryTableColumnPoints": "Очков",
+  "masteryTableColumnProgress": "Прогресс",
+  "masteryTableMaxProgress": "Мастер",
+  "masteryTableStatStonesCount": "{count} шт.",
+  "matchesCount": "{count, plural, one{{count} игра} few{{count} игры} many{{count} игр} other{{count} игр}}",
+  "summonerNextChestTooltip": "Новый сундук через {timeUnit, select, days{{when} дн.} hours{{when} ч.} minutes{{when} мин.} other{{when}}}",
+  "summonerNextLevelExpTooltip": "До следующего уровня {count} ед. опыта",
+  "tierListQueueFilterAram": "ARAM",
+  "tierListQueueFilterRanked": "Ранговая",
+  "tierListTableColumnBanrate": "Блокировок",
+  "tierListTableColumnChampion": "Чемпион",
+  "tierListTableColumnGames": "Игр",
+  "tierListTableColumnPickrate": "Выборов",
+  "tierListTableColumnRole": "Роль",
+  "tierListTableColumnTier": "Ранг",
+  "tierListTableColumnWinrate": "Побед",
+  "winrate": "{winrate}% побед"
 }

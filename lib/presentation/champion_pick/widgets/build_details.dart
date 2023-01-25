@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/domain/builds/build_info.dart';
 import 'package:sebastian/presentation/core/widgets/blurry_container.dart';
@@ -107,10 +109,12 @@ class _Runes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Руны', style: Theme.of(context).textTheme.titleMedium),
+        Text(appLocalizations.buildDetailsRunes, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 16),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,10 +157,12 @@ class _SummonerSpells extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Самонерки', style: Theme.of(context).textTheme.titleMedium),
+        Text(appLocalizations.buildDetailsSummonerSpells, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 12),
         Row(
           children: spells.map((e) => _getImage(summonerSpellImages[e]!)).toList(),
@@ -196,34 +202,36 @@ class _Items extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Предметы', style: Theme.of(context).textTheme.titleMedium),
-        const Padding(
-          padding: EdgeInsets.only(top: 12, bottom: 8),
-          child: Text('Стартовая сборка'),
+        Text(appLocalizations.buildDetailsItems, style: Theme.of(context).textTheme.titleMedium),
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 8),
+          child: Text(appLocalizations.buildDetailsItemsStart),
         ),
         Wrap(
           children: itemBuild.startBuild.map(_getImage).toList(),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 12, bottom: 8),
-          child: Text('Основная сборка'),
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 8),
+          child: Text(appLocalizations.buildDetailsItemsCore),
         ),
         Wrap(
           children: itemBuild.coreBuild.map(_getImage).toList(),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 12, bottom: 8),
-          child: Text('Финальная сборка'),
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 8),
+          child: Text(appLocalizations.buildDetailsItemsFinal),
         ),
         Wrap(
           children: itemBuild.finalBuild.map(_getImage).toList(),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 12, bottom: 8),
-          child: Text('Ситуативные предметы'),
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 8),
+          child: Text(appLocalizations.buildDetailsItemsSituational),
         ),
         Wrap(
           children: itemBuild.situationalItems.map(_getImage).toList(),
@@ -244,10 +252,12 @@ class _SkillOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Заклинания', style: Theme.of(context).textTheme.titleMedium),
+        Text(appLocalizations.buildDetailsSkills, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         Row(
           children: List.generate(18, (index) {

@@ -104,7 +104,8 @@ class _ActiveChampionPickWidget extends StatelessWidget {
                     const SizedBox(width: 16),
                     OutlinedButton.icon(
                       onPressed: hasBuilds
-                          ? () => context.read<ChampionPickBloc>().add(TapImportBuildChampionPickEvent())
+                          ? () =>
+                              context.read<ChampionPickBloc>().add(TapImportBuildChampionPickEvent(appLocalizations))
                           : null,
                       icon: const Icon(Icons.file_upload_rounded),
                       label: Text(appLocalizations.championPickImportButton),

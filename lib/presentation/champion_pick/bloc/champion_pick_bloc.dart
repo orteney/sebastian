@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meta/meta.dart';
 
 import 'package:sebastian/data/lcu/pick_session.dart';
@@ -216,7 +217,7 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
 
     final name = '[Sebby] ${state.pickedChampion.name}';
     _leagueClientEventRepository.setRunePage(name, build.runes);
-    _leagueClientEventRepository.setItemBuild(name, build.itemBuild);
+    _leagueClientEventRepository.setItemBuild(name, build.itemBuild, event.appLocalizations);
   }
 
   void _onGameEndEventChampionPickEvent(

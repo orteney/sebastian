@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:sebastian/data/lcu/lcu.dart';
@@ -94,25 +95,24 @@ class LeagueClientEventRepository {
     }
   }
 
-  Future<void> setItemBuild(String buildName, ItemBuild build) async {
-    //TODO l10n these strings :<
+  Future<void> setItemBuild(String buildName, ItemBuild build, AppLocalizations appLocalizations) async {
     final lcuBuild = lcu.ItemBuild(
       title: buildName,
       blocks: [
         lcu.Block(
-          type: '[Sebby] Стартовые предметы',
+          type: appLocalizations.itemBuildStartingBlock,
           items: build.startBuild.map((e) => lcu.Item(count: 1, id: e.toString())).toList(),
         ),
         lcu.Block(
-          type: '[Sebby] Основная сборка',
+          type: appLocalizations.itemBuildMainBlock,
           items: build.coreBuild.map((e) => lcu.Item(count: 1, id: e.toString())).toList(),
         ),
         lcu.Block(
-          type: '[Sebby] Финальная сборка',
+          type: appLocalizations.itemBuildFinalBlock,
           items: build.finalBuild.map((e) => lcu.Item(count: 1, id: e.toString())).toList(),
         ),
         lcu.Block(
-          type: '[Sebby] Ситуативные предметы',
+          type: appLocalizations.itemBuildSituationalBlock,
           items: build.situationalItems.map((e) => lcu.Item(count: 1, id: e.toString())).toList(),
         ),
       ],

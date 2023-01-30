@@ -4,21 +4,9 @@ abstract class HomeState {}
 
 class InitialHomeState extends HomeState {}
 
-class LolPathUnspecifiedHomeState extends HomeState {
-  final String? message;
+class LolPathUnspecifiedHomeState extends HomeState {}
 
-  LolPathUnspecifiedHomeState({this.message});
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is LolPathUnspecifiedHomeState && other.message == message;
-  }
-
-  @override
-  int get hashCode => message.hashCode;
-}
+class PickedWrongLolPathHomeState extends HomeState {}
 
 class LolNotLaunchedOrWrongPathProvidedHomeState extends HomeState {}
 

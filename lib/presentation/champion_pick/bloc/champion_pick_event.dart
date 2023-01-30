@@ -11,7 +11,11 @@ class PickSessionUpdatedChampionPickEvent extends ChampionPickEvent {
   });
 }
 
-class TapImportBuildChampionPickEvent extends ChampionPickEvent {}
+class TapImportBuildChampionPickEvent extends ChampionPickEvent {
+  final AppLocalizations appLocalizations;
+
+  TapImportBuildChampionPickEvent(this.appLocalizations);
+}
 
 class TapAvailableBuildTabChampionPickEvent extends ChampionPickEvent {
   final int pickedIndex;

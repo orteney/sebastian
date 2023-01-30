@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AppVersion extends StatefulWidget {
@@ -24,6 +26,7 @@ class _AppVersionState extends State<AppVersion> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Stack(
@@ -34,7 +37,7 @@ class _AppVersionState extends State<AppVersion> {
             right: 0,
             bottom: 0,
             child: Text(
-              'Версия: ${packageInfo!.version}',
+              appLocalizations.appVersion(packageInfo!.version),
               style: theme.textTheme.bodySmall,
             ),
           ),

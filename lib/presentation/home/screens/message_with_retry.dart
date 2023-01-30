@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
 
 class MessageWithRetryScreen extends StatelessWidget {
@@ -14,6 +16,8 @@ class MessageWithRetryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Center(
       child: SebastianMessage(
         child: Column(
@@ -24,7 +28,7 @@ class MessageWithRetryScreen extends StatelessWidget {
             const SizedBox(height: 32),
             OutlinedButton(
               onPressed: onTapRetry,
-              child: const Text('ПОВТОРИТЬ'),
+              child: Text(appLocalizations.buttonRetry),
             ),
           ],
         ),

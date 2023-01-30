@@ -22,20 +22,22 @@ class ChampionPickPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return BlocBuilder<ChampionPickBloc, ChampionPickState>(
       builder: (context, state) {
         if (state is NoActiveChampionPickState) {
-          return const Center(
+          return Center(
             child: SebastianMessage(
-              child: Text('Похоже ты сейчас не в лобби 🤔'),
+              child: Text(appLocalizations.championPickNotInLobbyMessage),
             ),
           );
         }
 
         if (state is NoPickedChampionPickState) {
-          return const Center(
+          return Center(
             child: SebastianMessage(
-              child: Text('Давай выбирай, ну... 🙃'),
+              child: Text(appLocalizations.championPickNoPickedChampionMessage),
             ),
           );
         }
@@ -62,6 +64,8 @@ class _ActiveChampionPickWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final bool hasBuilds = state.builds.isNotEmpty;
 
     return Ink(
@@ -92,7 +96,7 @@ class _ActiveChampionPickWidget extends StatelessWidget {
                   children: [
                     Text(
                       state.pickedChampion.name,
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      style: theme.textTheme.headlineSmall,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(width: 16),
@@ -100,10 +104,11 @@ class _ActiveChampionPickWidget extends StatelessWidget {
                     const SizedBox(width: 16),
                     OutlinedButton.icon(
                       onPressed: hasBuilds
-                          ? () => context.read<ChampionPickBloc>().add(TapImportBuildChampionPickEvent())
+                          ? () =>
+                              context.read<ChampionPickBloc>().add(TapImportBuildChampionPickEvent(appLocalizations))
                           : null,
                       icon: const Icon(Icons.file_upload_rounded),
-                      label: const Text('ИМПОРТИРОВАТЬ'),
+                      label: Text(appLocalizations.championPickImportButton),
                     ),
                   ],
                 ),
@@ -111,8 +116,8 @@ class _ActiveChampionPickWidget extends StatelessWidget {
                 if (!hasBuilds)
                   SebastianMessage(
                     child: Text(
-                      'Для выбранной роли нет сборок 🥲',
-                      style: Theme.of(context).textTheme.titleLarge,
+                      appLocalizations.championPickNoBuildsMessage,
+                      style: theme.textTheme.titleLarge,
                     ),
                   )
                 else ...[

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
 import 'package:sebastian/data/models/summoner.dart';
@@ -72,8 +74,10 @@ class _LevelProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return Tooltip(
-      message: 'До следующего уровня ${untilNextLvlExp - currentExp} опыта.',
+      message: appLocalizations.summonerNextLevelExpTooltip(untilNextLvlExp - currentExp),
       child: DefaultTextStyle(
         style: Theme.of(context).textTheme.titleMedium!,
         child: Row(
@@ -95,28 +99,25 @@ class _AvailableChests extends StatelessWidget {
 
   final ChestEligibility chests;
 
-  String _formatChestTime(DateTime nextChestDateTime) {
-    final now = DateTime.now();
-    final difference = nextChestDateTime.difference(now);
-
-    String when = '';
-    if (difference.inDays > 0) {
-      when = '${difference.inDays} дн.';
-    } else if (difference.inHours > 0) {
-      when = '${difference.inHours} ч.';
-    } else {
-      when = '${difference.inMinutes} мин.';
-    }
-
-    return 'Следующий сундук через $when';
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final appLocalizations = AppLocalizations.of(context)!;
+
+    final now = DateTime.now();
+    final difference = chests.nextChestDateTime().difference(now);
+
+    String message = '';
+    if (difference.inDays > 0) {
+      message = appLocalizations.summonerNextChestTooltip(difference.inDays, 'days');
+    } else if (difference.inHours > 0) {
+      message = appLocalizations.summonerNextChestTooltip(difference.inHours, 'hours');
+    } else {
+      message = appLocalizations.summonerNextChestTooltip(difference.inMinutes, 'minutes');
+    }
 
     return Tooltip(
-      message: _formatChestTime(chests.nextChestDateTime()),
+      message: message,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

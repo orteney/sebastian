@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meta/meta.dart';
 
 import 'package:sebastian/data/lcu/pick_session.dart';
@@ -132,24 +133,19 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
 
     if (state.role == event.pickedRole) return;
 
-    try {
-      final builds = await _buildRepository.getBuilds(
-        state.pickedChampion.id,
-        role: event.pickedRole,
-      );
+    final builds = await _buildRepository.getBuilds(
+      state.pickedChampion.id,
+      role: event.pickedRole,
+    );
 
-      emit(state.copyWith(
-        role: builds.role,
-        builds: builds.builds,
-        selectedBuildIndex: 0,
-        runesImages: _getPerksImages(builds.builds),
-        itemImages: _getItemImages(builds.builds),
-        summonerSpellImages: _getSummonerSpellImages(builds.builds),
-      ));
-    } catch (e, stackTrace) {
-      // Бывает такое, что для выбранной пары чемпион-роль нету билда
-      onError('Нет сборки для этой роли :<', stackTrace);
-    }
+    emit(state.copyWith(
+      role: builds.role,
+      builds: builds.builds,
+      selectedBuildIndex: 0,
+      runesImages: _getPerksImages(builds.builds),
+      itemImages: _getItemImages(builds.builds),
+      summonerSpellImages: _getSummonerSpellImages(builds.builds),
+    ));
   }
 
   Map<int, LcuImage> _getPerksImages(List<BuildInfo> builds) {
@@ -221,7 +217,7 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
 
     final name = '[Sebby] ${state.pickedChampion.name}';
     _leagueClientEventRepository.setRunePage(name, build.runes);
-    _leagueClientEventRepository.setItemBuild(name, build.itemBuild);
+    _leagueClientEventRepository.setItemBuild(name, build.itemBuild, event.appLocalizations);
   }
 
   void _onGameEndEventChampionPickEvent(

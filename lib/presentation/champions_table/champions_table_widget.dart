@@ -84,7 +84,7 @@ class _ChampionsTable extends StatelessWidget {
       sortColumnIndex: sortColumnIndex,
       sortAscending: sortAscending,
       headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-      columns: _buildChampionColumns(onSortColumn),
+      columns: _buildChampionColumns(appLocalizations, onSortColumn),
       rows: champions.map((champion) => _buildChampionRow(appLocalizations, champion)).toList(),
     );
   }
@@ -109,7 +109,7 @@ class _PickTable extends StatelessWidget {
       minWidth: _kTableMinWidth,
       columnSpacing: _kTableColumnSpacing,
       headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-      columns: _buildChampionColumns(),
+      columns: _buildChampionColumns(appLocalizations),
       rows: [
         ...benchChampions.map((e) => _buildChampionRow(appLocalizations, e)),
         if (myChampion != null) _buildChampionRow(appLocalizations, myChampion!, SebastianColors.myChampionRowColor),
@@ -120,12 +120,15 @@ class _PickTable extends StatelessWidget {
 }
 
 /// Do not forget change order in [ChampionsTableColumn]
-List<DataColumn> _buildChampionColumns([DataColumnSortCallback? onSortColumn]) {
+List<DataColumn> _buildChampionColumns(
+  AppLocalizations appLocalizations, [
+  DataColumnSortCallback? onSortColumn,
+]) {
   return <DataColumn>[
     DataColumn2(
       onSort: onSortColumn,
       size: ColumnSize.M,
-      label: const Text('Чемпион'),
+      label: Text(appLocalizations.masteryTableColumnChampion),
     ),
     DataColumn2(
       onSort: onSortColumn,
@@ -144,19 +147,19 @@ List<DataColumn> _buildChampionColumns([DataColumnSortCallback? onSortColumn]) {
       onSort: onSortColumn,
       numeric: true,
       size: ColumnSize.M,
-      label: const Text('Очков'),
+      label: Text(appLocalizations.masteryTableColumnPoints),
     ),
     DataColumn2(
       onSort: onSortColumn,
       numeric: true,
       size: ColumnSize.M,
-      label: const Text('Прогресс'),
+      label: Text(appLocalizations.masteryTableColumnProgress),
     ),
     DataColumn2(
       onSort: onSortColumn,
       size: ColumnSize.M,
       numeric: true,
-      label: const Text('Вечные'),
+      label: Text(appLocalizations.masteryTableColumnEternals),
     ),
     const DataColumn2(
       fixedWidth: 60,
@@ -170,10 +173,14 @@ List<DataColumn> _buildChampionColumns([DataColumnSortCallback? onSortColumn]) {
   ];
 }
 
-DataRow _buildChampionRow(AppLocalizations appLocalizations, Champion champion, [Color? color]) {
+DataRow _buildChampionRow(
+  AppLocalizations appLocalizations,
+  Champion champion, [
+  Color? color,
+]) {
   Widget progressRowData;
   if (champion.mastery.championLevel == 7) {
-    progressRowData = const Text('Мастер');
+    progressRowData = Text(appLocalizations.masteryTableMaxProgress);
   } else if (champion.mastery.championLevel == 6) {
     progressRowData = Text('${champion.mastery.tokensEarned}/3');
   } else if (champion.mastery.championLevel == 5) {
@@ -196,7 +203,7 @@ DataRow _buildChampionRow(AppLocalizations appLocalizations, Champion champion, 
           const SizedBox(width: 4),
           const EternalBonfireIcon(size: Size(16, 16)),
           const SizedBox(width: 12),
-          Text('${champion.statStones.stonesOwned} шт.')
+          Text(appLocalizations.masteryTableStatStonesCount(champion.statStones.stonesOwned))
         ],
       )),
       DataCell(Center(child: Checkbox(value: champion.mastery.chestGranted, onChanged: null))),

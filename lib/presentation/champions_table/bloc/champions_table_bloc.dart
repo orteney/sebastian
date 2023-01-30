@@ -90,7 +90,7 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
 
     switch (column) {
       case ChampionsTableColumn.champion:
-        // Из-за проблем в сортировке буквы Ё проще достать правильно отсортированный по алфавиту список
+        // Just take already sorted list from repository
         sortedChampions = _championRepository.champions.toList();
         break;
       case ChampionsTableColumn.level:

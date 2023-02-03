@@ -41,4 +41,5 @@
 ## Credits
 - https://github.com/HextechDocs/lcu-explorer
 - https://github.com/pipe01/lcu-event-viewer
+- https://github.com/CommunityDragon
 - https://github.com/elliejs/teemo

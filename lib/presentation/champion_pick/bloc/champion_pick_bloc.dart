@@ -142,6 +142,7 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
       role: builds.role,
       builds: builds.builds,
       selectedBuildIndex: 0,
+      selectedPerkStyle: PerkStyle.fromId(builds.builds[0].runes.primaryPath),
       runesImages: _getPerksImages(builds.builds),
       itemImages: _getItemImages(builds.builds),
       summonerSpellImages: _getSummonerSpellImages(builds.builds),

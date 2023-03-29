@@ -21,11 +21,11 @@ dependencies:
   json_annotation: 4.8.0
 
   # Presentation
-  bloc: 8.1.0
-  flutter_bloc: 8.1.1
+  bloc: 8.1.1
+  flutter_bloc: 8.1.2
 
   # UI
-  data_table_2: 2.3.10
+  data_table_2: 2.4.1
 
   # Extensions
   rxdart: 0.27.7
@@ -38,9 +38,9 @@ dependencies:
   collection: any #Resolved by Flutter
 
   # Plugins
-  shared_preferences: 2.0.17
-  file_picker: 5.2.5
-  package_info_plus: 3.0.2
+  shared_preferences: 2.0.20
+  file_picker: 5.2.6
+  package_info_plus: 3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +51,7 @@ dev_dependencies:
 
   # Codegen
   build_runner: 2.3.2
-  json_serializable: 6.6.0
+  json_serializable: 6.6.1
 
 flutter:
   generate: true

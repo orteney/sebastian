@@ -219,25 +219,27 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
     if (disenchantableLoots.isEmpty) return;
 
     var disenchantingState = DisenchantingChampionsDisenchanterState(
-      toDisenchantEntriesCount: disenchantableLoots.length,
+      toDisenchantEntriesCount: disenchantableLoots.fold(0, (previousValue, element) => previousValue += element.count),
       completedEntriesCount: 0,
     );
 
     emit(disenchantingState);
 
     for (var loot in disenchantableLoots) {
-      try {
-        await _lcu.service.disenchantChampion(loot.loot.lootId, loot.count);
-      } catch (e) {
-        if (kDebugMode) {
-          print(e);
-        }
-      } finally {
-        disenchantingState = disenchantingState.copyWith(
-          completedEntriesCount: disenchantingState.completedEntriesCount + 1,
-        );
+      for (var i = 0; i < loot.count; i++) {
+        try {
+          await _lcu.service.disenchantChampion(loot.loot.lootId);
+        } catch (e) {
+          if (kDebugMode) {
+            print(e);
+          }
+        } finally {
+          disenchantingState = disenchantingState.copyWith(
+            completedEntriesCount: disenchantingState.completedEntriesCount + 1,
+          );
 
-        emit(disenchantingState);
+          emit(disenchantingState);
+        }
       }
     }
 

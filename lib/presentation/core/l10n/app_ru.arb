@@ -19,6 +19,7 @@
   "disenchanterMasteryBadgeTooltip": "{level} ур. и {tokensCount} жетонов",
   "disenchanterNoShardsMessage": "А нету у тебя осколков чемпионов",
   "disenchanterNotOwnedBadgeTooltip": "Не куплено",
+  "disenchanterProgressMessage": "Распыляю твои осколки... 🔨",
   "disenchanterRemoveAllButton": "Убрать все",
   "disenchanterShardCount": "{count} из {totalCount}",
   "disenchanterShardsCount": "{count} оск.",

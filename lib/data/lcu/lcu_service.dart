@@ -88,10 +88,10 @@ class LcuService {
     }
   }
 
-  Future<void> disenchantChampion(String lootId, int count) async {
+  Future<void> disenchantChampion(String lootId) async {
     return _request(
       'POST',
-      '/lol-loot/v1/recipes/CHAMPION_RENTAL_disenchant/craft?repeat=$count',
+      '/lol-loot/v1/recipes/CHAMPION_RENTAL_disenchant/craft',
       body: [lootId],
     );
   }

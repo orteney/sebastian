@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sebastian/di/di.dart';
 import 'package:sebastian/presentation/core/widgets/icons/collection_tag.dart';
 import 'package:sebastian/presentation/core/widgets/icons/mastery_tag.dart';
+import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
 import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_disenchanter_bloc.dart';
@@ -64,8 +65,25 @@ class ChampionsDisenchanterWidget extends StatelessWidget {
 
           if (state is DisenchantingChampionsDisenchanterState) {
             return Center(
-              child: LinearProgressIndicator(
-                value: state.completedEntriesCount / state.toDisenchantEntriesCount,
+              child: SebastianMessage(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(appLocalizations.disenchanterProgressMessage),
+                    const SizedBox(height: 16),
+                    ConstrainedBox(
+                      constraints: BoxConstraints.loose(const Size.fromWidth(300)),
+                      child: LinearProgressIndicator(
+                        value: state.completedEntriesCount / state.toDisenchantEntriesCount,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${state.completedEntriesCount} из ${state.toDisenchantEntriesCount}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
               ),
             );
           }

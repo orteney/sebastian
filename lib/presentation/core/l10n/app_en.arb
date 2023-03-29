@@ -36,6 +36,7 @@
   },
   "disenchanterNoShardsMessage": "You have no champion's shards",
   "disenchanterNotOwnedBadgeTooltip": "Not owned",
+  "disenchanterProgressMessage": "Disenchanting your shards... 🔨",
   "disenchanterRemoveAllButton": "Remove All",
   "disenchanterShardCount": "{count} of {totalCount}",
   "@disenchanterShardCount": {

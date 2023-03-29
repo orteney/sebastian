@@ -16,4 +16,7 @@ class LcuError implements Exception {
 
   factory LcuError.fromJson(Map<String, dynamic> json) => _$LcuErrorFromJson(json);
   Map<String, dynamic> toJson() => _$LcuErrorToJson(this);
+
+  @override
+  String toString() => 'LcuError(errorCode: $errorCode, httpStatus: $httpStatus, message: $message)';
 }

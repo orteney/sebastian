@@ -63,12 +63,14 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
         masteryLevel = champion.first.mastery.championLevel;
       }
 
+      final owned = championLoot.redeemableStatus == 'ALREADY_OWNED';
+
       selectableLoots.add(
         SelectedLootCount(
           loot: championLoot,
-          count: _calcSafeToDisenchantCount(championLoot.count, masteryLevel),
+          count: _calcSafeToDisenchantCount(championLoot.count, masteryLevel, owned),
           image: _lcu.service.getLcuImage(championLoot.tilePath),
-          purchased: championLoot.redeemableStatus == 'ALREADY_OWNED',
+          purchased: owned,
           masteryLevel: masteryLevel,
           nextLevelTokensCount: _calcNextLevelTokensCount(
             tokenLoots,
@@ -101,17 +103,21 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
     return null;
   }
 
-  int _calcSafeToDisenchantCount(int lootCount, int masteryLevel) {
+  int _calcSafeToDisenchantCount(int lootCount, int masteryLevel, bool owned) {
+    int requiredShards = owned ? 0 : 1;
+
     switch (masteryLevel) {
       case 7:
-        return lootCount;
+        break;
       case 6:
-        return max(0, lootCount - 1);
-      case 5:
-        return max(0, lootCount - 2);
+        requiredShards++;
+        break;
       default:
-        return 0;
+        requiredShards += 2;
+        break;
     }
+
+    return max(0, lootCount - requiredShards);
   }
 
   void _onIncreaseCountChampionsDisenchanterEvent(

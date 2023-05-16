@@ -10,7 +10,6 @@ import 'package:sebastian/presentation/champions_disenchanter/champions_disencha
 import 'package:sebastian/presentation/champions_table/champions_table_widget.dart';
 import 'package:sebastian/presentation/champions_tier_list/champions_tier_list_widget.dart';
 import 'package:sebastian/presentation/core/widgets/app_version.dart';
-import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 import 'package:sebastian/presentation/summoner/summoner_widget.dart';
 
 import 'bloc/home_bloc.dart';
@@ -38,97 +37,79 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            if (state is InitialHomeState) {
-              return MessageWithLoading(message: appLocalizations.homeMessageConnecting);
-            }
-
-            if (state is LolPathUnspecifiedHomeState) {
-              return PickLolPathScreen(
-                onRetryTap: () => context.read<HomeBloc>().add(StartHomeEvent()),
-                onPickedPath: (path) => context.read<HomeBloc>().add(PickLolPathHomeEvent(pickedPath: path)),
-              );
-            }
-
-            if (state is PickedWrongLolPathHomeState) {
-              return PickLolPathScreen(
-                pickedWrongPath: true,
-                onRetryTap: () => context.read<HomeBloc>().add(StartHomeEvent()),
-                onPickedPath: (path) => context.read<HomeBloc>().add(PickLolPathHomeEvent(pickedPath: path)),
-              );
-            }
-
-            if (state is LolNotLaunchedOrWrongPathProvidedHomeState) {
-              return MessageWithRetryScreen(
-                message: appLocalizations.homeMessageLolOffline,
-                onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
-              );
-            }
-
-            if (state is ErrorHomeState) {
-              return MessageWithRetryScreen(
-                message: state.message,
-                onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
-              );
-            }
-
-            if (state is LoadingSummonerInfoHomeState) {
-              return MessageWithLoading(message: appLocalizations.homeMessageLoadingData);
-            }
-
-            if (state is LoadedHomeState) {
-              Widget body;
-
-              switch (state.destination) {
-                case Destination.championPick:
-                  body = ChampionPickPage(summonerId: state.summonerId);
-                  break;
-                case Destination.mastery:
-                  body = ChampionsTableWidget(summonerId: state.summonerId);
-                  break;
-                case Destination.disenchanter:
-                  body = const ChampionsDisenchanterWidget();
-                  break;
-                case Destination.stats:
-                  body = const ChampionsTierListWidget();
-                  break;
-              }
-
-              return BlocProvider(
-                create: (context) => ChampionPickBloc(
-                  state.summonerId,
-                  getIt(),
-                  getIt(),
-                  getIt(),
-                  getIt(),
-                  getIt(),
-                  getIt(),
+            return switch (state) {
+              InitialHomeState _ => MessageWithLoading(message: appLocalizations.homeMessageConnecting),
+              LolPathUnspecifiedHomeState _ => PickLolPathScreen(
+                  onRetryTap: () => context.read<HomeBloc>().add(StartHomeEvent()),
+                  onPickedPath: (path) => context.read<HomeBloc>().add(PickLolPathHomeEvent(pickedPath: path)),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    NavigationDrawer(
-                      currentDestination: state.destination,
-                      autoAcceptGame: state.autoAcceptEnabled,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8),
-                        child: Material(
-                          type: MaterialType.card,
-                          clipBehavior: Clip.antiAlias,
-                          borderRadius: const BorderRadius.all(Radius.circular(12)),
-                          child: body,
-                        ),
-                      ),
-                    ),
-                  ],
+              PickedWrongLolPathHomeState _ => PickLolPathScreen(
+                  pickedWrongPath: true,
+                  onRetryTap: () => context.read<HomeBloc>().add(StartHomeEvent()),
+                  onPickedPath: (path) => context.read<HomeBloc>().add(PickLolPathHomeEvent(pickedPath: path)),
                 ),
-              );
-            }
-
-            return UnknownBlocState(blocState: state);
+              LolNotLaunchedOrWrongPathProvidedHomeState _ => MessageWithRetryScreen(
+                  message: appLocalizations.homeMessageLolOffline,
+                  onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
+                ),
+              ErrorHomeState _ => MessageWithRetryScreen(
+                  message: state.message,
+                  onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
+                ),
+              LoadingSummonerInfoHomeState _ => MessageWithLoading(message: appLocalizations.homeMessageLoadingData),
+              LoadedHomeState _ => LoadedHomeStateWidget(state: state),
+            };
           },
         ),
+      ),
+    );
+  }
+}
+
+class LoadedHomeStateWidget extends StatelessWidget {
+  const LoadedHomeStateWidget({
+    required this.state,
+    super.key,
+  });
+
+  final LoadedHomeState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ChampionPickBloc(
+        state.summonerId,
+        getIt(),
+        getIt(),
+        getIt(),
+        getIt(),
+        getIt(),
+        getIt(),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          NavigationDrawer(
+            currentDestination: state.destination,
+            autoAcceptGame: state.autoAcceptEnabled,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8),
+              child: Material(
+                type: MaterialType.card,
+                clipBehavior: Clip.antiAlias,
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+                child: switch (state.destination) {
+                  Destination.championPick => ChampionPickPage(summonerId: state.summonerId),
+                  Destination.mastery => ChampionsTableWidget(summonerId: state.summonerId),
+                  Destination.disenchanter => const ChampionsDisenchanterWidget(),
+                  Destination.stats => const ChampionsTierListWidget(),
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -228,24 +209,13 @@ class NavigationMenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context)!;
 
-    String name;
-
-    switch (destination) {
-      case Destination.mastery:
-        name = appLocalizations.homeNavigationMastery;
-        break;
-      case Destination.disenchanter:
-        name = appLocalizations.homeNavigationDisenchanter;
-        break;
-      case Destination.championPick:
-        name = appLocalizations.homeNavigationCurrentGame;
-        break;
-      case Destination.stats:
-        name = appLocalizations.homeNavigationTierList;
-    }
-
     return ListTile(
-      title: Text(name),
+      title: Text(switch (destination) {
+        Destination.mastery => appLocalizations.homeNavigationMastery,
+        Destination.disenchanter => appLocalizations.homeNavigationDisenchanter,
+        Destination.championPick => appLocalizations.homeNavigationCurrentGame,
+        Destination.stats => appLocalizations.homeNavigationTierList
+      }),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),

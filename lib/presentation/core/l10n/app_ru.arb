@@ -1,65 +1,192 @@
 {
-  "@@locale": "ru",
-  "appVersion": "Версия: {version}",
-  "buildDetailsItems": "Предметы",
-  "buildDetailsItemsCore": "Основная сборка",
-  "buildDetailsItemsFinal": "Финальная сборка",
-  "buildDetailsItemsSituational": "Ситуативные предметы",
-  "buildDetailsItemsStart": "Стартовая сборка",
-  "buildDetailsRunes": "Руны",
-  "buildDetailsSkills": "Заклинания",
-  "buildDetailsSummonerSpells": "Самонерки",
   "buttonRetry": "ПОВТОРИТЬ",
+  "@buttonRetry": {},
+  "appVersion": "Версия: {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "buildDetailsItems": "Предметы",
+  "@buildDetailsItems": {},
+  "buildDetailsItemsCore": "Основная сборка",
+  "@buildDetailsItemsCore": {},
+  "buildDetailsItemsFinal": "Финальная сборка",
+  "@buildDetailsItemsFinal": {},
+  "buildDetailsItemsSituational": "Ситуативные предметы",
+  "@buildDetailsItemsSituational": {},
+  "buildDetailsItemsStart": "Стартовая сборка",
+  "@buildDetailsItemsStart": {},
+  "buildDetailsRunes": "Руны",
+  "@buildDetailsRunes": {},
+  "buildDetailsSkills": "Заклинания",
+  "@buildDetailsSkills": {},
+  "buildDetailsSummonerSpells": "Самонерки",
+  "@buildDetailsSummonerSpells": {},
   "championPickImportButton": "ИМПОРТИРОВАТЬ",
+  "@championPickImportButton": {},
   "championPickNoBuildsMessage": "Для выбранной роли нет сборок 🥲",
+  "@championPickNoBuildsMessage": {},
   "championPickNoPickedChampionMessage": "Давай выбирай, ну... 🙃",
+  "@championPickNoPickedChampionMessage": {},
   "championPickNotInLobbyMessage": "Похоже ты сейчас не в лобби 🤔",
+  "@championPickNotInLobbyMessage": {},
   "disenchanterAddAllButton": "Добавить все",
+  "@disenchanterAddAllButton": {},
   "disenchanterDisenchantButton": "РАСПЫЛИТЬ",
+  "@disenchanterDisenchantButton": {},
   "disenchanterMasteryBadgeTooltip": "{level} ур. и {tokensCount} жетонов",
+  "@disenchanterMasteryBadgeTooltip": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "tokensCount": {
+        "type": "int"
+      }
+    }
+  },
   "disenchanterNoShardsMessage": "А нету у тебя осколков чемпионов",
+  "@disenchanterNoShardsMessage": {},
   "disenchanterNotOwnedBadgeTooltip": "Не куплено",
-  "disenchanterProgressMessage": "Распыляю твои осколки... 🔨",
+  "@disenchanterNotOwnedBadgeTooltip": {},
   "disenchanterRemoveAllButton": "Убрать все",
+  "@disenchanterRemoveAllButton": {},
   "disenchanterShardCount": "{count} из {totalCount}",
+  "@disenchanterShardCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "totalCount": {
+        "type": "int"
+      }
+    }
+  },
   "disenchanterShardsCount": "{count} оск.",
+  "@disenchanterShardsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "disenchanterSortByName": "По алфавиту",
+  "@disenchanterSortByName": {},
   "disenchanterSortByPrice": "По стоимости",
+  "@disenchanterSortByPrice": {},
   "disenchanterSortTooltip": "Сортировка",
+  "@disenchanterSortTooltip": {},
   "homeAutoaccept": "Автоприём",
+  "@homeAutoaccept": {},
   "homeAutoacceptTooltip": "Себастьян постарается нажать кнопку \"Принять\" вместо вас",
-  "homeMessageConnecting": "Соединяюсь с League of Legends... 🤔",
+  "@homeAutoacceptTooltip": {},
   "homeMessageLoadingData": "Загружаю информацию о призывателе",
-  "homeMessageLolOffline": "Похоже лига не запущена...\nНажми \"повторить\", когда запустится 🙃",
+  "@homeMessageLoadingData": {},
   "homeNavigationCurrentGame": "ТЕКУЩАЯ ИГРА",
+  "@homeNavigationCurrentGame": {},
   "homeNavigationDisenchanter": "РАСПЫЛИТЕЛЬ",
+  "@homeNavigationDisenchanter": {},
   "homeNavigationMastery": "МАСТЕРСТВО",
+  "@homeNavigationMastery": {},
   "homeNavigationTierList": "СТАТИСТИКА",
+  "@homeNavigationTierList": {},
   "itemBuildFinalBlock": "[Sebby] Финальная сборка",
+  "@itemBuildFinalBlock": {},
   "itemBuildMainBlock": "[Sebby] Основная сборка",
+  "@itemBuildMainBlock": {},
   "itemBuildSituationalBlock": "[Sebby] Ситуативные предметы",
+  "@itemBuildSituationalBlock": {},
   "itemBuildStartingBlock": "[Sebby] Стартовые предметы",
+  "@itemBuildStartingBlock": {},
   "lolPathPickerDialogTitle": "Выбери папку «League of Legends»",
-  "lolPathPickerMessageInitial": "Привет, я Себстьян!\n\\nМне не удалось узнать где у тебя находится клиент лиги...\\n\\nЕсли она не запущена, то запусти её и попробуй \"повторить\".\\nЕсли всё равно не получается, тогда покажи мне путь до папки с файлом \"LeagueClient.exe\"",
+  "@lolPathPickerDialogTitle": {},
   "lolPathPickerMessageWrongPath": "Что-то не удалось найти файлы лиги легенд, не обманываешь?",
+  "@lolPathPickerMessageWrongPath": {},
   "lolPathPickerPickPathButton": "ПОКАЗАТЬ ПУТЬ",
+  "@lolPathPickerPickPathButton": {},
   "masteryTableColumnChampion": "Чемпион",
+  "@masteryTableColumnChampion": {},
   "masteryTableColumnEternals": "Вечные",
+  "@masteryTableColumnEternals": {},
   "masteryTableColumnPoints": "Очков",
+  "@masteryTableColumnPoints": {},
   "masteryTableColumnProgress": "Прогресс",
+  "@masteryTableColumnProgress": {},
   "masteryTableMaxProgress": "Мастер",
+  "@masteryTableMaxProgress": {},
   "masteryTableStatStonesCount": "{count} шт.",
+  "@masteryTableStatStonesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "matchesCount": "{count, plural, one{{count} игра} few{{count} игры} many{{count} игр} other{{count} игр}}",
+  "@matchesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "summonerNextChestTooltip": "Новый сундук через {timeUnit, select, days{{when} дн.} hours{{when} ч.} minutes{{when} мин.} other{{when}}}",
+  "@summonerNextChestTooltip": {
+    "placeholders": {
+      "when": {
+        "type": "int"
+      },
+      "timeUnit": {
+        "type": "String"
+      }
+    }
+  },
   "summonerNextLevelExpTooltip": "До следующего уровня {count} ед. опыта",
+  "@summonerNextLevelExpTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "tierListQueueFilterAram": "ARAM",
+  "@tierListQueueFilterAram": {},
   "tierListQueueFilterRanked": "Ранговая",
+  "@tierListQueueFilterRanked": {},
   "tierListTableColumnBanrate": "Блокировок",
+  "@tierListTableColumnBanrate": {},
   "tierListTableColumnChampion": "Чемпион",
+  "@tierListTableColumnChampion": {},
   "tierListTableColumnGames": "Игр",
+  "@tierListTableColumnGames": {},
   "tierListTableColumnPickrate": "Выборов",
+  "@tierListTableColumnPickrate": {},
   "tierListTableColumnRole": "Роль",
+  "@tierListTableColumnRole": {},
   "tierListTableColumnTier": "Ранг",
+  "@tierListTableColumnTier": {},
   "tierListTableColumnWinrate": "Побед",
-  "winrate": "{winrate}% побед"
+  "@tierListTableColumnWinrate": {},
+  "winrate": "{winrate}% побед",
+  "@winrate": {
+    "placeholders": {
+      "winrate": {
+        "type": "double",
+        "format": "decimalPattern",
+        "example": "100.00",
+        "description": "Winrate caption"
+      }
+    }
+  },
+  "disenchanterProgressMessage": "Распыляю твои осколки… 🔨",
+  "@disenchanterProgressMessage": {},
+  "homeMessageConnecting": "Соединяюсь с League of Legends… 🤔",
+  "@homeMessageConnecting": {},
+  "homeMessageLolOffline": "Похоже лига не запущена…\nНажми \"повторить\", когда запустится 🙃",
+  "@homeMessageLolOffline": {},
+  "lolPathPickerMessageInitial": "Привет, я Себстьян!\n\nМне не удалось узнать где у тебя находится клиент лиги…\\\\n\\\\nЕсли она не запущена, то запусти её и попробуй \\\"повторить\\\".\\\\nЕсли всё равно не получается, тогда покажи мне путь до папки с файлом \\\"LeagueClient.exe\\\"",
+  "@lolPathPickerMessageInitial": {}
 }

@@ -1,7 +1,6 @@
 part of 'champions_table_bloc.dart';
 
-@immutable
-abstract class ChampionsTableState {}
+sealed class ChampionsTableState {}
 
 class SummaryChampionsTableState extends ChampionsTableState with EquatableMixin {
   final int currentSummonerId;

@@ -11,7 +11,6 @@ import 'package:sebastian/presentation/core/widgets/blurry_container.dart';
 import 'package:sebastian/presentation/core/widgets/icons/role_icon.dart';
 import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
 import 'package:sebastian/presentation/core/widgets/snackbar_presenter.dart';
-import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'widgets/build_details.dart';
 
@@ -26,30 +25,22 @@ class ChampionPickPage extends StatelessWidget {
 
     return BlocBuilder<ChampionPickBloc, ChampionPickState>(
       builder: (context, state) {
-        if (state is NoActiveChampionPickState) {
-          return Center(
-            child: SebastianMessage(
-              child: Text(appLocalizations.championPickNotInLobbyMessage),
+        return switch (state) {
+          NoActiveChampionPickState _ => Center(
+              child: SebastianMessage(
+                child: Text(appLocalizations.championPickNotInLobbyMessage),
+              ),
             ),
-          );
-        }
-
-        if (state is NoPickedChampionPickState) {
-          return Center(
-            child: SebastianMessage(
-              child: Text(appLocalizations.championPickNoPickedChampionMessage),
+          NoPickedChampionPickState _ => Center(
+              child: SebastianMessage(
+                child: Text(appLocalizations.championPickNoPickedChampionMessage),
+              ),
             ),
-          );
-        }
-
-        if (state is ActiveChampionPickState) {
-          return SnackbarPresenter(
-            messageStream: context.read<ChampionPickBloc>().errorMessageStream,
-            child: _ActiveChampionPickWidget(state: state),
-          );
-        }
-
-        return UnknownBlocState(blocState: state);
+          ActiveChampionPickState _ => SnackbarPresenter(
+              messageStream: context.read<ChampionPickBloc>().errorMessageStream,
+              child: _ActiveChampionPickWidget(state: state),
+            ),
+        };
       },
     );
   }

@@ -1,6 +1,6 @@
 part of 'champions_disenchanter_bloc.dart';
 
-abstract class ChampionsDisenchanterState {}
+sealed class ChampionsDisenchanterState {}
 
 class LoadingChampionsDisenchanterState extends ChampionsDisenchanterState {}
 

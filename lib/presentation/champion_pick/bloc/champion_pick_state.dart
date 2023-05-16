@@ -1,7 +1,6 @@
 part of 'champion_pick_bloc.dart';
 
-@immutable
-abstract class ChampionPickState {}
+sealed class ChampionPickState {}
 
 class NoActiveChampionPickState extends ChampionPickState {}
 

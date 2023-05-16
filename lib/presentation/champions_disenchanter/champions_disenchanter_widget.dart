@@ -8,7 +8,6 @@ import 'package:sebastian/di/di.dart';
 import 'package:sebastian/presentation/core/widgets/icons/collection_tag.dart';
 import 'package:sebastian/presentation/core/widgets/icons/mastery_tag.dart';
 import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
-import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_disenchanter_bloc.dart';
 
@@ -23,74 +22,56 @@ class ChampionsDisenchanterWidget extends StatelessWidget {
       create: (context) => ChampionsDisenchanterBloc(getIt(), getIt()),
       child: BlocBuilder<ChampionsDisenchanterBloc, ChampionsDisenchanterState>(
         builder: (context, state) {
-          if (state is LoadingChampionsDisenchanterState) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is EmptyChampionsDisenchanterState) {
-            return Center(child: Text(appLocalizations.disenchanterNoShardsMessage));
-          }
-
-          if (state is SelectChampionsDisenchanterState) {
-            return Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 32),
-                  child: GridView.builder(
-                    padding: const EdgeInsets.only(left: 8, bottom: 8, top: 68, right: 8),
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                    ),
-                    itemCount: state.loots.length,
-                    itemBuilder: (context, index) {
-                      final lootCount = state.loots[index];
-
-                      return _LootCard(
-                        key: Key(lootCount.loot.lootId),
-                        lootCount: lootCount,
-                      );
-                    },
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: _SummaryDisenchantWidget(
-                    sortField: state.sortField,
-                    summaryDisenchantLoot: state.summary,
-                  ),
-                ),
-              ],
-            );
-          }
-
-          if (state is DisenchantingChampionsDisenchanterState) {
-            return Center(
-              child: SebastianMessage(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(appLocalizations.disenchanterProgressMessage),
-                    const SizedBox(height: 16),
-                    ConstrainedBox(
-                      constraints: BoxConstraints.loose(const Size.fromWidth(300)),
-                      child: LinearProgressIndicator(
-                        value: state.completedEntriesCount / state.toDisenchantEntriesCount,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '${state.completedEntriesCount} из ${state.toDisenchantEntriesCount}',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          return UnknownBlocState(blocState: state);
+          return switch (state) {
+            LoadingChampionsDisenchanterState _ => const Center(child: CircularProgressIndicator()),
+            EmptyChampionsDisenchanterState _ => Center(child: Text(appLocalizations.disenchanterNoShardsMessage)),
+            SelectChampionsDisenchanterState _ => SelectChampionsDisenchanterStateWidget(state: state),
+            DisenchantingChampionsDisenchanterState _ => DisenchantingWidget(state: state),
+          };
         },
       ),
+    );
+  }
+}
+
+class SelectChampionsDisenchanterStateWidget extends StatelessWidget {
+  const SelectChampionsDisenchanterStateWidget({
+    required this.state,
+    super.key,
+  });
+
+  final SelectChampionsDisenchanterState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 32),
+          child: GridView.builder(
+            padding: const EdgeInsets.only(left: 8, bottom: 8, top: 68, right: 8),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200,
+            ),
+            itemCount: state.loots.length,
+            itemBuilder: (context, index) {
+              final lootCount = state.loots[index];
+
+              return _LootCard(
+                key: Key(lootCount.loot.lootId),
+                lootCount: lootCount,
+              );
+            },
+          ),
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: _SummaryDisenchantWidget(
+            sortField: state.sortField,
+            summaryDisenchantLoot: state.summary,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -362,6 +343,43 @@ class _BlueEssence extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class DisenchantingWidget extends StatelessWidget {
+  const DisenchantingWidget({
+    required this.state,
+    super.key,
+  });
+
+  final DisenchantingChampionsDisenchanterState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
+    return Center(
+      child: SebastianMessage(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(appLocalizations.disenchanterProgressMessage),
+            const SizedBox(height: 16),
+            ConstrainedBox(
+              constraints: BoxConstraints.loose(const Size.fromWidth(300)),
+              child: LinearProgressIndicator(
+                value: state.completedEntriesCount / state.toDisenchantEntriesCount,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '${state.completedEntriesCount} из ${state.toDisenchantEntriesCount}',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

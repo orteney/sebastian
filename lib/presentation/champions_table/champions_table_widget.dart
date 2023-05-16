@@ -10,7 +10,6 @@ import 'package:sebastian/presentation/core/colors.dart';
 import 'package:sebastian/presentation/core/widgets/icons/chest_icon.dart';
 import 'package:sebastian/presentation/core/widgets/icons/eternal_bonfire_icon.dart';
 import 'package:sebastian/presentation/core/widgets/icons/mastery_icon.dart';
-import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_table_bloc.dart';
 
@@ -25,31 +24,26 @@ class ChampionsTableWidget extends StatelessWidget {
       create: (context) => ChampionsTableBloc(summonerId, getIt(), getIt()),
       child: BlocBuilder<ChampionsTableBloc, ChampionsTableState>(
         builder: (context, state) {
-          if (state is SummaryChampionsTableState) {
-            return _ChampionsTable(
-              champions: state.champions,
-              sortAscending: state.ascending,
-              sortColumnIndex: ChampionsTableColumn.values.indexOf(state.sortColumn),
-              onSortColumn: (int columnIndex, bool ascending) {
-                context.read<ChampionsTableBloc>().add(
-                      ChangeSortChampionsTableEvent(
-                        column: ChampionsTableColumn.values[columnIndex],
-                        ascending: ascending,
-                      ),
-                    );
-              },
-            );
-          }
-
-          if (state is PickInfoChampionsTableState) {
-            return _PickTable(
-              myChampion: state.myChampion,
-              benchChampions: state.benchChampions,
-              teamChampions: state.teamMatesChampions,
-            );
-          }
-
-          return UnknownBlocState(blocState: state);
+          return switch (state) {
+            SummaryChampionsTableState state => _ChampionsTable(
+                champions: state.champions,
+                sortAscending: state.ascending,
+                sortColumnIndex: ChampionsTableColumn.values.indexOf(state.sortColumn),
+                onSortColumn: (int columnIndex, bool ascending) {
+                  context.read<ChampionsTableBloc>().add(
+                        ChangeSortChampionsTableEvent(
+                          column: ChampionsTableColumn.values[columnIndex],
+                          ascending: ascending,
+                        ),
+                      );
+                },
+              ),
+            PickInfoChampionsTableState state => _PickTable(
+                myChampion: state.myChampion,
+                benchChampions: state.benchChampions,
+                teamChampions: state.teamMatesChampions,
+              ),
+          };
         },
       ),
     );
@@ -178,24 +172,18 @@ DataRow _buildChampionRow(
   Champion champion, [
   Color? color,
 ]) {
-  Widget progressRowData;
-  if (champion.mastery.championLevel == 7) {
-    progressRowData = Text(appLocalizations.masteryTableMaxProgress);
-  } else if (champion.mastery.championLevel == 6) {
-    progressRowData = Text('${champion.mastery.tokensEarned}/3');
-  } else if (champion.mastery.championLevel == 5) {
-    progressRowData = Text('${champion.mastery.tokensEarned}/2');
-  } else {
-    progressRowData = Text(champion.mastery.championPointsUntilNextLevel.toString());
-  }
-
   return DataRow(
     color: color != null ? MaterialStateProperty.all(color) : null,
     cells: <DataCell>[
       DataCell(Text(champion.name)),
       DataCell(Center(child: Text(champion.mastery.championLevel.toString()))),
       DataCell(Text(champion.mastery.championPoints.toString())),
-      DataCell(progressRowData),
+      DataCell(switch (champion.mastery.championLevel) {
+        7 => Text(appLocalizations.masteryTableMaxProgress),
+        6 => Text('${champion.mastery.tokensEarned}/3'),
+        5 => Text('${champion.mastery.tokensEarned}/2'),
+        _ => Text(champion.mastery.championPointsUntilNextLevel.toString()),
+      }),
       DataCell(Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

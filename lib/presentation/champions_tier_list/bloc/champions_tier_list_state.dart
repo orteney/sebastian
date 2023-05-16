@@ -1,6 +1,6 @@
 part of 'champions_tier_list_bloc.dart';
 
-abstract class ChampionsTierListState {}
+sealed class ChampionsTierListState {}
 
 class InitialChampionsTierListState extends ChampionsTierListState {}
 

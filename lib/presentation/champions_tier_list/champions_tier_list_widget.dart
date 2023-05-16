@@ -9,7 +9,6 @@ import 'package:sebastian/domain/champion_tier/champion_tier.dart';
 import 'package:sebastian/domain/core/role.dart';
 import 'package:sebastian/presentation/core/colors.dart';
 import 'package:sebastian/presentation/core/widgets/icons/role_icon.dart';
-import 'package:sebastian/presentation/core/widgets/unknown_bloc_state.dart';
 
 import 'bloc/champions_tier_list_bloc.dart';
 import 'bloc/champions_tier_list_models.dart';
@@ -23,68 +22,72 @@ class ChampionsTierListWidget extends StatelessWidget {
       create: (context) => ChampionsTierListBloc(getIt(), getIt())..add(InitChampionsTierListEvent()),
       child: BlocBuilder<ChampionsTierListBloc, ChampionsTierListState>(
         builder: (context, state) {
-          if (state is InitialChampionsTierListState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (state is LoadedChampionsTierListState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    children: [
-                      QueuePicker(
-                        currentQueue: state.currentQueue,
-                        onChanged: (value) => context
-                            .read<ChampionsTierListBloc>()
-                            .add(ChangeQueueChampionsTierListEvent(pickedQueue: value)),
-                      ),
-                      if (state.currentQueue != AvailableQueue.aram)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12),
-                          child: _RolePicker(
-                            role: state.roleFilter,
-                            onChanged: (value) => context
-                                .read<ChampionsTierListBloc>()
-                                .add(ChangeRoleChampionsTierListEvent(pickedRole: value)),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: _ChampionsTable(
-                    championTiers: state.championTiers,
-                    sortAscending: state.ascending,
-                    sortColumnIndex: ChampionTierTableColumn.values.indexOf(state.sortColumn),
-                    onSortColumn: (columnIndex, ascending) {
-                      context.read<ChampionsTierListBloc>().add(
-                            ChangeSortChampionsTierListEvent(
-                              column: ChampionTierTableColumn.values[columnIndex],
-                              ascending: ascending,
-                            ),
-                          );
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-
-          if (state is AramPickInfoChampionsTierListState) {
-            return _AramChampionsTable(
-              benchChampionTiers: state.benchChampions,
-              teamChampionTiers: state.teamChampions,
-            );
-          }
-
-          return UnknownBlocState(blocState: state);
+          return switch (state) {
+            InitialChampionsTierListState _ => const Center(child: CircularProgressIndicator()),
+            LoadedChampionsTierListState state => LoadedChampionsTierListStateWidget(state: state),
+            AramPickInfoChampionsTierListState state => _AramChampionsTable(
+                benchChampionTiers: state.benchChampions,
+                teamChampionTiers: state.teamChampions,
+              ),
+          };
         },
       ),
+    );
+  }
+}
+
+class LoadedChampionsTierListStateWidget extends StatelessWidget {
+  const LoadedChampionsTierListStateWidget({
+    required this.state,
+    super.key,
+  });
+
+  final LoadedChampionsTierListState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              QueuePicker(
+                currentQueue: state.currentQueue,
+                onChanged: (value) => context.read<ChampionsTierListBloc>().add(
+                      ChangeQueueChampionsTierListEvent(pickedQueue: value),
+                    ),
+              ),
+              if (state.currentQueue != AvailableQueue.aram)
+                Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: _RolePicker(
+                    role: state.roleFilter,
+                    onChanged: (value) => context.read<ChampionsTierListBloc>().add(
+                          ChangeRoleChampionsTierListEvent(pickedRole: value),
+                        ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: _ChampionsTable(
+            championTiers: state.championTiers,
+            sortAscending: state.ascending,
+            sortColumnIndex: ChampionTierTableColumn.values.indexOf(state.sortColumn),
+            onSortColumn: (columnIndex, ascending) {
+              context.read<ChampionsTierListBloc>().add(
+                    ChangeSortChampionsTierListEvent(
+                      column: ChampionTierTableColumn.values[columnIndex],
+                      ascending: ascending,
+                    ),
+                  );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

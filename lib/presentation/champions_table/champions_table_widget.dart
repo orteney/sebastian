@@ -178,12 +178,12 @@ DataRow _buildChampionRow(
       DataCell(Text(champion.name)),
       DataCell(Center(child: Text(champion.mastery.championLevel.toString()))),
       DataCell(Text(champion.mastery.championPoints.toString())),
-      DataCell(switch (champion.mastery.championLevel) {
-        7 => Text(appLocalizations.masteryTableMaxProgress),
-        6 => Text('${champion.mastery.tokensEarned}/3'),
-        5 => Text('${champion.mastery.tokensEarned}/2'),
-        _ => Text(champion.mastery.championPointsUntilNextLevel.toString()),
-      }),
+      DataCell(Text(switch (champion.mastery.championLevel) {
+        7 => appLocalizations.masteryTableMaxProgress,
+        6 => '${champion.mastery.tokensEarned}/3',
+        5 => '${champion.mastery.tokensEarned}/2',
+        _ => champion.mastery.championPointsUntilNextLevel.toString(),
+      })),
       DataCell(Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

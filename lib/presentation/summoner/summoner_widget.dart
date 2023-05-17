@@ -107,14 +107,11 @@ class _AvailableChests extends StatelessWidget {
     final now = DateTime.now();
     final difference = chests.nextChestDateTime().difference(now);
 
-    String message = '';
-    if (difference.inDays > 0) {
-      message = appLocalizations.summonerNextChestTooltip(difference.inDays, 'days');
-    } else if (difference.inHours > 0) {
-      message = appLocalizations.summonerNextChestTooltip(difference.inHours, 'hours');
-    } else {
-      message = appLocalizations.summonerNextChestTooltip(difference.inMinutes, 'minutes');
-    }
+    final message = switch (difference) {
+      Duration(inDays: 0, inHours: 0, inMinutes: int m) => appLocalizations.summonerNextChestTooltip(m, 'minutes'),
+      Duration(inDays: 0, inHours: int h) => appLocalizations.summonerNextChestTooltip(h, 'hours'),
+      Duration(inDays: int d) => appLocalizations.summonerNextChestTooltip(d, 'days'),
+    };
 
     return Tooltip(
       message: message,

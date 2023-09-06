@@ -8,28 +8,40 @@ class SummaryChampionsTableState extends ChampionsTableState with EquatableMixin
   final ChampionsTableColumn sortColumn;
   final bool ascending;
   final List<Champion> champions;
+  final ChampionRole? roleFilter;
 
   SummaryChampionsTableState({
     required this.currentSummonerId,
     this.sortColumn = ChampionsTableColumn.champion,
     this.ascending = true,
     required this.champions,
+    this.roleFilter,
   });
 
   @override
-  List<Object?> get props => [currentSummonerId, sortColumn, ascending, champions];
+  List<Object?> get props {
+    return [
+      currentSummonerId,
+      sortColumn,
+      ascending,
+      champions,
+      roleFilter,
+    ];
+  }
 
   SummaryChampionsTableState copyWith({
     int? currentSummonerId,
     ChampionsTableColumn? sortColumn,
     bool? ascending,
     List<Champion>? champions,
+    ChampionRole? Function()? roleFilter,
   }) {
     return SummaryChampionsTableState(
       currentSummonerId: currentSummonerId ?? this.currentSummonerId,
       sortColumn: sortColumn ?? this.sortColumn,
       ascending: ascending ?? this.ascending,
       champions: champions ?? this.champions,
+      roleFilter: roleFilter != null ? roleFilter() : this.roleFilter,
     );
   }
 }

@@ -28,3 +28,9 @@ class PickSessionUpdatedChampionsTableEvent extends ChampionsTableEvent {
     this.pickSession,
   });
 }
+
+class ChangeRoleFilterChampionsTableEvent extends ChampionsTableEvent {
+  final ChampionRole? roleFilter;
+
+  ChangeRoleFilterChampionsTableEvent(this.roleFilter);
+}

@@ -33,6 +33,7 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     on<UpdatedChampionsTableEvent>(_onUpdatedChampionsTableEvent);
     on<ChangeSortChampionsTableEvent>(_onChangeSortChampionsTableEvent);
     on<PickSessionUpdatedChampionsTableEvent>(_onPickSessionUpdatedChampionsTableEvent);
+    on<ChangeRoleFilterChampionsTableEvent>(_onChangeRoleFilterChampionsTableEvent);
 
     _championsSubscription = _championRepository.stream.listen((event) {
       add(UpdatedChampionsTableEvent(updatedChampions: event));
@@ -52,11 +53,9 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     var updatedChampions = event.updatedChampions;
 
     if (state is SummaryChampionsTableState) {
-      if (state.sortColumn != ChampionsTableColumn.champion || !state.ascending) {
-        updatedChampions = _sortChampions(updatedChampions, state.sortColumn, state.ascending);
-      }
-
-      emit(state.copyWith(champions: updatedChampions));
+      emit(state.copyWith(
+        champions: _sortChampions(updatedChampions, state.sortColumn, state.ascending),
+      ));
     }
   }
 
@@ -81,7 +80,7 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     emit(state.copyWith(
       sortColumn: event.column,
       ascending: event.column.initialSortAccending,
-      champions: _sortChampions(state.champions, event.column, event.column.initialSortAccending),
+      champions: _sortChampions(_championRepository.champions, event.column, event.column.initialSortAccending),
     ));
   }
 
@@ -90,8 +89,7 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
 
     switch (column) {
       case ChampionsTableColumn.champion:
-        // Just take already sorted list from repository
-        sortedChampions = _championRepository.champions.toList();
+        // Default sort
         break;
       case ChampionsTableColumn.level:
         sortedChampions.sort(((a, b) => a.mastery.championLevel.compareTo(b.mastery.championLevel)));
@@ -110,11 +108,13 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
         }));
         break;
       case ChampionsTableColumn.progress:
-        sortedChampions.sort(_sortByProgress);
+        sortedChampions.sort(
+          (a, b) => a.mastery.championPointsUntilNextLevel.compareTo(b.mastery.championPointsUntilNextLevel),
+        );
         break;
       case ChampionsTableColumn.statStones:
         sortedChampions.sort(
-          ((a, b) => a.statStones.milestonesPassed.compareTo(b.statStones.milestonesPassed)),
+          (a, b) => a.statStones.milestonesPassed.compareTo(b.statStones.milestonesPassed),
         );
         break;
     }
@@ -124,10 +124,6 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     }
 
     return sortedChampions;
-  }
-
-  int _sortByProgress(Champion a, Champion b) {
-    return a.mastery.championPointsUntilNextLevel.compareTo(b.mastery.championPointsUntilNextLevel);
   }
 
   void _onPickSessionUpdatedChampionsTableEvent(
@@ -154,9 +150,9 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
 
     for (var element in pickSession.myTeam) {
       if (element.summonerId == summaryState.currentSummonerId) {
-        myChampion = _findChampion(element.championId, summaryState.champions);
+        myChampion = _championRepository.getChampion(element.championId);
       } else {
-        final champion = _findChampion(element.championId, summaryState.champions);
+        final champion = _championRepository.getChampion(element.championId);
         if (champion != null) {
           teamChampions.add(champion);
         }
@@ -165,7 +161,7 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
 
     final List<Champion> benchChampions = [];
     for (var benchChampion in pickSession.benchChampions) {
-      final champion = _findChampion(benchChampion.championId, summaryState.champions);
+      final champion = _championRepository.getChampion(benchChampion.championId);
       if (champion != null) {
         benchChampions.add(champion);
       }
@@ -179,13 +175,25 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     ));
   }
 
-  Champion? _findChampion(int? champId, List<Champion> champions) {
-    if (champId == null || champId == 0) return null;
-    for (var champion in champions) {
-      if (champion.id == champId) return champion;
+  void _onChangeRoleFilterChampionsTableEvent(
+    ChangeRoleFilterChampionsTableEvent event,
+    Emitter<ChampionsTableState> emit,
+  ) {
+    if (this.state is! SummaryChampionsTableState) return;
+
+    final state = this.state as SummaryChampionsTableState;
+
+    if (event.roleFilter == state.roleFilter) return;
+
+    List<Champion> champions = _championRepository.champions;
+    if (event.roleFilter != null) {
+      champions = _championRepository.champions.where((e) => e.roles.contains(event.roleFilter)).toList();
     }
 
-    return null;
+    return emit(state.copyWith(
+      roleFilter: () => event.roleFilter,
+      champions: _sortChampions(champions, state.sortColumn, state.ascending),
+    ));
   }
 
   @override

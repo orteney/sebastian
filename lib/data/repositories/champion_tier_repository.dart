@@ -23,11 +23,15 @@ class ChampionTierRepository {
     final championTiers = <ChampionTier>[];
     for (var i = 0; i < stats.length; i++) {
       final stat = stats[i];
+
+      final champion = _championRepository.getChampion(stat.championId);
+      if (champion == null) continue; //Unknown champion, skip
+
       championTiers.add(
         ChampionTier(
           originRank: i,
           championId: stat.championId,
-          championName: _championRepository.getChampion(stat.championId).name,
+          championName: champion.name,
           games: stat.games,
           banRate: ((stat.banRate ?? 0) * 100),
           pickRate: (stat.pickRate * 100),

@@ -25,19 +25,7 @@ class ChampionsTableWidget extends StatelessWidget {
       child: BlocBuilder<ChampionsTableBloc, ChampionsTableState>(
         builder: (context, state) {
           return switch (state) {
-            SummaryChampionsTableState state => _ChampionsTable(
-                champions: state.champions,
-                sortAscending: state.ascending,
-                sortColumnIndex: ChampionsTableColumn.values.indexOf(state.sortColumn),
-                onSortColumn: (int columnIndex, bool ascending) {
-                  context.read<ChampionsTableBloc>().add(
-                        ChangeSortChampionsTableEvent(
-                          column: ChampionsTableColumn.values[columnIndex],
-                          ascending: ascending,
-                        ),
-                      );
-                },
-              ),
+            SummaryChampionsTableState state => SummaryChampionsTableStateWidget(state: state),
             PickInfoChampionsTableState state => _PickTable(
                 myChampion: state.myChampion,
                 benchChampions: state.benchChampions,
@@ -46,6 +34,64 @@ class ChampionsTableWidget extends StatelessWidget {
           };
         },
       ),
+    );
+  }
+}
+
+class SummaryChampionsTableStateWidget extends StatelessWidget {
+  const SummaryChampionsTableStateWidget({
+    super.key,
+    required this.state,
+  });
+
+  final SummaryChampionsTableState state;
+
+  DropdownMenuItem<ChampionRole> _roleMenuItem(ChampionRole? role, AppLocalizations appLocalizations) {
+    return DropdownMenuItem(
+      value: role,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Text(appLocalizations.championRole(role?.name ?? "")),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: DropdownButton<ChampionRole>(
+            value: state.roleFilter,
+            underline: const SizedBox.shrink(),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            onChanged: (value) => context.read<ChampionsTableBloc>().add(ChangeRoleFilterChampionsTableEvent(value)),
+            items: [
+              _roleMenuItem(null, appLocalizations),
+              for (var role in ChampionRole.values) _roleMenuItem(role, appLocalizations),
+            ],
+          ),
+        ),
+        Expanded(
+          child: _ChampionsTable(
+            champions: state.champions,
+            sortAscending: state.ascending,
+            sortColumnIndex: ChampionsTableColumn.values.indexOf(state.sortColumn),
+            onSortColumn: (int columnIndex, bool ascending) {
+              context.read<ChampionsTableBloc>().add(
+                    ChangeSortChampionsTableEvent(
+                      column: ChampionsTableColumn.values[columnIndex],
+                      ascending: ascending,
+                    ),
+                  );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

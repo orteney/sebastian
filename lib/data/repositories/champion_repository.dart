@@ -41,6 +41,7 @@ class ChampionRepository {
           name: dto.name,
           mastery: ChampionMastery.empty(dto.id),
           statStones: ChampionStatStones.empty(dto.id),
+          roles: dto.roles.map((e) => e.role).toList(),
         ),
       );
     }
@@ -78,8 +79,14 @@ class ChampionRepository {
 
   List<Champion> get champions => _championsSubject.valueOrNull ?? const [];
 
-  Champion getChampion(int championId) {
-    return champions.firstWhere((element) => element.id == championId);
+  Champion? getChampion(int? championId) {
+    if (championId == null || championId == 0) return null;
+
+    for (var champion in champions) {
+      if (champion.id == championId) return champion;
+    }
+
+    return null;
   }
 
   LcuImage getSplashImage(int championId) {

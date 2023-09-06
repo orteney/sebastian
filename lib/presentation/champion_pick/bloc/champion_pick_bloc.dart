@@ -98,6 +98,7 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     }
 
     final champion = _championRepository.getChampion(championId);
+    if (champion == null) return;
 
     Builds builds;
     if (pickSession.benchEnabled) {

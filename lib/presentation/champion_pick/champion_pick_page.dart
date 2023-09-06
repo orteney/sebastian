@@ -21,7 +21,7 @@ class ChampionPickPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return BlocBuilder<ChampionPickBloc, ChampionPickState>(
       builder: (context, state) {
@@ -55,7 +55,7 @@ class _ActiveChampionPickWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final bool hasBuilds = state.builds.isNotEmpty;
 
@@ -202,7 +202,7 @@ class _BuildTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
     final textStyle = Theme.of(context).textTheme.bodyMedium;
 
     const borderRadius = BorderRadius.all(Radius.circular(12));

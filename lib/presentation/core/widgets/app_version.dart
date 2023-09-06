@@ -26,7 +26,7 @@ class _AppVersionState extends State<AppVersion> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Stack(

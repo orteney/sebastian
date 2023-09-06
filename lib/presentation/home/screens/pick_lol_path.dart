@@ -32,7 +32,7 @@ class PickLolPathScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return Center(
       child: SebastianMessage(

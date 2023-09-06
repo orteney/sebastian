@@ -69,7 +69,7 @@ class _ChampionsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return DataTable2(
       minWidth: _kTableMinWidth,
@@ -97,7 +97,7 @@ class _PickTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return DataTable2(
       minWidth: _kTableMinWidth,

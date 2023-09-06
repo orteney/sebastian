@@ -74,7 +74,7 @@ class _LevelProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return Tooltip(
       message: appLocalizations.summonerNextLevelExpTooltip(untilNextLvlExp - currentExp),
@@ -102,15 +102,15 @@ class _AvailableChests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     final now = DateTime.now();
     final difference = chests.nextChestDateTime().difference(now);
 
     final message = switch (difference) {
-      Duration(inDays: 0, inHours: 0, inMinutes: int m) => appLocalizations.summonerNextChestTooltip(m, 'minutes'),
-      Duration(inDays: 0, inHours: int h) => appLocalizations.summonerNextChestTooltip(h, 'hours'),
-      Duration(inDays: int d) => appLocalizations.summonerNextChestTooltip(d, 'days'),
+      Duration(inDays: 0, inHours: 0, inMinutes: int m) => appLocalizations.summonerNextChestTooltip('minutes', m),
+      Duration(inDays: 0, inHours: int h) => appLocalizations.summonerNextChestTooltip('hours', h),
+      Duration(inDays: int d) => appLocalizations.summonerNextChestTooltip('days', d),
     };
 
     return Tooltip(

@@ -9,35 +9,26 @@
     }
   },
   "buildDetailsItems": "Items",
-  "@buildDetailsItems": {},
   "buildDetailsItemsCore": "Core build",
-  "@buildDetailsItemsCore": {},
   "buildDetailsItemsFinal": "Final build",
-  "@buildDetailsItemsFinal": {},
   "buildDetailsItemsSituational": "Situational items",
-  "@buildDetailsItemsSituational": {},
   "buildDetailsItemsStart": "Starting build",
-  "@buildDetailsItemsStart": {},
   "buildDetailsRunes": "Runes",
-  "@buildDetailsRunes": {},
   "buildDetailsSkills": "Skills",
-  "@buildDetailsSkills": {},
   "buildDetailsSummonerSpells": "Summoner spells",
-  "@buildDetailsSummonerSpells": {},
   "buttonRetry": "RETRY",
-  "@buttonRetry": {},
   "championPickImportButton": "IMPORT",
-  "@championPickImportButton": {},
   "championPickNoBuildsMessage": "There are no builds for the selected role 🥲",
-  "@championPickNoBuildsMessage": {},
   "championPickNoPickedChampionMessage": "Pick champion 🙃",
-  "@championPickNoPickedChampionMessage": {},
   "championPickNotInLobbyMessage": "Looks like you're not in the lobby right now 🤔",
-  "@championPickNotInLobbyMessage": {},
+  "championRole": "{role, select, assassin{Assassin} fighter{Fighter} mage{Mage} marksman{Marksman} support{Support} tank{Tank} other{All roles}}",
+  "@championRole": {
+    "placeholders": {
+      "role": {}
+    }
+  },
   "disenchanterAddAllButton": "Add All",
-  "@disenchanterAddAllButton": {},
   "disenchanterDisenchantButton": "DISENCHANT",
-  "@disenchanterDisenchantButton": {},
   "disenchanterMasteryBadgeTooltip": "{level} mastery and {tokensCount} tokens",
   "@disenchanterMasteryBadgeTooltip": {
     "placeholders": {
@@ -50,13 +41,9 @@
     }
   },
   "disenchanterNoShardsMessage": "You have no champion's shards",
-  "@disenchanterNoShardsMessage": {},
   "disenchanterNotOwnedBadgeTooltip": "Not owned",
-  "@disenchanterNotOwnedBadgeTooltip": {},
   "disenchanterProgressMessage": "Disenchanting your shards… 🔨",
-  "@disenchanterProgressMessage": {},
   "disenchanterRemoveAllButton": "Remove All",
-  "@disenchanterRemoveAllButton": {},
   "disenchanterShardCount": "{count} of {totalCount}",
   "@disenchanterShardCount": {
     "placeholders": {
@@ -77,55 +64,30 @@
     }
   },
   "disenchanterSortByName": "Alphabetically",
-  "@disenchanterSortByName": {},
   "disenchanterSortByPrice": "By Price",
-  "@disenchanterSortByPrice": {},
   "disenchanterSortTooltip": "Sort",
-  "@disenchanterSortTooltip": {},
   "homeAutoaccept": "Autoaccept",
-  "@homeAutoaccept": {},
   "homeAutoacceptTooltip": "Sebastian will try to push the button \"Accept\" instead of you",
-  "@homeAutoacceptTooltip": {},
   "homeMessageConnecting": "Connecting to League of Legends… 🤔",
-  "@homeMessageConnecting": {},
   "homeMessageLoadingData": "Loading data about summoner",
-  "@homeMessageLoadingData": {},
   "homeMessageLolOffline": "Looks like the league is offline…\nRetry when it starts 🙃",
-  "@homeMessageLolOffline": {},
   "homeNavigationCurrentGame": "CURRENT GAME",
-  "@homeNavigationCurrentGame": {},
   "homeNavigationDisenchanter": "DISENCHANTER",
-  "@homeNavigationDisenchanter": {},
   "homeNavigationMastery": "MASTERY",
-  "@homeNavigationMastery": {},
   "homeNavigationTierList": "TIER LIST",
-  "@homeNavigationTierList": {},
   "itemBuildFinalBlock": "[Sebby] Final build",
-  "@itemBuildFinalBlock": {},
   "itemBuildMainBlock": "[Sebby] Main build",
-  "@itemBuildMainBlock": {},
   "itemBuildSituationalBlock": "[Sebby] Situational items",
-  "@itemBuildSituationalBlock": {},
   "itemBuildStartingBlock": "[Sebby] Starting items",
-  "@itemBuildStartingBlock": {},
   "lolPathPickerDialogTitle": "Pick «League of Legends» folder",
-  "@lolPathPickerDialogTitle": {},
   "lolPathPickerMessageInitial": "Hello, i'm Sebastian\n\\nI could not find where you find the league of legends client…\\n\\nIf it is not running then run it and retry.\\nIf it still doesn't work, then show me the path to the folder with the file \"LeagueClient.exe\"",
-  "@lolPathPickerMessageInitial": {},
   "lolPathPickerMessageWrongPath": "I can't find the league of legends files in the selected folder",
-  "@lolPathPickerMessageWrongPath": {},
   "lolPathPickerPickPathButton": "PICK PATH",
-  "@lolPathPickerPickPathButton": {},
   "masteryTableColumnChampion": "Champion",
-  "@masteryTableColumnChampion": {},
   "masteryTableColumnEternals": "Eternals",
-  "@masteryTableColumnEternals": {},
   "masteryTableColumnPoints": "Points",
-  "@masteryTableColumnPoints": {},
   "masteryTableColumnProgress": "Progress",
-  "@masteryTableColumnProgress": {},
   "masteryTableMaxProgress": "Master",
-  "@masteryTableMaxProgress": {},
   "masteryTableStatStonesCount": "{count} pcs",
   "@masteryTableStatStonesCount": {
     "placeholders": {
@@ -145,11 +107,11 @@
   "summonerNextChestTooltip": "New chest will arrives in {timeUnit, select, days{{when} d.} hours{{when} h.} minutes{{when} m.} other{{when}}}",
   "@summonerNextChestTooltip": {
     "placeholders": {
-      "when": {
-        "type": "int"
-      },
       "timeUnit": {
         "type": "String"
+      },
+      "when": {
+        "type": "int"
       }
     }
   },
@@ -162,31 +124,22 @@
     }
   },
   "tierListQueueFilterAram": "ARAM",
-  "@tierListQueueFilterAram": {},
   "tierListQueueFilterRanked": "Ranked",
-  "@tierListQueueFilterRanked": {},
   "tierListTableColumnBanrate": "Ban Rate",
-  "@tierListTableColumnBanrate": {},
   "tierListTableColumnChampion": "Champion",
-  "@tierListTableColumnChampion": {},
   "tierListTableColumnGames": "Games",
-  "@tierListTableColumnGames": {},
   "tierListTableColumnPickrate": "Pick Rate",
-  "@tierListTableColumnPickrate": {},
   "tierListTableColumnRole": "Role",
-  "@tierListTableColumnRole": {},
   "tierListTableColumnTier": "Tier",
-  "@tierListTableColumnTier": {},
   "tierListTableColumnWinrate": "Win Rate",
-  "@tierListTableColumnWinrate": {},
   "winrate": "{winrate}% wins",
   "@winrate": {
     "placeholders": {
       "winrate": {
-        "type": "double",
-        "format": "decimalPattern",
+        "description": "Winrate caption",
         "example": "100.00",
-        "description": "Winrate caption"
+        "format": "decimalPattern",
+        "type": "double"
       }
     }
   }

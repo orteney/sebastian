@@ -16,7 +16,7 @@ class ChampionsDisenchanterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return BlocProvider(
       create: (context) => ChampionsDisenchanterBloc(getIt(), getIt()),
@@ -86,7 +86,7 @@ class _LootCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return Card(
       clipBehavior: Clip.hardEdge,
@@ -201,7 +201,7 @@ class NotOwnedBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return Padding(
       padding: const EdgeInsets.only(left: 12),
@@ -225,7 +225,7 @@ class MasteryBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return Padding(
       padding: const EdgeInsets.only(left: 12),
@@ -248,7 +248,7 @@ class _SummaryDisenchantWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return Card(
       margin: const EdgeInsets.only(left: 12, top: 16, right: 12),
@@ -357,7 +357,7 @@ class DisenchantingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return Center(
       child: SebastianMessage(

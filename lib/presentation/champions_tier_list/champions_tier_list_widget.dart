@@ -104,7 +104,7 @@ class QueuePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
     final items = <DropdownMenuItem<AvailableQueue>>[];
 
     for (var queue in AvailableQueue.values) {
@@ -186,7 +186,7 @@ class _ChampionsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return DataTable2(
       minWidth: 800,
@@ -214,7 +214,7 @@ class _AramChampionsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context);
 
     return DataTable2(
       minWidth: 800,

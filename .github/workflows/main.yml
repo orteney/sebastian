@@ -13,7 +13,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: 'stable'
-          flutter-version: '3.10.x'
+          flutter-version: '3.13.x'
       - name: Build artifacts
         run: flutter build windows --release
       - name: Archive Release
@@ -37,7 +37,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: 'stable'
-          flutter-version: '3.10.x'
+          flutter-version: '3.13.x'
       - name: Build artifacts
         run: flutter build macos --release
       - name: Archive Release

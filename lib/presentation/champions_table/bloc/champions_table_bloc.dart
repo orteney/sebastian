@@ -54,7 +54,12 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
 
     if (state is SummaryChampionsTableState) {
       emit(state.copyWith(
-        champions: _sortChampions(updatedChampions, state.sortColumn, state.ascending),
+        champions: _filterAndSortChampions(
+          updatedChampions,
+          state.sortColumn,
+          state.ascending,
+          state.roleFilter,
+        ),
       ));
     }
   }
@@ -80,50 +85,13 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     emit(state.copyWith(
       sortColumn: event.column,
       ascending: event.column.initialSortAccending,
-      champions: _sortChampions(_championRepository.champions, event.column, event.column.initialSortAccending),
+      champions: _filterAndSortChampions(
+        state.champions,
+        event.column,
+        event.column.initialSortAccending,
+        state.roleFilter,
+      ),
     ));
-  }
-
-  List<Champion> _sortChampions(List<Champion> champions, ChampionsTableColumn column, bool ascending) {
-    var sortedChampions = champions.toList();
-
-    switch (column) {
-      case ChampionsTableColumn.champion:
-        // Default sort
-        break;
-      case ChampionsTableColumn.level:
-        sortedChampions.sort(((a, b) => a.mastery.championLevel.compareTo(b.mastery.championLevel)));
-        break;
-      case ChampionsTableColumn.points:
-        sortedChampions.sort(((a, b) => a.mastery.championPoints.compareTo(b.mastery.championPoints)));
-        break;
-      case ChampionsTableColumn.chestEarned:
-        sortedChampions.sort(((a, b) {
-          if (a.mastery.chestGranted == b.mastery.chestGranted) {
-            return 0;
-          } else if (a.mastery.chestGranted) {
-            return -1;
-          }
-          return 1;
-        }));
-        break;
-      case ChampionsTableColumn.progress:
-        sortedChampions.sort(
-          (a, b) => a.mastery.championPointsUntilNextLevel.compareTo(b.mastery.championPointsUntilNextLevel),
-        );
-        break;
-      case ChampionsTableColumn.statStones:
-        sortedChampions.sort(
-          (a, b) => a.statStones.milestonesPassed.compareTo(b.statStones.milestonesPassed),
-        );
-        break;
-    }
-
-    if (!ascending) {
-      sortedChampions = sortedChampions.reversed.toList();
-    }
-
-    return sortedChampions;
   }
 
   void _onPickSessionUpdatedChampionsTableEvent(
@@ -185,15 +153,75 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
 
     if (event.roleFilter == state.roleFilter) return;
 
-    List<Champion> champions = _championRepository.champions;
-    if (event.roleFilter != null) {
-      champions = _championRepository.champions.where((e) => e.roles.contains(event.roleFilter)).toList();
-    }
-
     return emit(state.copyWith(
       roleFilter: () => event.roleFilter,
-      champions: _sortChampions(champions, state.sortColumn, state.ascending),
+      champions: _filterAndSortChampions(
+        _championRepository.champions,
+        state.sortColumn,
+        state.ascending,
+        event.roleFilter,
+      ),
     ));
+  }
+
+  List<Champion> _filterAndSortChampions(
+    List<Champion> champions,
+    ChampionsTableColumn column,
+    bool ascending,
+    ChampionRole? roleFilter,
+  ) {
+    if (column == ChampionsTableColumn.champion) {
+      // _sortChampions expect already sorted by name list in that case
+      champions = _championRepository.champions;
+    }
+
+    if (roleFilter != null) {
+      champions = champions.where((element) => element.roles.contains(roleFilter)).toList();
+    }
+
+    return _sortChampions(champions, column, ascending);
+  }
+
+  List<Champion> _sortChampions(List<Champion> champions, ChampionsTableColumn column, bool ascending) {
+    var sortedChampions = champions.toList();
+
+    switch (column) {
+      case ChampionsTableColumn.champion:
+        // Default sort
+        break;
+      case ChampionsTableColumn.level:
+        sortedChampions.sort(((a, b) => a.mastery.championLevel.compareTo(b.mastery.championLevel)));
+        break;
+      case ChampionsTableColumn.points:
+        sortedChampions.sort(((a, b) => a.mastery.championPoints.compareTo(b.mastery.championPoints)));
+        break;
+      case ChampionsTableColumn.chestEarned:
+        sortedChampions.sort(((a, b) {
+          if (a.mastery.chestGranted == b.mastery.chestGranted) {
+            return 0;
+          } else if (a.mastery.chestGranted) {
+            return -1;
+          }
+          return 1;
+        }));
+        break;
+      case ChampionsTableColumn.progress:
+        sortedChampions.sort(
+          (a, b) => a.mastery.championPointsUntilNextLevel.compareTo(b.mastery.championPointsUntilNextLevel),
+        );
+        break;
+      case ChampionsTableColumn.statStones:
+        sortedChampions.sort(
+          (a, b) => a.statStones.milestonesPassed.compareTo(b.statStones.milestonesPassed),
+        );
+        break;
+    }
+
+    if (!ascending) {
+      sortedChampions = sortedChampions.reversed.toList();
+    }
+
+    return sortedChampions;
   }
 
   @override

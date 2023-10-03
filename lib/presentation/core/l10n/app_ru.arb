@@ -99,6 +99,11 @@
       }
     }
   },
+  "secretMenuCleanBannerTitle": "Очистить баннер призывателя",
+  "secretMenuClearBannerSubtitle": "Уберёт жетоны испытаний, титул и знамя",
+  "secretMenuResetIconSubtitle": "Установит в профиле иконку \"Шлемобратана\"",
+  "secretMenuResetIconTitle": "Сбросить иконку профиля",
+  "secretMenuTitle": "Секретное меню",
   "summonerNextChestTooltip": "Новый сундук через {timeUnit, select, days{{when} дн.} hours{{when} ч.} minutes{{when} мин.} other{{when}}}",
   "@summonerNextChestTooltip": {
     "placeholders": {

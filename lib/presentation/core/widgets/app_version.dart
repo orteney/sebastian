@@ -13,14 +13,14 @@ class AppVersion extends StatefulWidget {
 class _AppVersionState extends State<AppVersion> {
   PackageInfo? packageInfo;
 
-  Future<void> loadPackageInfo() async {
+  Future<void> _loadPackageInfo() async {
     packageInfo = await PackageInfo.fromPlatform();
     setState(() {});
   }
 
   @override
   void initState() {
-    loadPackageInfo();
+    _loadPackageInfo();
     super.initState();
   }
 

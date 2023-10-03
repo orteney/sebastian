@@ -7,6 +7,7 @@ import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
 import 'package:sebastian/data/models/summoner.dart';
 import 'package:sebastian/di/di.dart';
 import 'package:sebastian/presentation/core/widgets/icons/chest_icon.dart';
+import 'package:sebastian/presentation/summoner/secret_menu/secret_menu_dialog.dart';
 
 import 'bloc/summoner_bloc.dart';
 
@@ -42,10 +43,13 @@ class _SummonerInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          summoner.displayName,
-          style: Theme.of(context).textTheme.titleMedium,
-          textAlign: TextAlign.start,
+        GestureDetector(
+          onTap: () => showDialog(context: context, builder: (context) => const SecretMenuDialog()),
+          child: Text(
+            summoner.displayName,
+            style: Theme.of(context).textTheme.titleMedium,
+            textAlign: TextAlign.start,
+          ),
         ),
         const SizedBox(height: 16),
         _LevelProgress(

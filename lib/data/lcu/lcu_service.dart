@@ -112,6 +112,22 @@ class LcuService {
     return _request('POST', '/lol-matchmaking/v1/ready-check/accept');
   }
 
+  Future<void> removeChallengesTokens() {
+    return _request(
+      'POST',
+      '/lol-challenges/v1/update-player-preferences',
+      body: {"challengeIds": []},
+    );
+  }
+
+  Future<void> resetAccountIcon() {
+    return _request(
+      'PUT',
+      '/lol-summoner/v1/current-summoner/icon',
+      body: {"profileIconId": 29},
+    );
+  }
+
   Future<dynamic> _request(
     String method,
     String endpoint, {

@@ -4,8 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import 'package:sebastian/data/models/champion.dart';
 import 'package:sebastian/data/lcu/pick_session.dart';
+import 'package:sebastian/data/models/champion.dart';
 import 'package:sebastian/data/repositories/champion_repository.dart';
 import 'package:sebastian/data/repositories/league_client_event_repository.dart';
 
@@ -98,13 +98,13 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     PickSessionUpdatedChampionsTableEvent event,
     Emitter<ChampionsTableState> emit,
   ) {
-    if (state is! SummaryChampionsTableState && state is! PickInfoChampionsTableState) return;
-
     final SummaryChampionsTableState summaryState;
     if (state is SummaryChampionsTableState) {
       summaryState = state as SummaryChampionsTableState;
-    } else {
+    } else if (state is PickInfoChampionsTableState) {
       summaryState = (state as PickInfoChampionsTableState).summaryState;
+    } else {
+      return;
     }
 
     final pickSession = event.pickSession;
@@ -186,6 +186,10 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     var sortedChampions = champions.toList();
 
     switch (column) {
+      case ChampionsTableColumn.ordinal:
+        // Do nothing
+        return sortedChampions;
+
       case ChampionsTableColumn.champion:
         // Default sort
         break;

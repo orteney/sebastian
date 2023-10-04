@@ -124,8 +124,10 @@ class _ChampionsTable extends StatelessWidget {
       sortColumnIndex: sortColumnIndex,
       sortAscending: sortAscending,
       headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-      columns: _buildChampionColumns(appLocalizations, onSortColumn),
-      rows: champions.map((champion) => _buildChampionRow(appLocalizations, champion)).toList(),
+      columns: _buildChampionColumns(appLocalizations, onSortColumn, true),
+      rows: [
+        for (var i = 0; i < champions.length; i++) _buildChampionRow(appLocalizations, champions[i], ordinal: i + 1),
+      ],
     );
   }
 }
@@ -151,9 +153,11 @@ class _PickTable extends StatelessWidget {
       headingTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
       columns: _buildChampionColumns(appLocalizations),
       rows: [
-        ...benchChampions.map((e) => _buildChampionRow(appLocalizations, e)),
-        if (myChampion != null) _buildChampionRow(appLocalizations, myChampion!, SebastianColors.myChampionRowColor),
-        ...teamChampions.map((e) => _buildChampionRow(appLocalizations, e, SebastianColors.myTeamChampionRowColor)),
+        for (var champion in benchChampions) _buildChampionRow(appLocalizations, champion),
+        if (myChampion != null)
+          _buildChampionRow(appLocalizations, myChampion!, color: SebastianColors.myChampionRowColor),
+        for (var champion in teamChampions)
+          _buildChampionRow(appLocalizations, champion, color: SebastianColors.myTeamChampionRowColor)
       ],
     );
   }
@@ -163,8 +167,14 @@ class _PickTable extends StatelessWidget {
 List<DataColumn> _buildChampionColumns(
   AppLocalizations appLocalizations, [
   DataColumnSortCallback? onSortColumn,
+  bool withOrdinalColumn = false,
 ]) {
   return <DataColumn>[
+    if (withOrdinalColumn)
+      const DataColumn2(
+        fixedWidth: 36,
+        label: SizedBox.shrink(),
+      ),
     DataColumn2(
       onSort: onSortColumn,
       size: ColumnSize.M,
@@ -215,12 +225,15 @@ List<DataColumn> _buildChampionColumns(
 
 DataRow _buildChampionRow(
   AppLocalizations appLocalizations,
-  Champion champion, [
+  Champion champion, {
   Color? color,
-]) {
+  int? ordinal,
+}) {
   return DataRow(
+    key: ValueKey(champion.id),
     color: color != null ? MaterialStateProperty.all(color) : null,
     cells: <DataCell>[
+      if (ordinal != null) DataCell(Center(child: Text(ordinal.toString())), placeholder: true),
       DataCell(Text(champion.name)),
       DataCell(Center(child: Text(champion.mastery.championLevel.toString()))),
       DataCell(Text(champion.mastery.championPoints.toString())),

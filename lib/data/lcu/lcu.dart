@@ -81,25 +81,8 @@ class LCU {
       onDone: onDisconect,
     );
 
-    _websocket.add('[5, "$_pickSessionEvent"]');
-    _websocket.add('[5, "$_gameFlowStateEvent"]');
-    _websocket.add('[5, "$_matchmakingEvent"]');
-
+    _subscribeToLcuEvents(_websocket);
     _service = LcuService(_restClient, '127.0.0.1:$_port', _authHeader);
-  }
-
-  void _onWebsocketData(dynamic data) {
-    if (data.isEmpty) return;
-
-    if (kDebugMode) {
-      print("LCUEvent: $data");
-    }
-
-    final jsonEvent = json.decode(data);
-
-    if (jsonEvent is! List) return;
-
-    _websocketEventSubject.add(jsonEvent);
   }
 
   Future<bool> _tryFindRunningLolDirectory() async {
@@ -123,6 +106,29 @@ class LCU {
     }
 
     return false;
+  }
+
+  void _onWebsocketData(dynamic data) {
+    if (data.isEmpty) return;
+
+    if (kDebugMode) {
+      print("LCUEvent: $data");
+    }
+
+    final jsonEvent = json.decode(data);
+
+    if (jsonEvent is! List) return;
+
+    _websocketEventSubject.add(jsonEvent);
+  }
+
+  Future<void> _subscribeToLcuEvents(WebSocket socket) async {
+    // Should delay any following subscribing messages
+    _websocket.add('[5, "$_pickSessionEvent"]');
+    await Future.delayed(const Duration(milliseconds: 50));
+    _websocket.add('[5, "$_gameFlowStateEvent"]');
+    await Future.delayed(const Duration(milliseconds: 50));
+    _websocket.add('[5, "$_matchmakingEvent"]');
   }
 
   Future<bool> saveLockfileDirectory(Directory directory) async {

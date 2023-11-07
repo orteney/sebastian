@@ -125,9 +125,9 @@ class LCU {
   Future<void> _subscribeToLcuEvents(WebSocket socket) async {
     // Should delay any following subscribing messages
     _websocket.add('[5, "$_pickSessionEvent"]');
-    await Future.delayed(const Duration(milliseconds: 50));
+    await Future.delayed(const Duration(milliseconds: 100));
     _websocket.add('[5, "$_gameFlowStateEvent"]');
-    await Future.delayed(const Duration(milliseconds: 50));
+    await Future.delayed(const Duration(milliseconds: 100));
     _websocket.add('[5, "$_matchmakingEvent"]');
   }
 

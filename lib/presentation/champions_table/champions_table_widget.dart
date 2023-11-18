@@ -101,12 +101,11 @@ const _kTableColumnSpacing = 24.0;
 
 class _ChampionsTable extends StatelessWidget {
   const _ChampionsTable({
-    Key? key,
     required this.champions,
     this.sortAscending = true,
     this.sortColumnIndex,
     this.onSortColumn,
-  }) : super(key: key);
+  });
 
   final List<Champion> champions;
   final bool sortAscending;

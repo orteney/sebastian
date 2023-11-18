@@ -33,7 +33,7 @@ class BlurryContainer extends StatelessWidget {
   final BorderRadius borderRadius;
 
   const BlurryContainer({
-    Key? key,
+    super.key,
     required this.child,
     this.height,
     this.width,
@@ -41,7 +41,7 @@ class BlurryContainer extends StatelessWidget {
     this.padding = EdgeInsets.zero,
     this.color = Colors.transparent,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

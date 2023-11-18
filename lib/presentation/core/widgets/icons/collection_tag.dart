@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class CollectionTag extends StatelessWidget {
-  const CollectionTag({Key? key}) : super(key: key);
+  const CollectionTag({super.key});
 
   @override
   Widget build(BuildContext context) {

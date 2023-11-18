@@ -12,7 +12,7 @@ import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
 import 'bloc/champions_disenchanter_bloc.dart';
 
 class ChampionsDisenchanterWidget extends StatelessWidget {
-  const ChampionsDisenchanterWidget({Key? key}) : super(key: key);
+  const ChampionsDisenchanterWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

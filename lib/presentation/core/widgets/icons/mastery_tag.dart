@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class MasteryTag extends StatelessWidget {
-  const MasteryTag({Key? key}) : super(key: key);
+  const MasteryTag({super.key});
 
   @override
   Widget build(BuildContext context) {

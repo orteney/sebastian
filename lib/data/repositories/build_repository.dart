@@ -27,7 +27,7 @@ class BuildRepository {
       ),
     );
 
-    builds.addAll(blitzBuilds.map<BuildInfo>(_blitzBuildMapper));
+    builds.addAll(blitzBuilds.map<BuildInfo>(_blitzBuildMapper.call));
 
     return Builds(
       role: role ?? blitzRole.role,
@@ -44,7 +44,7 @@ class BuildRepository {
         championId: championId,
       ),
     );
-    builds.addAll(blitzBuilds.map<BuildInfo>(_blitzBuildMapper));
+    builds.addAll(blitzBuilds.map<BuildInfo>(_blitzBuildMapper.call));
 
     return Builds(
       builds: builds,

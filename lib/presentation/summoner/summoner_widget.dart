@@ -66,11 +66,10 @@ class _SummonerInfo extends StatelessWidget {
 
 class _LevelProgress extends StatelessWidget {
   const _LevelProgress({
-    Key? key,
     required this.currentLvl,
     required this.currentExp,
     required this.untilNextLvlExp,
-  }) : super(key: key);
+  });
 
   final int currentLvl;
   final int currentExp;

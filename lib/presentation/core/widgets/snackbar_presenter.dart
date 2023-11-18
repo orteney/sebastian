@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class SnackbarPresenter extends StatefulWidget {
   const SnackbarPresenter({
-    Key? key,
+    super.key,
     required this.messageStream,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Stream<String> messageStream;
   final Widget child;

@@ -172,12 +172,11 @@ class _RolePicker extends StatelessWidget {
 
 class _ChampionsTable extends StatelessWidget {
   const _ChampionsTable({
-    Key? key,
     required this.championTiers,
     this.sortAscending = true,
     this.sortColumnIndex,
     this.onSortColumn,
-  }) : super(key: key);
+  });
 
   final List<ChampionTier> championTiers;
   final bool sortAscending;
@@ -204,10 +203,9 @@ class _ChampionsTable extends StatelessWidget {
 
 class _AramChampionsTable extends StatelessWidget {
   const _AramChampionsTable({
-    Key? key,
     required this.teamChampionTiers,
     required this.benchChampionTiers,
-  }) : super(key: key);
+  });
 
   final List<ChampionTier> teamChampionTiers;
   final List<ChampionTier> benchChampionTiers;

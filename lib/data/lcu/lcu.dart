@@ -81,7 +81,6 @@ class LCU {
       onDone: onDisconect,
     );
 
-    _subscribeToLcuEvents(_websocket);
     _service = LcuService(_restClient, '127.0.0.1:$_port', _authHeader);
   }
 
@@ -120,15 +119,6 @@ class LCU {
     if (jsonEvent is! List) return;
 
     _websocketEventSubject.add(jsonEvent);
-  }
-
-  Future<void> _subscribeToLcuEvents(WebSocket socket) async {
-    // Should delay any following subscribing messages
-    _websocket.add('[5, "$_pickSessionEvent"]');
-    await Future.delayed(const Duration(milliseconds: 100));
-    _websocket.add('[5, "$_gameFlowStateEvent"]');
-    await Future.delayed(const Duration(milliseconds: 100));
-    _websocket.add('[5, "$_matchmakingEvent"]');
   }
 
   Future<bool> saveLockfileDirectory(Directory directory) async {
@@ -186,6 +176,7 @@ class LCU {
   Stream<dynamic> subscribeToReadyCheckEvent() => _subscribeToWebsocketEvent(_matchmakingEvent);
 
   Stream<dynamic> _subscribeToWebsocketEvent(String eventName) {
+    _websocket.add('[5, "$eventName"]');
     return _websocketEventSubject.where((event) => eventName == event.elementAt(1)).map((event) => event.elementAt(2));
   }
 

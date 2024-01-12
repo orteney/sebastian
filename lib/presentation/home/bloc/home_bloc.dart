@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:sebastian/data/lcu/lcu.dart';
+import 'package:sebastian/data/lcu/models/ready_check_event.dart';
 import 'package:sebastian/data/repositories/champion_repository.dart';
 import 'package:sebastian/data/repositories/items_repository.dart';
 import 'package:sebastian/data/repositories/league_client_event_repository.dart';
@@ -42,6 +43,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
     on<TapDestinationHomeEvent>(_onTapDestinationHomeEvent);
     on<ToggleAutoAcceptHomeEvent>(_onToggleAutoAcceptHomeEvent);
   }
+
+  StreamSubscription? _readyCheckSubscription;
 
   Future<void> _onStartHomeEvent(StartHomeEvent event, Emitter<HomeState> emit) async {
     if (state is! InitialHomeState) {
@@ -106,17 +109,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
       final summoner = await _summonerRepository.getCurrentSummoner();
       await _championRepository.updateChampions(summoner.summonerId);
     }).addTo(subscriptions);
-
-    _leagueClientEventRepository.observeReadyCheckEvent().listen((event) {
-      if (state is! LoadedHomeState) return;
-
-      if ((state as LoadedHomeState).autoAcceptEnabled &&
-          event.timer >= 2 &&
-          event.state == 'InProgress' &&
-          event.playerResponse == 'None') {
-        _lcu.service.acceptReadyCheck().ignore();
-      }
-    }).addTo(subscriptions);
   }
 
   void _onTapDestinationHomeEvent(TapDestinationHomeEvent event, Emitter<HomeState> emit) {
@@ -133,7 +125,28 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
     if (this.state is! LoadedHomeState) return;
 
     final state = this.state as LoadedHomeState;
+
+    if (state.autoAcceptEnabled) {
+      if (_readyCheckSubscription != null) {
+        subscriptions.remove(_readyCheckSubscription!);
+      }
+    } else {
+      _readyCheckSubscription = _leagueClientEventRepository.observeReadyCheckEvent().listen(_onReadyChekEvent)
+        ..addTo(subscriptions);
+    }
+
     emit(state.copyWith(autoAcceptEnabled: !state.autoAcceptEnabled));
+  }
+
+  void _onReadyChekEvent(ReadyCheckEvent event) {
+    if (state is! LoadedHomeState) return;
+
+    if ((state as LoadedHomeState).autoAcceptEnabled &&
+        event.timer >= 2 &&
+        event.state == 'InProgress' &&
+        event.playerResponse == 'None') {
+      _lcu.service.acceptReadyCheck().ignore();
+    }
   }
 
   @override

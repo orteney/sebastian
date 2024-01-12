@@ -55,7 +55,8 @@ class LeagueClientEventRepository {
   }
 
   Stream<ReadyCheckEvent> observeReadyCheckEvent() {
-    _readyCheckSubscription ??= _lcu.subscribeToReadyCheckEvent().listen((event) {
+    _readyCheckSubscription?.cancel();
+    _readyCheckSubscription = _lcu.subscribeToReadyCheckEvent().listen((event) {
       if (event['eventType'] != 'Update') return;
 
       final readyCheckEvent = ReadyCheckEvent.fromJson(event['data']);

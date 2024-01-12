@@ -54,24 +54,14 @@ class ChampionRepository {
     List<ChampionMastery> masteries,
     List<ChampionStatStones> statStones,
   ) sync* {
+    final masteryMap = {for (var mastery in masteries) mastery.championId: mastery};
+    final statStonesMap = {for (var statStone in statStones) statStone.championId: statStone};
+
     for (var champion in champions) {
-      ChampionMastery? mastery;
-      for (var element in masteries) {
-        if (element.championId == champion.id) {
-          mastery = element;
-          break;
-        }
-      }
-
-      ChampionStatStones? champStatStones;
-      for (var statStone in statStones) {
-        if (statStone.championId == champion.id) {
-          champStatStones = statStone;
-          break;
-        }
-      }
-
-      yield champion.copyWith(mastery: mastery, statStones: champStatStones);
+      yield champion.copyWith(
+        mastery: masteryMap[champion.id],
+        statStones: statStonesMap[champion.id],
+      );
     }
   }
 

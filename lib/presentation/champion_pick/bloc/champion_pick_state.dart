@@ -12,7 +12,7 @@ class ActiveChampionPickState extends ChampionPickState with EquatableMixin {
   final Role? role;
   final List<BuildInfo> builds;
   final int selectedBuildIndex;
-  final PerkStyle selectedPerkStyle;
+  final PerkStyle? selectedPerkStyle;
   final Map<int, LcuImage> runesImages;
   final Map<int, LcuImage> itemImages;
   final Map<int, LcuImage> summonerSpellImages;

@@ -123,7 +123,7 @@ class _ActiveChampionPickWidget extends StatelessWidget {
                           child: _BuildTab(
                             keyPerkIcon: state.runesImages[build.keystoneId]!,
                             championBuild: build,
-                            color: index == state.selectedBuildIndex ? state.selectedPerkStyle.color : null,
+                            color: index == state.selectedBuildIndex ? state.selectedPerkStyle?.color : null,
                             onTap: () =>
                                 context.read<ChampionPickBloc>().add(TapAvailableBuildTabChampionPickEvent(index)),
                           ),
@@ -132,18 +132,19 @@ class _ActiveChampionPickWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      return BuildDetails(
-                        singleColumn: constraints.maxWidth < 720,
-                        championBuild: state.builds[state.selectedBuildIndex],
-                        runesImages: state.runesImages,
-                        itemImages: state.itemImages,
-                        summonerSpellImages: state.summonerSpellImages,
-                        color: state.selectedPerkStyle.color,
-                      );
-                    },
-                  ),
+                  if (state.builds.isNotEmpty)
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        return BuildDetails(
+                          singleColumn: constraints.maxWidth < 720,
+                          championBuild: state.builds[state.selectedBuildIndex],
+                          runesImages: state.runesImages,
+                          itemImages: state.itemImages,
+                          summonerSpellImages: state.summonerSpellImages,
+                          color: state.selectedPerkStyle?.color ?? Colors.transparent,
+                        );
+                      },
+                    ),
                 ]
               ],
             ),

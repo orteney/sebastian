@@ -22,26 +22,28 @@ class ChampionPickPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final bloc = context.read<ChampionPickBloc>();
 
-    return BlocBuilder<ChampionPickBloc, ChampionPickState>(
-      builder: (context, state) {
-        return switch (state) {
-          NoActiveChampionPickState _ => Center(
-              child: SebastianMessage(
-                child: Text(appLocalizations.championPickNotInLobbyMessage),
+    return SnackbarPresenter(
+      messageStream: bloc.errorMessageStream,
+      child: BlocBuilder<ChampionPickBloc, ChampionPickState>(
+        bloc: bloc,
+        builder: (context, state) {
+          return switch (state) {
+            NoActiveChampionPickState _ => Center(
+                child: SebastianMessage(
+                  child: Text(appLocalizations.championPickNotInLobbyMessage),
+                ),
               ),
-            ),
-          NoPickedChampionPickState _ => Center(
-              child: SebastianMessage(
-                child: Text(appLocalizations.championPickNoPickedChampionMessage),
+            NoPickedChampionPickState _ => Center(
+                child: SebastianMessage(
+                  child: Text(appLocalizations.championPickNoPickedChampionMessage),
+                ),
               ),
-            ),
-          ActiveChampionPickState _ => SnackbarPresenter(
-              messageStream: context.read<ChampionPickBloc>().errorMessageStream,
-              child: _ActiveChampionPickWidget(state: state),
-            ),
-        };
-      },
+            ActiveChampionPickState _ => _ActiveChampionPickWidget(state: state),
+          };
+        },
+      ),
     );
   }
 }

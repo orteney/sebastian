@@ -3,7 +3,7 @@
 </p>
 
 [![](https://img.shields.io/github/v/release/orteney/champmastery?label=VERSION&style=for-the-badge)](https://github.com/orteney/champmastery/releases/latest)
-[![](https://img.shields.io/github/downloads/orteney/champmastery/total?style=for-the-badge)](https://github.com/orteney/champmastery/releases)
+[![](https://img.shields.io/github/downloads/orteney/sebastian/latest/total?style=for-the-badge)](https://github.com/orteney/champmastery/releases/latest)
 
 ## Features
 

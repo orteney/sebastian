@@ -1,61 +1,78 @@
 import 'package:collection/collection.dart';
+
 import 'package:sebastian/data/blitz/models/blitz_builds_response.dart';
 import 'package:sebastian/domain/builds/build_info.dart';
 
 class BlitzBuildMapper {
   BuildInfo call(BlitzBuild blitzBuild) {
+    blitzBuild.keystone.sortBy((element) => element.pickRate as num);
+    final keyStone = blitzBuild.keystone.last;
+
     return BuildInfo(
-      keystoneId: blitzBuild.primaryRune,
+      keystoneId: keyStone.keystoneId,
       winRate: ((blitzBuild.wins / blitzBuild.games) * 100).roundToDouble(),
       numMatches: blitzBuild.games,
       itemBuild: _mapBuildItems(
-        blitzBuild.mythicId,
         blitzBuild.startingItems,
         blitzBuild.coreItems,
-        blitzBuild.completedItems,
         blitzBuild.situationalItems,
       ),
       summonerSpells: blitzBuild.summonerSpells.first.summonerSpellIds,
-      runes: _mapBlitzRunes(blitzBuild.primaryRune, blitzBuild.runes),
-      skillPath: blitzBuild.skillOrders.firstOrNull?.skillOrder,
+      runes: _mapBlitzRunes(keyStone, blitzBuild.runes, blitzBuild.shards),
+      skillPath: blitzBuild.skillOrders?.firstOrNull?.skillOrder,
       skillOrder: null,
     );
   }
 
-  Runes _mapBlitzRunes(int primaryRune, List<BlitzRune> runes) {
-    final List<List<BlitzRune>> sortedRunes = [[], [], [], [], [], [], [], []];
-
+  Runes _mapBlitzRunes(
+    BlitzKeystone keystone,
+    List<BlitzRunes> runes,
+    BlitzShards shards,
+  ) {
+    final List<List<BlitzRunes>> sortedRunes = [[], [], [], [], []];
     for (var rune in runes) {
+      if (rune.index < 3 && rune.treeId != keystone.treeId || rune.index > 4) {
+        continue;
+      }
+
       sortedRunes[rune.index].add(rune);
     }
 
-    final primaryPath = sortedRunes[0].first.treeId!;
+    for (var runes in sortedRunes) {
+      runes.sortBy<num>((element) => element.pickRate);
+    }
+
+    final firstRune = sortedRunes[0].last;
     final primaryTree = <int>[
-      primaryRune,
-      sortedRunes[0].first.runeId,
-      sortedRunes[1].first.runeId,
-      sortedRunes[2].first.runeId,
+      keystone.keystoneId,
+      firstRune.runeId,
+      sortedRunes[1].last.runeId,
+      sortedRunes[2].last.runeId,
     ];
 
-    final subRune1 = sortedRunes[3].first;
-    final subRune2 = sortedRunes[4].firstWhere(
+    final subRune1 = sortedRunes[3].last;
+    final subRune2 = sortedRunes[4].lastWhere(
       (rune) => rune.runeId != subRune1.runeId && rune.treeId == subRune1.treeId,
-      orElse: () => sortedRunes[4].first,
+      orElse: () => sortedRunes[4].last,
     );
-    final subPath = subRune1.treeId!;
+    final subPath = subRune1.treeId;
     final subTree = <int>[
       subRune1.runeId,
       subRune2.runeId,
     ];
 
+    shards.offenseShard.sortBy((element) => element.pickRate as num);
+    shards.flexShard.sortBy((element) => element.pickRate as num);
+    shards.defenseShard.sortBy((element) => element.pickRate as num);
+
     final statTree = <int>[
-      sortedRunes[5].first.runeId,
-      sortedRunes[6].first.runeId,
-      sortedRunes[7].first.runeId,
+      int.parse(shards.offenseShard.last.shardId),
+      int.parse(shards.flexShard.last.shardId),
+      int.parse(shards.defenseShard.last.shardId),
     ];
 
     return Runes(
-      primaryPath: primaryPath,
+      primaryPath: firstRune.treeId,
       primary: primaryTree,
       subPath: subPath,
       sub: subTree,
@@ -64,35 +81,48 @@ class BlitzBuildMapper {
   }
 
   ItemBuild _mapBuildItems(
-    int mythicId,
-    List<BlitzStartingItem> startingItems,
-    List<BlitzItemSet> coreItems,
-    List<BlitzItem> completedItems,
-    List<BlitzItemStat> situationalItems,
+    List<BlitzStartingItems> startingItems,
+    List<BlitzCoreItem> coreItems,
+    List<BlitzSituationalItem> situationalItems,
   ) {
-    final coreBuild = coreItems.first.itemIds;
+    startingItems.sortBy((element) => element.pickRate as num);
+    coreItems.sortBy((element) => element.pickRate as num);
+    situationalItems.sortBy((element) => element.pickRate as num);
+
+    final startingBuild = startingItems.last.itemIds.map((e) => int.parse(e)).toList();
+
+    final coreBuild = coreItems.last.itemIds.split(',').map((e) => int.parse(e)).toList();
     final coreBoots = coreBuild.firstWhereOrNull((element) => _boots.contains(element));
+    if (coreBoots != null) {
+      situationalItems.removeWhere((element) => _boots.contains(element.itemId));
+    }
 
-    final finalItems = (completedItems.toList()
-          ..removeWhere(
-            (element) => coreBuild.contains(element.itemId) || (coreBoots != null && _boots.contains(element.itemId)),
-          )
-          ..sort((a, b) => a.averageIndex.compareTo(b.averageIndex)))
-        .map<int>((e) => e.itemId);
+    // Add final support item to core build
+    if (startingBuild.contains(_worldAtlasId)) {
+      for (var item in situationalItems.reversed) {
+        if (_finalItemsFromWorldAtlas.contains(item.itemId)) {
+          coreBuild.add(item.itemId);
+          break;
+        }
+      }
+    }
 
-    final finalBuild = (coreBuild.toList()..addAll(finalItems)).take(6).toList();
+    final finalBuild = {
+      ...coreBuild,
+      ...situationalItems.reversed.map((e) => e.itemId),
+    }.take(6).toList();
 
-    final situational = (situationalItems.toList()..removeWhere((element) => finalBuild.contains(element.itemId)))
-        .take(6)
+    final situational = situationalItems.reversed
+        .where((element) => !finalBuild.contains(element.itemId))
+        .take(10)
         .map((e) => e.itemId)
         .toList();
 
     return ItemBuild(
-      startBuild: startingItems.first.startingItemIds,
+      startBuild: startingBuild,
       coreBuild: coreBuild,
       finalBuild: finalBuild,
       situationalItems: situational,
-      buildPath: [],
     );
   }
 }
@@ -107,4 +137,13 @@ const _boots = [
   3111,
   3117,
   2422,
+];
+
+const _worldAtlasId = 3865;
+const _finalItemsFromWorldAtlas = [
+  3869,
+  3870,
+  3871,
+  3876,
+  3877,
 ];

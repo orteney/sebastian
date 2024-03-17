@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
+
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +25,7 @@ Future<void> initDi() async {
 
   getIt.registerLazySingleton<LCU>(() => LCU(getIt()));
 
-  getIt.registerFactory(() => BlitzDataSource());
+  getIt.registerFactory(() => BlitzDataSource(logEnabled: kDebugMode));
   getIt.registerFactory(() => BlitzBuildMapper());
 
   getIt.registerLazySingleton<SummonerRepository>(() => SummonerRepository(lcu: getIt()));

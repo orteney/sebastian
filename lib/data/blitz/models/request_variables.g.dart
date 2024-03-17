@@ -9,9 +9,8 @@ part of 'request_variables.dart';
 Map<String, dynamic> _$BuildRequestVariablesToJson(
     BuildRequestVariables instance) {
   final val = <String, dynamic>{
+    'championId': instance.championId,
     'queue': _$BlitzQueueEnumMap[instance.queue]!,
-    'region': instance.region,
-    'tier': instance.tier,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -20,9 +19,7 @@ Map<String, dynamic> _$BuildRequestVariablesToJson(
     }
   }
 
-  writeNotNull('role', _$BlitzRoleEnumMap[instance.role]);
-  val['championId'] = instance.championId;
-  writeNotNull('opponentChampionId', instance.opponentChampionId);
+  writeNotNull('role', blitzRoleToJson(instance.role));
   return val;
 }
 
@@ -36,14 +33,6 @@ const _$BlitzQueueEnumMap = {
   BlitzQueue.summonersRiftBlindPick: 'SUMMONERS_RIFT_BLIND_PICK',
   BlitzQueue.summonersRiftDraftPick: 'SUMMONERS_RIFT_DRAFT_PICK',
   BlitzQueue.summonersRiftUrf: 'SUMMONERS_RIFT_URF',
-};
-
-const _$BlitzRoleEnumMap = {
-  BlitzRole.adc: 'ADC',
-  BlitzRole.jungle: 'JUNGLE',
-  BlitzRole.mid: 'MID',
-  BlitzRole.support: 'SUPPORT',
-  BlitzRole.top: 'TOP',
 };
 
 Map<String, dynamic> _$AllChampionsStatsRequestVariablesToJson(

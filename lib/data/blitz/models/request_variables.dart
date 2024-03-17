@@ -10,20 +10,16 @@ part 'request_variables.g.dart';
 
 @JsonSerializable(createFactory: false, includeIfNull: false)
 class BuildRequestVariables {
+  final String championId;
   final BlitzQueue queue;
-  final String region;
-  final String tier;
+
+  @JsonKey(toJson: blitzRoleToJson)
   final BlitzRole? role;
-  final int championId;
-  final int? opponentChampionId;
 
   BuildRequestVariables({
-    required this.queue,
-    this.region = 'WORLD',
-    this.tier = 'PLATINUM_PLUS',
-    this.role,
     required this.championId,
-    this.opponentChampionId,
+    required this.queue,
+    this.role,
   });
 
   Map<String, dynamic> toJson() => _$BuildRequestVariablesToJson(this);

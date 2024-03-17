@@ -21,9 +21,9 @@ class BuildRepository {
 
     final blitzBuilds = await _blitzDataSource.getBuilds(
       BuildRequestVariables(
+        championId: championId.toString(),
         queue: BlitzQueue.rankedSolo5X5,
         role: blitzRole,
-        championId: championId,
       ),
     );
 
@@ -38,10 +38,10 @@ class BuildRepository {
   Future<Builds> getAramBuilds(int championId) async {
     final builds = <BuildInfo>[];
 
-    final blitzBuilds = await _blitzDataSource.getAramBuilds(
+    final blitzBuilds = await _blitzDataSource.getBuilds(
       BuildRequestVariables(
+        championId: championId.toString(),
         queue: BlitzQueue.howlingAbyssAram,
-        championId: championId,
       ),
     );
     builds.addAll(blitzBuilds.map<BuildInfo>(_blitzBuildMapper.call));

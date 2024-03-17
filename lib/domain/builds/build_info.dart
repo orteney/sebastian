@@ -37,14 +37,12 @@ class ItemBuild {
   final List<int> coreBuild;
   final List<int> finalBuild;
   final List<int> situationalItems;
-  final List<List<int>> buildPath;
 
   ItemBuild({
     required this.startBuild,
     required this.coreBuild,
     required this.finalBuild,
     required this.situationalItems,
-    required this.buildPath,
   });
 }
 

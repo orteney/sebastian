@@ -26,3 +26,12 @@ enum BlitzRole {
     return BlitzRole.values.firstWhere((element) => element.role == role);
   }
 }
+
+String? blitzRoleToJson(BlitzRole? role) => switch (role) {
+      BlitzRole.adc => 'BOT',
+      BlitzRole.jungle => 'JUNGLE',
+      BlitzRole.mid => 'MID',
+      BlitzRole.support => 'SUPPORT',
+      BlitzRole.top => 'TOP',
+      null => null,
+    };

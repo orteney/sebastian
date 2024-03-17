@@ -9,21 +9,21 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           flutter-version: '3.19.x'
       - name: Build artifacts
         run: flutter build windows --release
       - name: Archive Release
-        uses: thedoctor0/zip-release@master
+        uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
           filename: Sebastian-${{github.ref_name}}-windows.zip
           directory: build/windows/x64/runner/Release
       - name: Windows Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -33,8 +33,8 @@ jobs:
     runs-on: macos-12
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           flutter-version: '3.19.x'
@@ -44,7 +44,7 @@ jobs:
         working-directory: build/macos/Build/Products/Release
         run:  zip --symlinks -qr Sebastian-${{github.ref_name}}-macos.zip Sebastian.app
       - name: macOS Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

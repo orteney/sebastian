@@ -19,12 +19,14 @@ class ChampionsDisenchanterWidget extends StatelessWidget {
     final appLocalizations = AppLocalizations.of(context);
 
     return BlocProvider(
-      create: (context) => ChampionsDisenchanterBloc(getIt(), getIt()),
+      create: (context) => ChampionsDisenchanterBloc(getIt()),
       child: BlocBuilder<ChampionsDisenchanterBloc, ChampionsDisenchanterState>(
         builder: (context, state) {
           return switch (state) {
             LoadingChampionsDisenchanterState _ => const Center(child: CircularProgressIndicator()),
-            EmptyChampionsDisenchanterState _ => Center(child: Text(appLocalizations.disenchanterNoShardsMessage)),
+            EmptyChampionsDisenchanterState _ => Center(
+                child: SebastianMessage(child: Text(appLocalizations.disenchanterNoShardsMessage)),
+              ),
             SelectChampionsDisenchanterState _ => SelectChampionsDisenchanterStateWidget(state: state),
             DisenchantingChampionsDisenchanterState _ => DisenchantingWidget(state: state),
           };
@@ -104,11 +106,6 @@ class _LootCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (!lootCount.purchased) const NotOwnedBadge(),
-                  if (lootCount.nextLevelTokensCount != null)
-                    MasteryBadge(
-                      level: lootCount.masteryLevel,
-                      nextLevelTokensCount: lootCount.nextLevelTokensCount!,
-                    ),
                   const Spacer(),
                   Card(
                     elevation: 4,

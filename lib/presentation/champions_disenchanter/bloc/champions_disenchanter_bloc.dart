@@ -1,13 +1,11 @@
-import 'dart:math';
+import 'package:flutter/foundation.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:sebastian/data/lcu/lcu.dart';
-import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/data/lcu/models/loot.dart';
-import 'package:sebastian/data/repositories/champion_repository.dart';
+import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/data/utils/cyrillic_comparator.dart';
 
 part 'champions_disenchanter_event.dart';
@@ -16,9 +14,10 @@ part 'champions_disenchanter_state.dart';
 
 class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, ChampionsDisenchanterState> {
   final LCU _lcu;
-  final ChampionRepository _championRepository;
 
-  ChampionsDisenchanterBloc(this._lcu, this._championRepository) : super(LoadingChampionsDisenchanterState()) {
+  ChampionsDisenchanterBloc(
+    this._lcu,
+  ) : super(LoadingChampionsDisenchanterState()) {
     on<LoadLootChampionsDisenchanterEvent>(_onLoadLootChampionsDisenchanterEvent);
     on<IncreaseCountChampionsDisenchanterEvent>(_onIncreaseCountChampionsDisenchanterEvent);
     on<DecreaseChampionsDisenchanterEvent>(_onDecreaseChampionsDisenchanterEvent);
@@ -36,16 +35,12 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
   ) async {
     final loots = await _lcu.service.getPlayerLoot();
 
-    final tokenLoots = <Loot>[];
     final championsLoots = <Loot>[];
 
     for (var loot in loots) {
       switch (loot.type) {
         case 'CHAMPION_RENTAL':
           championsLoots.add(loot);
-          break;
-        case 'CHAMPION_TOKEN':
-          tokenLoots.add(loot);
           break;
       }
     }
@@ -57,26 +52,14 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
     final selectableLoots = <SelectedLootCount>[];
 
     for (var championLoot in championsLoots) {
-      int masteryLevel = 0;
-      final champion = _championRepository.champions.where((element) => element.id == championLoot.storeItemId);
-      if (champion.isNotEmpty) {
-        masteryLevel = champion.first.mastery.championLevel;
-      }
-
       final owned = championLoot.redeemableStatus == 'ALREADY_OWNED';
 
       selectableLoots.add(
         SelectedLootCount(
           loot: championLoot,
-          count: _calcSafeToDisenchantCount(championLoot.count, masteryLevel, owned),
+          count: championLoot.count,
           image: _lcu.service.getLcuImage(championLoot.tilePath),
           purchased: owned,
-          masteryLevel: masteryLevel,
-          nextLevelTokensCount: _calcNextLevelTokensCount(
-            tokenLoots,
-            masteryLevel,
-            championLoot.storeItemId.toString(),
-          ),
         ),
       );
     }
@@ -86,38 +69,6 @@ class ChampionsDisenchanterBloc extends Bloc<ChampionsDisenchanterEvent, Champio
       sortField: SortField.name,
       summary: _calcSummary(selectableLoots),
     ));
-  }
-
-  int? _calcNextLevelTokensCount(List<Loot> tokenLoots, int masteryLevel, String championId) {
-    if (masteryLevel >= 5 && masteryLevel < 7) {
-      for (var tokenLoot in tokenLoots) {
-        if (tokenLoot.refId == championId) {
-          tokenLoots.remove(tokenLoot);
-          return tokenLoot.count;
-        }
-      }
-
-      return 0;
-    }
-
-    return null;
-  }
-
-  int _calcSafeToDisenchantCount(int lootCount, int masteryLevel, bool owned) {
-    int requiredShards = owned ? 0 : 1;
-
-    switch (masteryLevel) {
-      case 7:
-        break;
-      case 6:
-        requiredShards++;
-        break;
-      default:
-        requiredShards += 2;
-        break;
-    }
-
-    return max(0, lootCount - requiredShards);
   }
 
   void _onIncreaseCountChampionsDisenchanterEvent(

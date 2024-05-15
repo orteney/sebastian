@@ -5,16 +5,12 @@ class SelectedLootCount {
   final int count;
   final LcuImage image;
   final bool purchased;
-  final int masteryLevel;
-  final int? nextLevelTokensCount;
 
   SelectedLootCount({
     required this.loot,
     required this.count,
     required this.image,
     required this.purchased,
-    required this.masteryLevel,
-    required this.nextLevelTokensCount,
   });
 
   SelectedLootCount copyWith({
@@ -22,16 +18,12 @@ class SelectedLootCount {
     int? count,
     LcuImage? image,
     bool? purchased,
-    int? masteryLevel,
-    int? nextLevelTokensCount,
   }) {
     return SelectedLootCount(
       loot: loot ?? this.loot,
       count: count ?? this.count,
       image: image ?? this.image,
       purchased: purchased ?? this.purchased,
-      masteryLevel: masteryLevel ?? this.masteryLevel,
-      nextLevelTokensCount: nextLevelTokensCount ?? this.nextLevelTokensCount,
     );
   }
 
@@ -43,19 +35,12 @@ class SelectedLootCount {
         other.loot == loot &&
         other.count == count &&
         other.image == image &&
-        other.purchased == purchased &&
-        other.masteryLevel == masteryLevel &&
-        other.nextLevelTokensCount == nextLevelTokensCount;
+        other.purchased == purchased;
   }
 
   @override
   int get hashCode {
-    return loot.hashCode ^
-        count.hashCode ^
-        image.hashCode ^
-        purchased.hashCode ^
-        masteryLevel.hashCode ^
-        nextLevelTokensCount.hashCode;
+    return loot.hashCode ^ count.hashCode ^ image.hashCode ^ purchased.hashCode;
   }
 }
 

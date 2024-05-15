@@ -250,7 +250,7 @@ class _SummaryDisenchantWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
 
-    return Card(
+    return Card.filled(
       margin: const EdgeInsets.only(left: 12, top: 16, right: 12),
       elevation: 10,
       clipBehavior: Clip.antiAlias,

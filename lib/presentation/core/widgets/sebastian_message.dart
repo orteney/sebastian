@@ -22,7 +22,7 @@ class SebastianMessage extends StatelessWidget {
           const SebastianLogo(size: Size.square(75), flip: true),
           const SizedBox(width: 16),
           Flexible(
-            child: Card(
+            child: Card.filled(
               margin: const EdgeInsets.only(bottom: 32),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(

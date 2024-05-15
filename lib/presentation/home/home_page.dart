@@ -96,10 +96,11 @@ class LoadedHomeStateWidget extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8),
-              child: Material(
-                type: MaterialType.card,
+              child: Card(
+                margin: EdgeInsets.zero,
+                // type: MaterialType.card,
                 clipBehavior: Clip.antiAlias,
-                borderRadius: const BorderRadius.all(Radius.circular(12)),
+                // borderRadius: const BorderRadius.all(Radius.circular(12)),
                 child: switch (state.destination) {
                   Destination.championPick => ChampionPickPage(summonerId: state.summonerId),
                   Destination.mastery => ChampionsTableWidget(summonerId: state.summonerId),

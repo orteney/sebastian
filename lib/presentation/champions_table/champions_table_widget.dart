@@ -230,7 +230,7 @@ DataRow _buildChampionRow(
 }) {
   return DataRow(
     key: ValueKey(champion.id),
-    color: color != null ? MaterialStateProperty.all(color) : null,
+    color: color != null ? WidgetStateProperty.all(color) : null,
     cells: <DataCell>[
       if (ordinal != null) DataCell(Center(child: Text(ordinal.toString())), placeholder: true),
       DataCell(Text(champion.name)),

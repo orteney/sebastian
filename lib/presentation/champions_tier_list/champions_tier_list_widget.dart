@@ -283,7 +283,7 @@ List<DataColumn> _buildDataColumns(
 
 DataRow _buildDataRow(ChampionTier championTier, {Color? color}) {
   return DataRow(
-    color: color == null ? null : MaterialStateProperty.all(color),
+    color: color == null ? null : WidgetStateProperty.all(color),
     cells: <DataCell>[
       DataCell(
         championTier.role == null ? const SizedBox.shrink() : RoleIcon(role: championTier.role!),

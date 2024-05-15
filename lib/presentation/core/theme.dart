@@ -5,12 +5,14 @@ ThemeData mainTheme() {
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
       seedColor: const Color(0xFFF22222),
-      background: const Color(0xFF121212),
+      surfaceContainerLowest: const Color(0xFF121212),
       brightness: Brightness.dark,
     ),
   );
 
   return theme.copyWith(
+    scaffoldBackgroundColor: theme.colorScheme.surfaceContainerLowest,
+
     progressIndicatorTheme: theme.progressIndicatorTheme.copyWith(
       color: const Color(0xFFF22222),
       linearTrackColor: theme.colorScheme.primary,
@@ -25,16 +27,16 @@ ThemeData mainTheme() {
     ),
 
     switchTheme: theme.switchTheme.copyWith(
-      thumbColor: MaterialStateProperty.resolveWith(
+      thumbColor: WidgetStateProperty.resolveWith(
         (states) {
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return theme.colorScheme.primary;
           }
           return null;
         },
       ),
-      trackColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      trackColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return theme.colorScheme.primary.withAlpha(0x80);
         }
         return null;

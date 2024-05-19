@@ -239,7 +239,7 @@ DataRow _buildChampionRow(
       DataCell(
         Text(champion.mastery.championPointsUntilNextLevel > 0
             ? champion.mastery.championPointsUntilNextLevel.toString()
-            : '${champion.mastery.tokensEarned} / ?'),
+            : '${champion.mastery.tokensEarned} / ${champion.mastery.getNextMasteryTokensCount()}'),
       ),
       DataCell(Row(
         mainAxisAlignment: MainAxisAlignment.end,

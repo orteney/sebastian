@@ -76,4 +76,15 @@ class ChampionMastery {
   }
 
   factory ChampionMastery.fromJson(Map<String, dynamic> json) => _$ChampionMasteryFromJson(json);
+
+  int getNextMasteryTokensCount() {
+    switch (championLevel + 1) {
+      case >= 5 && <= 9:
+        return 1;
+      case >= 10:
+        return 2;
+      default:
+        return 0;
+    }
+  }
 }

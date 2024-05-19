@@ -88,7 +88,7 @@ class _ActiveChampionPickWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      state.pickedChampion.name,
+                      state.skinName,
                       style: theme.textTheme.headlineSmall,
                       textAlign: TextAlign.center,
                     ),

@@ -7,10 +7,10 @@ part of 'summoner_dto.dart';
 // **************************************************************************
 
 SummonerDto _$SummonerDtoFromJson(Map<String, dynamic> json) => SummonerDto(
-      accountId: json['accountId'] as int,
+      accountId: (json['accountId'] as num).toInt(),
       displayName: json['displayName'] as String,
-      summonerId: json['summonerId'] as int,
-      summonerLevel: json['summonerLevel'] as int,
-      xpSinceLastLevel: json['xpSinceLastLevel'] as int,
-      xpUntilNextLevel: json['xpUntilNextLevel'] as int,
+      summonerId: (json['summonerId'] as num).toInt(),
+      summonerLevel: (json['summonerLevel'] as num).toInt(),
+      xpSinceLastLevel: (json['xpSinceLastLevel'] as num).toInt(),
+      xpUntilNextLevel: (json['xpUntilNextLevel'] as num).toInt(),
     );

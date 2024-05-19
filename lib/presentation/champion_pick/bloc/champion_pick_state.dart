@@ -7,7 +7,10 @@ class NoActiveChampionPickState extends ChampionPickState {}
 class NoPickedChampionPickState extends ChampionPickState {}
 
 class ActiveChampionPickState extends ChampionPickState with EquatableMixin {
-  final Champion pickedChampion;
+  final int championId;
+  final String championName;
+  final int skinId;
+  final String skinName;
   final LcuImage splashImage;
   final Role? role;
   final List<BuildInfo> builds;
@@ -18,7 +21,10 @@ class ActiveChampionPickState extends ChampionPickState with EquatableMixin {
   final Map<int, LcuImage> summonerSpellImages;
 
   ActiveChampionPickState({
-    required this.pickedChampion,
+    required this.championId,
+    required this.championName,
+    required this.skinId,
+    required this.skinName,
     required this.splashImage,
     required this.role,
     required this.builds,
@@ -30,20 +36,28 @@ class ActiveChampionPickState extends ChampionPickState with EquatableMixin {
   });
 
   @override
-  List<Object?> get props => [
-        pickedChampion,
-        splashImage,
-        role,
-        builds,
-        selectedBuildIndex,
-        selectedPerkStyle,
-        runesImages,
-        itemImages,
-        summonerSpellImages,
-      ];
+  List<Object?> get props {
+    return [
+      championId,
+      championName,
+      skinId,
+      skinName,
+      splashImage,
+      role,
+      builds,
+      selectedBuildIndex,
+      selectedPerkStyle,
+      runesImages,
+      itemImages,
+      summonerSpellImages,
+    ];
+  }
 
   ActiveChampionPickState copyWith({
-    Champion? pickedChampion,
+    int? championId,
+    String? championName,
+    int? skinId,
+    String? skinName,
     LcuImage? splashImage,
     Role? role,
     List<BuildInfo>? builds,
@@ -54,7 +68,10 @@ class ActiveChampionPickState extends ChampionPickState with EquatableMixin {
     Map<int, LcuImage>? summonerSpellImages,
   }) {
     return ActiveChampionPickState(
-      pickedChampion: pickedChampion ?? this.pickedChampion,
+      championId: championId ?? this.championId,
+      championName: championName ?? this.championName,
+      skinId: skinId ?? this.skinId,
+      skinName: skinName ?? this.skinName,
       splashImage: splashImage ?? this.splashImage,
       role: role ?? this.role,
       builds: builds ?? this.builds,

@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart' show listEquals;
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 import 'package:sebastian/domain/core/role.dart';
 
 part 'pick_session.g.dart';
@@ -97,6 +99,7 @@ class BenchChampion {
 class TeamPick {
   final int summonerId;
   final int championId;
+  final int selectedSkinId;
   final int? championPickIntent;
   @JsonKey(unknownEnumValue: PickPosition.unknown)
   final PickPosition? assignedPosition;
@@ -104,23 +107,30 @@ class TeamPick {
   const TeamPick({
     required this.summonerId,
     required this.championId,
+    required this.selectedSkinId,
     required this.championPickIntent,
     this.assignedPosition,
   });
 
   @override
-  bool operator ==(covariant TeamPick other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other.summonerId == summonerId &&
+    return other is TeamPick &&
+        other.summonerId == summonerId &&
         other.championId == championId &&
+        other.selectedSkinId == selectedSkinId &&
         other.championPickIntent == championPickIntent &&
         other.assignedPosition == assignedPosition;
   }
 
   @override
   int get hashCode {
-    return summonerId.hashCode ^ championId.hashCode ^ championPickIntent.hashCode ^ assignedPosition.hashCode;
+    return summonerId.hashCode ^
+        championId.hashCode ^
+        selectedSkinId.hashCode ^
+        championPickIntent.hashCode ^
+        assignedPosition.hashCode;
   }
 
   factory TeamPick.fromJson(Map<String, dynamic> json) => _$TeamPickFromJson(json);

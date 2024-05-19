@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meta/meta.dart';
 
 import 'package:sebastian/data/lcu/pick_session.dart';
-import 'package:sebastian/data/models/champion.dart';
 import 'package:sebastian/data/models/lcu_image.dart';
 import 'package:sebastian/data/repositories/build_repository.dart';
 import 'package:sebastian/data/repositories/champion_repository.dart';
@@ -81,16 +80,35 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
       }
     }
 
-    final championId = ((myPick?.championId ?? 0) > 0) ? myPick?.championId : myPick?.championPickIntent;
+    if (myPick == null) {
+      return emit(NoPickedChampionPickState());
+    }
+
+    final championId = ((myPick.championId) > 0) ? myPick.championId : myPick.championPickIntent;
     if (championId == null || championId <= 0) {
       return emit(NoPickedChampionPickState());
     }
 
+    final skinOrChromaId = myPick.selectedSkinId;
+
     final state = this.state;
     Role? previousRole;
     if (state is ActiveChampionPickState) {
-      if (championId == state.pickedChampion.id) {
-        //We are looking on same pick
+      if (championId == state.championId) {
+        // We are looking on same pick
+
+        if (skinOrChromaId != state.skinId) {
+          // Update skin
+          final newSkin = await _championRepository.getChampionSkin(_summonerId, championId, skinOrChromaId);
+          if (newSkin.id != state.skinId) {
+            emit(state.copyWith(
+              skinId: newSkin.id,
+              skinName: newSkin.name,
+              splashImage: newSkin.splashImage,
+            ));
+          }
+        }
+
         return;
       }
 
@@ -100,20 +118,25 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     final champion = _championRepository.getChampion(championId);
     if (champion == null) return;
 
+    final selectedSkin = await _championRepository.getChampionSkin(_summonerId, championId, skinOrChromaId);
+
     Builds builds;
     if (pickSession.benchEnabled) {
       //Aram flow
-      builds = await _buildRepository.getAramBuilds(champion.id);
+      builds = await _buildRepository.getAramBuilds(championId);
     } else {
       builds = await _buildRepository.getBuilds(
-        champion.id,
-        role: previousRole ?? myPick?.assignedPosition?.role,
+        championId,
+        role: previousRole ?? myPick.assignedPosition?.role,
       );
     }
 
     emit(ActiveChampionPickState(
-      pickedChampion: champion,
-      splashImage: _championRepository.getSplashImage(champion.id),
+      championId: championId,
+      championName: champion.name,
+      skinId: skinOrChromaId,
+      skinName: selectedSkin.name,
+      splashImage: selectedSkin.splashImage,
       role: builds.role,
       builds: builds.builds,
       selectedBuildIndex: 0,
@@ -135,7 +158,7 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
     if (state.role == event.pickedRole) return;
 
     final builds = await _buildRepository.getBuilds(
-      state.pickedChampion.id,
+      state.championId,
       role: event.pickedRole,
     );
 
@@ -217,7 +240,7 @@ class ChampionPickBloc extends Bloc<ChampionPickEvent, ChampionPickState> with E
 
     final build = state.builds[state.selectedBuildIndex];
 
-    final name = '[Sebby] ${state.pickedChampion.name}';
+    final name = '[Sebby] ${state.championName}';
     _leagueClientEventRepository.setRunePage(name, build.runes);
     _leagueClientEventRepository.setItemBuild(name, build.itemBuild, event.appLocalizations);
   }

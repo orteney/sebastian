@@ -8,7 +8,7 @@ part of 'summoner_spell.dart';
 
 SummonerSpell _$SummonerSpellFromJson(Map<String, dynamic> json) =>
     SummonerSpell(
-      json['id'] as int,
+      (json['id'] as num).toInt(),
       json['name'] as String,
       json['iconPath'] as String,
     );

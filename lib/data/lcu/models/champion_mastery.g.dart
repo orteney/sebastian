@@ -8,10 +8,11 @@ part of 'champion_mastery.dart';
 
 ChampionMastery _$ChampionMasteryFromJson(Map<String, dynamic> json) =>
     ChampionMastery(
-      championId: json['championId'] as int,
-      championLevel: json['championLevel'] as int,
-      championPoints: json['championPoints'] as int,
-      championPointsUntilNextLevel: json['championPointsUntilNextLevel'] as int,
+      championId: (json['championId'] as num).toInt(),
+      championLevel: (json['championLevel'] as num).toInt(),
+      championPoints: (json['championPoints'] as num).toInt(),
+      championPointsUntilNextLevel:
+          (json['championPointsUntilNextLevel'] as num).toInt(),
       chestGranted: json['chestGranted'] as bool,
-      tokensEarned: json['tokensEarned'] as int,
+      tokensEarned: (json['tokensEarned'] as num).toInt(),
     );

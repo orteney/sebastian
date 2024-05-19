@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show compute;
 
 import 'package:sebastian/data/lcu/models/champion_dto.dart';
+import 'package:sebastian/data/lcu/models/champion_full_dto.dart';
 import 'package:sebastian/data/lcu/models/champion_mastery.dart';
 import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
 import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
@@ -126,6 +127,11 @@ class LcuService {
       '/lol-summoner/v1/current-summoner/icon',
       body: {"profileIconId": 29},
     );
+  }
+
+  Future<ChampionFullDto> getChampion(int summonerId, int championId) async {
+    final response = await _request('GET', '/lol-champions/v1/inventories/$summonerId/champions/$championId');
+    return ChampionFullDto.fromJson(response);
   }
 
   Future<dynamic> _request(

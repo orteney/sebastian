@@ -21,9 +21,9 @@ ChampionsStatsData _$ChampionsStatsDataFromJson(Map<String, dynamic> json) =>
 
 ChampionStats _$ChampionStatsFromJson(Map<String, dynamic> json) =>
     ChampionStats(
-      json['championId'] as int,
-      json['games'] as int,
-      json['wins'] as int,
+      (json['championId'] as num).toInt(),
+      (json['games'] as num).toInt(),
+      (json['wins'] as num).toInt(),
       $enumDecodeNullable(_$BlitzRoleEnumMap, json['role']),
       json['tierListTier'] == null
           ? null
@@ -41,6 +41,6 @@ const _$BlitzRoleEnumMap = {
 };
 
 TierListTier _$TierListTierFromJson(Map<String, dynamic> json) => TierListTier(
-      json['tierRank'] as int,
-      json['previousTierRank'] as int,
+      (json['tierRank'] as num).toInt(),
+      (json['previousTierRank'] as num).toInt(),
     );

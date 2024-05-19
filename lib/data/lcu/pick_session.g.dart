@@ -19,13 +19,14 @@ PickSession _$PickSessionFromJson(Map<String, dynamic> json) => PickSession(
 
 BenchChampion _$BenchChampionFromJson(Map<String, dynamic> json) =>
     BenchChampion(
-      championId: json['championId'] as int,
+      championId: (json['championId'] as num).toInt(),
     );
 
 TeamPick _$TeamPickFromJson(Map<String, dynamic> json) => TeamPick(
-      summonerId: json['summonerId'] as int,
-      championId: json['championId'] as int,
-      championPickIntent: json['championPickIntent'] as int?,
+      summonerId: (json['summonerId'] as num).toInt(),
+      championId: (json['championId'] as num).toInt(),
+      selectedSkinId: (json['selectedSkinId'] as num).toInt(),
+      championPickIntent: (json['championPickIntent'] as num?)?.toInt(),
       assignedPosition: $enumDecodeNullable(
           _$PickPositionEnumMap, json['assignedPosition'],
           unknownValue: PickPosition.unknown),

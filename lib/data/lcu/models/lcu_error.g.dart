@@ -8,7 +8,7 @@ part of 'lcu_error.dart';
 
 LcuError _$LcuErrorFromJson(Map<String, dynamic> json) => LcuError(
       errorCode: json['errorCode'] as String,
-      httpStatus: json['httpStatus'] as int,
+      httpStatus: (json['httpStatus'] as num).toInt(),
       message: json['message'] as String,
     );
 

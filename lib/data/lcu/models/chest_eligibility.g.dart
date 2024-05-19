@@ -8,7 +8,7 @@ part of 'chest_eligibility.dart';
 
 ChestEligibility _$ChestEligibilityFromJson(Map<String, dynamic> json) =>
     ChestEligibility(
-      earnableChests: json['earnableChests'] as int,
-      maximumChests: json['maximumChests'] as int,
-      nextChestRechargeTime: json['nextChestRechargeTime'] as int,
+      earnableChests: (json['earnableChests'] as num).toInt(),
+      maximumChests: (json['maximumChests'] as num).toInt(),
+      nextChestRechargeTime: (json['nextChestRechargeTime'] as num).toInt(),
     );

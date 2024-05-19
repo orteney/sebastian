@@ -8,11 +8,11 @@ part of 'rune_page.dart';
 
 RunePage _$RunePageFromJson(Map<String, dynamic> json) => RunePage(
       name: json['name'] as String,
-      primaryStyleId: json['primaryStyleId'] as int,
-      subStyleId: json['subStyleId'] as int,
+      primaryStyleId: (json['primaryStyleId'] as num).toInt(),
+      subStyleId: (json['subStyleId'] as num).toInt(),
       current: json['current'] as bool,
       selectedPerkIds: (json['selectedPerkIds'] as List<dynamic>)
-          .map((e) => e as int)
+          .map((e) => (e as num).toInt())
           .toList(),
     );
 

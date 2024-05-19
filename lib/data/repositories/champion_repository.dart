@@ -4,7 +4,7 @@ import 'package:sebastian/data/lcu/lcu.dart';
 import 'package:sebastian/data/lcu/models/champion_mastery.dart';
 import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
 import 'package:sebastian/data/models/champion.dart';
-import 'package:sebastian/data/models/lcu_image.dart';
+import 'package:sebastian/data/models/champion_skin.dart';
 import 'package:sebastian/data/utils/cyrillic_comparator.dart';
 
 class ChampionRepository {
@@ -15,6 +15,7 @@ class ChampionRepository {
   });
 
   final _championsSubject = BehaviorSubject<List<Champion>>();
+  final _championsSkinsCache = <int, List<ChampionSkin>>{};
 
   Future<List<Champion>> updateChampions(int summonerId) async {
     var champions = _championsSubject.valueOrNull ?? await _loadRawChampions();
@@ -79,9 +80,39 @@ class ChampionRepository {
     return null;
   }
 
-  LcuImage getSplashImage(int championId) {
-    return lcu.service.getLcuImage(
-      '/lol-game-data/assets/v1/champion-splashes/$championId/${championId}000.jpg',
-    );
+  Future<ChampionSkin> getChampionSkin(int summonerId, int championId, int skinOrChromaId) async {
+    if (_championsSkinsCache[championId] != null) {
+      final skins = _championsSkinsCache[championId]!;
+
+      for (var skin in skins) {
+        if (skin.id == skinOrChromaId || skin.chromaIds.contains(skinOrChromaId)) return skin;
+      }
+
+      return skins.first;
+    }
+
+    final championFull = await lcu.service.getChampion(summonerId, championId);
+    final skins = <ChampionSkin>[];
+
+    ChampionSkin? requestedSkin;
+    for (var championSkin in championFull.skins) {
+      final skin = ChampionSkin(
+        championSkin.id,
+        championId,
+        championSkin.name,
+        lcu.service.getLcuImage(championSkin.splashPath),
+        championSkin.chromas.map((e) => e.id).toList(),
+      );
+
+      if (skin.id == skinOrChromaId || skin.chromaIds.contains(skinOrChromaId)) {
+        requestedSkin = skin;
+      }
+
+      skins.add(skin);
+    }
+
+    _championsSkinsCache[championId] = skins;
+
+    return requestedSkin ?? skins.first;
   }
 }

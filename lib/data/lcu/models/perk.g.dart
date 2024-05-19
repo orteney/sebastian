@@ -7,7 +7,7 @@ part of 'perk.dart';
 // **************************************************************************
 
 Perk _$PerkFromJson(Map<String, dynamic> json) => Perk(
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       name: json['name'] as String,
       iconPath: json['iconPath'] as String,
     );

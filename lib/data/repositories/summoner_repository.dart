@@ -13,7 +13,6 @@ class SummonerRepository {
 
   Future<Summoner> getCurrentSummoner() async {
     final dto = await lcu.service.getCurrentSummoner();
-    final chestEligibility = await lcu.service.getChestEligibility();
 
     final updatedSummoner = Summoner(
       accountId: dto.accountId,
@@ -22,7 +21,6 @@ class SummonerRepository {
       summonerLevel: dto.summonerLevel,
       xpSinceLastLevel: dto.xpSinceLastLevel,
       xpUntilNextLevel: dto.xpUntilNextLevel,
-      chestEligibility: chestEligibility,
     );
 
     _summonerSubject.add(updatedSummoner);

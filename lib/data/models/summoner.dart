@@ -1,5 +1,3 @@
-import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
-
 class Summoner {
   final int accountId;
   final String displayName;
@@ -7,7 +5,6 @@ class Summoner {
   final int summonerLevel;
   final int xpSinceLastLevel;
   final int xpUntilNextLevel;
-  final ChestEligibility chestEligibility;
 
   Summoner({
     required this.accountId,
@@ -16,7 +13,6 @@ class Summoner {
     required this.summonerLevel,
     required this.xpSinceLastLevel,
     required this.xpUntilNextLevel,
-    required this.chestEligibility,
   });
 
   Summoner copyWith({
@@ -26,7 +22,6 @@ class Summoner {
     int? summonerLevel,
     int? xpSinceLastLevel,
     int? xpUntilNextLevel,
-    ChestEligibility? chestEligibility,
   }) {
     return Summoner(
       accountId: accountId ?? this.accountId,
@@ -35,13 +30,12 @@ class Summoner {
       summonerLevel: summonerLevel ?? this.summonerLevel,
       xpSinceLastLevel: xpSinceLastLevel ?? this.xpSinceLastLevel,
       xpUntilNextLevel: xpUntilNextLevel ?? this.xpUntilNextLevel,
-      chestEligibility: chestEligibility ?? this.chestEligibility,
     );
   }
 
   @override
   String toString() {
-    return 'Summoner(accountId: $accountId, displayName: $displayName, summonerId: $summonerId, summonerLevel: $summonerLevel, xpSinceLastLevel: $xpSinceLastLevel, xpUntilNextLevel: $xpUntilNextLevel, chestEligibility: $chestEligibility)';
+    return 'Summoner(accountId: $accountId, displayName: $displayName, summonerId: $summonerId, summonerLevel: $summonerLevel, xpSinceLastLevel: $xpSinceLastLevel, xpUntilNextLevel: $xpUntilNextLevel)';
   }
 
   @override
@@ -54,8 +48,7 @@ class Summoner {
         other.summonerId == summonerId &&
         other.summonerLevel == summonerLevel &&
         other.xpSinceLastLevel == xpSinceLastLevel &&
-        other.xpUntilNextLevel == xpUntilNextLevel &&
-        other.chestEligibility == chestEligibility;
+        other.xpUntilNextLevel == xpUntilNextLevel;
   }
 
   @override
@@ -65,7 +58,6 @@ class Summoner {
         summonerId.hashCode ^
         summonerLevel.hashCode ^
         xpSinceLastLevel.hashCode ^
-        xpUntilNextLevel.hashCode ^
-        chestEligibility.hashCode;
+        xpUntilNextLevel.hashCode;
   }
 }

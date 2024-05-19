@@ -104,17 +104,6 @@
   "secretMenuResetIconSubtitle": "Установит в профиле иконку \"Шлемобратана\"",
   "secretMenuResetIconTitle": "Сбросить иконку профиля",
   "secretMenuTitle": "Секретное меню",
-  "summonerNextChestTooltip": "Новый сундук через {timeUnit, select, days{{when} дн.} hours{{when} ч.} minutes{{when} мин.} other{{when}}}",
-  "@summonerNextChestTooltip": {
-    "placeholders": {
-      "timeUnit": {
-        "type": "String"
-      },
-      "when": {
-        "type": "int"
-      }
-    }
-  },
   "summonerNextLevelExpTooltip": "До следующего уровня {count} ед. опыта",
   "@summonerNextLevelExpTooltip": {
     "placeholders": {

@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sebastian/data/models/champion.dart';
 import 'package:sebastian/di/di.dart';
 import 'package:sebastian/presentation/core/colors.dart';
-import 'package:sebastian/presentation/core/widgets/icons/chest_icon.dart';
 import 'package:sebastian/presentation/core/widgets/icons/eternal_bonfire_icon.dart';
 import 'package:sebastian/presentation/core/widgets/icons/mastery_icon.dart';
 
@@ -210,15 +209,6 @@ List<DataColumn> _buildChampionColumns(
       numeric: true,
       label: Text(appLocalizations.masteryTableColumnEternals),
     ),
-    const DataColumn2(
-      fixedWidth: 60,
-      label: Center(
-        child: ChestIcon(
-          size: Size(20, 20),
-          color: Colors.white,
-        ),
-      ),
-    ),
   ];
 }
 
@@ -251,7 +241,6 @@ DataRow _buildChampionRow(
           Text(appLocalizations.masteryTableStatStonesCount(champion.statStones.stonesOwned))
         ],
       )),
-      DataCell(Center(child: Checkbox(value: champion.mastery.chestGranted, onChanged: null))),
     ],
   );
 }

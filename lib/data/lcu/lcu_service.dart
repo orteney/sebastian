@@ -7,7 +7,6 @@ import 'package:sebastian/data/lcu/models/champion_dto.dart';
 import 'package:sebastian/data/lcu/models/champion_full_dto.dart';
 import 'package:sebastian/data/lcu/models/champion_mastery.dart';
 import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
-import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
 import 'package:sebastian/data/lcu/models/item.dart';
 import 'package:sebastian/data/lcu/models/lcu_error.dart';
 import 'package:sebastian/data/lcu/models/loot.dart';
@@ -32,11 +31,6 @@ class LcuService {
   Future<SummonerDto> getCurrentSummoner() async {
     final response = await _request('GET', '/lol-summoner/v1/current-summoner');
     return SummonerDto.fromJson(response);
-  }
-
-  Future<ChestEligibility> getChestEligibility() async {
-    final response = await _request('GET', '/lol-collections/v1/inventories/chest-eligibility');
-    return ChestEligibility.fromJson(response);
   }
 
   Future<List<ChampionDto>> getChampionsSummary() async {

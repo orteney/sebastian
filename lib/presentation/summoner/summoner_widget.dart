@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:sebastian/data/lcu/models/chest_eligibility.dart';
 import 'package:sebastian/data/models/summoner.dart';
 import 'package:sebastian/di/di.dart';
-import 'package:sebastian/presentation/core/widgets/icons/chest_icon.dart';
 import 'package:sebastian/presentation/summoner/secret_menu/secret_menu_dialog.dart';
 
 import 'bloc/summoner_bloc.dart';
@@ -57,8 +55,6 @@ class _SummonerInfo extends StatelessWidget {
           currentExp: summoner.xpSinceLastLevel,
           untilNextLvlExp: summoner.xpUntilNextLevel,
         ),
-        const SizedBox(height: 24),
-        _AvailableChests(chests: summoner.chestEligibility),
       ],
     );
   }
@@ -92,43 +88,6 @@ class _LevelProgress extends StatelessWidget {
             Text((currentLvl + 1).toString()),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _AvailableChests extends StatelessWidget {
-  const _AvailableChests({required this.chests});
-
-  final ChestEligibility chests;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final appLocalizations = AppLocalizations.of(context);
-
-    final now = DateTime.now();
-    final difference = chests.nextChestDateTime().difference(now);
-
-    final message = switch (difference) {
-      Duration(inDays: 0, inHours: 0, inMinutes: int m) => appLocalizations.summonerNextChestTooltip('minutes', m),
-      Duration(inDays: 0, inHours: int h) => appLocalizations.summonerNextChestTooltip('hours', h),
-      Duration(inDays: int d) => appLocalizations.summonerNextChestTooltip('days', d),
-    };
-
-    return Tooltip(
-      message: message,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          for (int i = 0; i < chests.maximumChests; i++)
-            ChestIcon(
-              size: const Size(24, 24),
-              color: i + 1 > chests.earnableChests
-                  ? theme.colorScheme.onSurface.withOpacity(0.38)
-                  : const Color(0xFFCDBE91),
-            ),
-        ],
       ),
     );
   }

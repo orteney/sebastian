@@ -109,17 +109,6 @@
   "secretMenuResetIconSubtitle": "Replaces the current icon with \"HelmetBro\"",
   "secretMenuResetIconTitle": "Reset summoner icon",
   "secretMenuTitle": "Secret menu",
-  "summonerNextChestTooltip": "New chest will arrives in {timeUnit, select, days{{when} d.} hours{{when} h.} minutes{{when} m.} other{{when}}}",
-  "@summonerNextChestTooltip": {
-    "placeholders": {
-      "timeUnit": {
-        "type": "String"
-      },
-      "when": {
-        "type": "int"
-      }
-    }
-  },
   "summonerNextLevelExpTooltip": "Until next level {count} experience",
   "@summonerNextLevelExpTooltip": {
     "placeholders": {

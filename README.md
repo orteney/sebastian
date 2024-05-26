@@ -7,21 +7,19 @@
 
 ## Features
 
-- Always shows the number of Hextech Chests available
 - Auto accept matchmaking
-- Fast import **Runes** and **Items** from suggested build for selected champion
-- Can massively convert selected champion's shards to blue essence
+- Import **Runes** and **Items** for selected champion from suggested build
+- Massively disenchant champion's shards
   - auto select unnecessary shards
-  - shows a hint if the shard can be useful
-- Your champions mastery table (with chest availability and eternal count)
+  - display a hint when the shard can be useful
+- Champions mastery table (with **Seasonal Milestones** and **Eternals**)
 - Global champions stat for current patch
 - 🛠️ Technical Features
-  - Runs with ~~Electron~~ [Flutter](https://flutter.dev/)
+  - Runs with [Flutter](https://flutter.dev/)
   - All necessary data and assets are loading from running League client
-  - Support English and Russian languages
+  - Support English and Russian languages (if you need more tell me)
 
-
-## Installation / Update
+## Install / Update
 
 ### Windows
 1. Download latest version [sebastian-windows.zip](https://github.com/orteney/sebastian/releases/latest)
@@ -43,6 +41,7 @@
 - https://github.com/pipe01/lcu-event-viewer
 - https://github.com/CommunityDragon
 - https://github.com/elliejs/teemo
+- https://github.com/KebsCS/lcu-and-riotclient-api
 
 ## Legal boilerplate
 Sebastian is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc

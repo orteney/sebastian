@@ -20,10 +20,10 @@ class ChampionRepository {
   Future<List<Champion>> updateChampions(int summonerId) async {
     var champions = _championsSubject.valueOrNull ?? await _loadRawChampions();
 
-    final masteries = await lcu.service.getChampionMasteryList(summonerId);
+    final masteriesResponse = await lcu.service.getChampionMasteryList();
     final statStones = await lcu.service.getChampionStatStones();
 
-    champions = _merge(champions, masteries, statStones).toList();
+    champions = _merge(champions, masteriesResponse.championMasteries, statStones).toList();
     _championsSubject.add(champions);
     return champions;
   }

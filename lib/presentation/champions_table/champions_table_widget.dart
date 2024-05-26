@@ -4,6 +4,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:sebastian/data/lcu/models/champion_mastery.dart';
 import 'package:sebastian/data/models/champion.dart';
 import 'package:sebastian/di/di.dart';
 import 'package:sebastian/presentation/core/colors.dart';
@@ -95,7 +96,7 @@ class SummaryChampionsTableStateWidget extends StatelessWidget {
   }
 }
 
-const _kTableMinWidth = 700.0;
+const _kTableMinWidth = 800.0;
 const _kTableColumnSpacing = 24.0;
 
 class _ChampionsTable extends StatelessWidget {
@@ -205,6 +206,12 @@ List<DataColumn> _buildChampionColumns(
     ),
     DataColumn2(
       onSort: onSortColumn,
+      numeric: true,
+      size: ColumnSize.L,
+      label: Text(appLocalizations.masteryTableColumnMilestones),
+    ),
+    DataColumn2(
+      onSort: onSortColumn,
       size: ColumnSize.M,
       numeric: true,
       label: Text(appLocalizations.masteryTableColumnEternals),
@@ -229,18 +236,96 @@ DataRow _buildChampionRow(
       DataCell(
         Text(champion.mastery.championPointsUntilNextLevel > 0
             ? champion.mastery.championPointsUntilNextLevel.toString()
-            : '${champion.mastery.tokensEarned} / ${champion.mastery.getNextMasteryTokensCount()}'),
+            : '${champion.mastery.tokensEarned} / ${champion.mastery.markRequiredForNextLevel}'),
       ),
-      DataCell(Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(champion.statStones.milestonesPassed.toString()),
-          const SizedBox(width: 4),
-          const EternalBonfireIcon(size: Size(16, 16)),
-          const SizedBox(width: 12),
-          Text(appLocalizations.masteryTableStatStonesCount(champion.statStones.stonesOwned))
-        ],
+      DataCell(_MasteryMilestoneWidget(mastery: champion.mastery)),
+      DataCell(_StatStoneWidget(
+        milestonesPassed: champion.statStones.milestonesPassed,
+        stonesOwned: champion.statStones.stonesOwned,
       )),
     ],
   );
+}
+
+class _MasteryMilestoneWidget extends StatelessWidget {
+  const _MasteryMilestoneWidget({
+    required this.mastery,
+  });
+
+  final ChampionMastery mastery;
+
+  static int _gradeCompare(String a, String b) {
+    const gradeRank = {'S': 0, 'A': 1, 'B': 2, 'C': 3, 'D': 4};
+    return (gradeRank[a] ?? 0).compareTo(gradeRank[b] ?? 0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final requiredGrades = <String>[];
+    mastery.nextSeasonMilestone.requireGradeCounts.forEach((key, value) {
+      for (var i = 0; i < value; i++) {
+        requiredGrades.add(key[0]);
+      }
+    });
+    requiredGrades.sort(_gradeCompare);
+
+    final milestoneGrades = mastery.milestoneGrades.map((e) => e[0]).toList();
+    milestoneGrades.sort(_gradeCompare);
+
+    final gradeWidgets = <Widget>[];
+    for (var grade in requiredGrades) {
+      var earned = false;
+
+      for (var milestoneGrade in milestoneGrades) {
+        if (_gradeCompare(grade, milestoneGrade) >= 0) {
+          earned = true;
+          milestoneGrades.remove(milestoneGrade);
+          break;
+        }
+      }
+
+      gradeWidgets.add(Padding(
+        padding: const EdgeInsets.only(right: 4),
+        child: Text(
+          grade,
+          style: earned ? null : const TextStyle(color: Colors.white24),
+        ),
+      ));
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text('${mastery.championSeasonMilestone + 1}'),
+        const VerticalDivider(indent: 12, endIndent: 12),
+        ...gradeWidgets,
+      ],
+    );
+  }
+}
+
+class _StatStoneWidget extends StatelessWidget {
+  const _StatStoneWidget({
+    required this.milestonesPassed,
+    required this.stonesOwned,
+  });
+
+  final int milestonesPassed;
+  final int stonesOwned;
+
+  @override
+  Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(milestonesPassed.toString()),
+        const SizedBox(width: 4),
+        const EternalBonfireIcon(size: Size(16, 16)),
+        const SizedBox(width: 12),
+        Text(appLocalizations.masteryTableStatStonesCount(stonesOwned))
+      ],
+    );
+  }
 }

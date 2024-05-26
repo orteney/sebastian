@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart' show compute;
 
 import 'package:sebastian/data/lcu/models/champion_dto.dart';
 import 'package:sebastian/data/lcu/models/champion_full_dto.dart';
-import 'package:sebastian/data/lcu/models/champion_mastery.dart';
 import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
+import 'package:sebastian/data/lcu/models/champion_mastery.dart';
 import 'package:sebastian/data/lcu/models/item.dart';
 import 'package:sebastian/data/lcu/models/lcu_error.dart';
 import 'package:sebastian/data/lcu/models/loot.dart';
@@ -53,14 +53,9 @@ class LcuService {
     return response is List ? response.map((e) => SummonerSpell.fromJson(e)).toList() : [];
   }
 
-  Future<List<ChampionMastery>> getChampionMasteryList(int summonerId) async {
-    final response = await _request('GET', '/lol-collections/v1/inventories/$summonerId/champion-mastery');
-
-    if (response is List) {
-      return response.map((e) => ChampionMastery.fromJson(e)).toList();
-    } else {
-      return [];
-    }
+  Future<ChampionsMasteryResponse> getChampionMasteryList() async {
+    final response = await _request('GET', '/lol-champion-mastery/v1/local-player/champion-mastery-sets-and-rewards');
+    return ChampionsMasteryResponse.fromJson(response);
   }
 
   Future<List<ChampionStatStones>> getChampionStatStones() async {

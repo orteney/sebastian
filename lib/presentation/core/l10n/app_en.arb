@@ -85,6 +85,7 @@
   "lolPathPickerPickPathButton": "PICK PATH",
   "masteryTableColumnChampion": "Champion",
   "masteryTableColumnEternals": "Eternals",
+  "masteryTableColumnMilestones": "Milestones",
   "masteryTableColumnPoints": "Points",
   "masteryTableColumnProgress": "Progress",
   "masteryTableMaxProgress": "Master",

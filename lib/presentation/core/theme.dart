@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:sebastian/presentation/core/colors.dart';
+
 ThemeData mainTheme() {
   final theme = ThemeData.from(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xFFF22222),
+      seedColor: SebastianColors.primary,
       surfaceContainerLowest: const Color(0xFF121212),
       brightness: Brightness.dark,
     ),
@@ -14,7 +16,7 @@ ThemeData mainTheme() {
     scaffoldBackgroundColor: theme.colorScheme.surfaceContainerLowest,
 
     progressIndicatorTheme: theme.progressIndicatorTheme.copyWith(
-      color: const Color(0xFFF22222),
+      color: SebastianColors.primary,
       linearTrackColor: theme.colorScheme.primary,
     ),
     snackBarTheme: theme.snackBarTheme.copyWith(

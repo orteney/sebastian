@@ -6,8 +6,8 @@ enum ChampionsTableColumn {
   level(false),
   points(false),
   progress(false),
-  statStones(false),
-  chestEarned(false);
+  milestones(false),
+  statStones(false);
 
   final bool initialSortAccending;
 

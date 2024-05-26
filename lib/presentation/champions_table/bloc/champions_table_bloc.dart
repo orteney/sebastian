@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -199,25 +200,14 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
       case ChampionsTableColumn.points:
         sortedChampions.sort(((a, b) => a.mastery.championPoints.compareTo(b.mastery.championPoints)));
         break;
-      case ChampionsTableColumn.chestEarned:
-        sortedChampions.sort(((a, b) {
-          if (a.mastery.chestGranted == b.mastery.chestGranted) {
-            return 0;
-          } else if (a.mastery.chestGranted) {
-            return -1;
-          }
-          return 1;
-        }));
-        break;
       case ChampionsTableColumn.progress:
-        sortedChampions.sort(
-          (a, b) => a.mastery.championPointsUntilNextLevel.compareTo(b.mastery.championPointsUntilNextLevel),
-        );
+        sortedChampions.sort(_compareChampionsByProgress);
+        break;
+      case ChampionsTableColumn.milestones:
+        sortedChampions.sort(_compareChampionsByMilestones);
         break;
       case ChampionsTableColumn.statStones:
-        sortedChampions.sort(
-          (a, b) => a.statStones.milestonesPassed.compareTo(b.statStones.milestonesPassed),
-        );
+        sortedChampions.sort((a, b) => a.statStones.milestonesPassed.compareTo(b.statStones.milestonesPassed));
         break;
     }
 
@@ -226,6 +216,23 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     }
 
     return sortedChampions;
+  }
+
+  int _compareChampionsByProgress(Champion a, Champion b) {
+    if (a.mastery.championPointsUntilNextLevel <= 0 && b.mastery.championPointsUntilNextLevel <= 0) {
+      return a.mastery.tokensEarned.compareTo(b.mastery.tokensEarned);
+    }
+
+    return a.mastery.championPointsUntilNextLevel.compareTo(b.mastery.championPointsUntilNextLevel) * -1;
+  }
+
+  int _compareChampionsByMilestones(Champion a, Champion b) {
+    final milestoneCompare = a.mastery.championSeasonMilestone.compareTo(b.mastery.championSeasonMilestone);
+    if (milestoneCompare != 0) return milestoneCompare;
+
+    final gradesLeftA = a.mastery.nextSeasonMilestone.requireGradeCounts.values.sum - a.mastery.milestoneGrades.length;
+    final gradesLeftB = b.mastery.nextSeasonMilestone.requireGradeCounts.values.sum - b.mastery.milestoneGrades.length;
+    return gradesLeftA.compareTo(gradesLeftB) * -1;
   }
 
   @override

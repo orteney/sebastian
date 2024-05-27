@@ -8,6 +8,7 @@ import 'package:sebastian/data/lcu/models/champion_mastery.dart';
 import 'package:sebastian/data/models/champion.dart';
 import 'package:sebastian/di/di.dart';
 import 'package:sebastian/presentation/core/colors.dart';
+import 'package:sebastian/presentation/core/widgets/icons/chest_icon.dart';
 import 'package:sebastian/presentation/core/widgets/icons/eternal_bonfire_icon.dart';
 import 'package:sebastian/presentation/core/widgets/icons/mastery_icon.dart';
 
@@ -65,14 +66,26 @@ class SummaryChampionsTableStateWidget extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(12.0),
-          child: DropdownButton<ChampionRole>(
-            value: state.roleFilter,
-            underline: const SizedBox.shrink(),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            onChanged: (value) => context.read<ChampionsTableBloc>().add(ChangeRoleFilterChampionsTableEvent(value)),
-            items: [
-              _roleMenuItem(null, appLocalizations),
-              for (var role in ChampionRole.values) _roleMenuItem(role, appLocalizations),
+          child: Row(
+            children: [
+              DropdownButton<ChampionRole>(
+                value: state.roleFilter,
+                underline: const SizedBox.shrink(),
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                onChanged: (value) =>
+                    context.read<ChampionsTableBloc>().add(ChangeRoleFilterChampionsTableEvent(value)),
+                items: [
+                  _roleMenuItem(null, appLocalizations),
+                  for (var role in ChampionRole.values) _roleMenuItem(role, appLocalizations),
+                ],
+              ),
+              const SizedBox(width: 16),
+              FilterChip(
+                selected: state.onlyMasterySet,
+                onSelected: (selected) =>
+                    context.read<ChampionsTableBloc>().add(ChangeOnlySetFilterChampionsTableEvent(selected)),
+                label: Text(appLocalizations.masteryTableFilterSet),
+              ),
             ],
           ),
         ),
@@ -230,7 +243,10 @@ DataRow _buildChampionRow(
     color: color != null ? WidgetStateProperty.all(color) : null,
     cells: <DataCell>[
       if (ordinal != null) DataCell(Center(child: Text(ordinal.toString())), placeholder: true),
-      DataCell(Text(champion.name)),
+      DataCell(_ChampionNameWidget(
+        championName: champion.name,
+        inMasterySet: champion.inMasterySet,
+      )),
       DataCell(Center(child: Text(champion.mastery.championLevel.toString()))),
       DataCell(Text(champion.mastery.championPoints.toString())),
       DataCell(
@@ -245,6 +261,34 @@ DataRow _buildChampionRow(
       )),
     ],
   );
+}
+
+class _ChampionNameWidget extends StatelessWidget {
+  const _ChampionNameWidget({
+    required this.championName,
+    required this.inMasterySet,
+  });
+
+  final String championName;
+  final bool inMasterySet;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!inMasterySet) {
+      return Text(championName);
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Flexible(child: Text(championName)),
+        const SizedBox(width: 8),
+        const ChestIcon(
+          size: Size(16, 16),
+        ),
+      ],
+    );
+  }
 }
 
 class _MasteryMilestoneWidget extends StatelessWidget {
@@ -296,7 +340,7 @@ class _MasteryMilestoneWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Text('${mastery.championSeasonMilestone + 1}'),
+        Text('${mastery.championSeasonMilestone}'),
         const VerticalDivider(indent: 12, endIndent: 12),
         ...gradeWidgets,
       ],

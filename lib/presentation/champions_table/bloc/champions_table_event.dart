@@ -34,3 +34,9 @@ class ChangeRoleFilterChampionsTableEvent extends ChampionsTableEvent {
 
   ChangeRoleFilterChampionsTableEvent(this.roleFilter);
 }
+
+class ChangeOnlySetFilterChampionsTableEvent extends ChampionsTableEvent {
+  final bool enabled;
+
+  ChangeOnlySetFilterChampionsTableEvent(this.enabled);
+}

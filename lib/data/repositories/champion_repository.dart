@@ -23,7 +23,12 @@ class ChampionRepository {
     final masteriesResponse = await lcu.service.getChampionMasteryList();
     final statStones = await lcu.service.getChampionStatStones();
 
-    champions = _merge(champions, masteriesResponse.championMasteries, statStones).toList();
+    champions = _merge(
+      champions,
+      masteriesResponse.championMasteries,
+      statStones,
+      masteriesResponse.championSet,
+    ).toList();
     _championsSubject.add(champions);
     return champions;
   }
@@ -43,6 +48,7 @@ class ChampionRepository {
           mastery: ChampionMastery.empty(dto.id),
           statStones: ChampionStatStones.empty(dto.id),
           roles: dto.roles.map((e) => e.role).toList(),
+          inMasterySet: false,
         ),
       );
     }
@@ -54,6 +60,7 @@ class ChampionRepository {
     List<Champion> champions,
     List<ChampionMastery> masteries,
     List<ChampionStatStones> statStones,
+    MasteryChampionSet masteryChampionSet,
   ) sync* {
     final masteryMap = {for (var mastery in masteries) mastery.championId: mastery};
     final statStonesMap = {for (var statStone in statStones) statStone.championId: statStone};
@@ -62,6 +69,7 @@ class ChampionRepository {
       yield champion.copyWith(
         mastery: masteryMap[champion.id],
         statStones: statStonesMap[champion.id],
+        inMasterySet: masteryChampionSet.champions.contains(champion.id),
       );
     }
   }

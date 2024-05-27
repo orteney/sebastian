@@ -83,6 +83,7 @@
   "masteryTableColumnMilestones": "Вехи",
   "masteryTableColumnPoints": "Очков",
   "masteryTableColumnProgress": "Прогресс",
+  "masteryTableFilterSet": "Мастерство сплита",
   "masteryTableMaxProgress": "Мастер",
   "masteryTableStatStonesCount": "{count} шт.",
   "@masteryTableStatStonesCount": {

@@ -9,6 +9,7 @@ class SummaryChampionsTableState extends ChampionsTableState with EquatableMixin
   final bool ascending;
   final List<Champion> champions;
   final ChampionRole? roleFilter;
+  final bool onlyMasterySet;
 
   SummaryChampionsTableState({
     required this.currentSummonerId,
@@ -16,6 +17,7 @@ class SummaryChampionsTableState extends ChampionsTableState with EquatableMixin
     this.ascending = true,
     required this.champions,
     this.roleFilter,
+    this.onlyMasterySet = false,
   });
 
   @override
@@ -26,6 +28,7 @@ class SummaryChampionsTableState extends ChampionsTableState with EquatableMixin
       ascending,
       champions,
       roleFilter,
+      onlyMasterySet,
     ];
   }
 
@@ -35,6 +38,7 @@ class SummaryChampionsTableState extends ChampionsTableState with EquatableMixin
     bool? ascending,
     List<Champion>? champions,
     ChampionRole? Function()? roleFilter,
+    bool? onlyMasterySet,
   }) {
     return SummaryChampionsTableState(
       currentSummonerId: currentSummonerId ?? this.currentSummonerId,
@@ -42,6 +46,7 @@ class SummaryChampionsTableState extends ChampionsTableState with EquatableMixin
       ascending: ascending ?? this.ascending,
       champions: champions ?? this.champions,
       roleFilter: roleFilter != null ? roleFilter() : this.roleFilter,
+      onlyMasterySet: onlyMasterySet ?? this.onlyMasterySet,
     );
   }
 }

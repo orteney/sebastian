@@ -35,6 +35,7 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     on<ChangeSortChampionsTableEvent>(_onChangeSortChampionsTableEvent);
     on<PickSessionUpdatedChampionsTableEvent>(_onPickSessionUpdatedChampionsTableEvent);
     on<ChangeRoleFilterChampionsTableEvent>(_onChangeRoleFilterChampionsTableEvent);
+    on<ChangeOnlySetFilterChampionsTableEvent>(_onChangeOnlySetFilterChampionsTableEvent);
 
     _championsSubscription = _championRepository.stream.listen((event) {
       add(UpdatedChampionsTableEvent(updatedChampions: event));
@@ -60,6 +61,7 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
           state.sortColumn,
           state.ascending,
           state.roleFilter,
+          state.onlyMasterySet,
         ),
       ));
     }
@@ -91,6 +93,7 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
         event.column,
         event.column.initialSortAccending,
         state.roleFilter,
+        state.onlyMasterySet,
       ),
     ));
   }
@@ -161,6 +164,27 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
         state.sortColumn,
         state.ascending,
         event.roleFilter,
+        state.onlyMasterySet,
+      ),
+    ));
+  }
+
+  void _onChangeOnlySetFilterChampionsTableEvent(
+    ChangeOnlySetFilterChampionsTableEvent event,
+    Emitter<ChampionsTableState> emit,
+  ) {
+    if (this.state is! SummaryChampionsTableState) return;
+
+    final state = this.state as SummaryChampionsTableState;
+
+    emit(state.copyWith(
+      onlyMasterySet: event.enabled,
+      champions: _filterAndSortChampions(
+        _championRepository.champions,
+        state.sortColumn,
+        state.ascending,
+        state.roleFilter,
+        event.enabled,
       ),
     ));
   }
@@ -170,10 +194,15 @@ class ChampionsTableBloc extends Bloc<ChampionsTableEvent, ChampionsTableState> 
     ChampionsTableColumn column,
     bool ascending,
     ChampionRole? roleFilter,
+    bool onlyMasterySet,
   ) {
     if (column == ChampionsTableColumn.champion) {
       // _sortChampions expect already sorted by name list in that case
       champions = _championRepository.champions;
+    }
+
+    if (onlyMasterySet) {
+      champions = champions.where((element) => element.inMasterySet).toList();
     }
 
     if (roleFilter != null) {

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sebastian/data/lcu/lcu.dart';
 
 import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
 
@@ -18,10 +21,19 @@ class PickLolPathScreen extends StatelessWidget {
   final void Function(String) onPickedPath;
 
   Future<void> _onPickPathTap(String dialogTitle) async {
-    final result = await FilePicker.platform.getDirectoryPath(
-      lockParentWindow: true,
-      dialogTitle: dialogTitle,
-    );
+    String? result;
+
+    if (!Platform.isMacOS) {
+      result = await FilePicker.platform.getDirectoryPath(
+        lockParentWindow: true,
+        dialogTitle: dialogTitle,
+      );
+    } else {
+      final files = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: [LCU.macosFileType]);
+      if (files != null) {
+        result = files.files.single.path;
+      }
+    }
 
     if (result != null) {
       onPickedPath(result);

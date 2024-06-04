@@ -19,6 +19,10 @@ class LcuPathStorage {
     return File(path);
   }
 
+  void clearLockfile() {
+    _sharedPreferences.remove(_spLockfilePathKey);
+  }
+
   Future<void> putLcuLockfilePath(String lockfilePath) async {
     await _sharedPreferences.setString(_spLockfilePathKey, lockfilePath);
   }

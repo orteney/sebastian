@@ -9,10 +9,12 @@ class MessageWithRetryScreen extends StatelessWidget {
     super.key,
     required this.message,
     required this.onTapRetry,
+    this.onTapChangePath,
   });
 
   final String message;
   final VoidCallback onTapRetry;
+  final VoidCallback? onTapChangePath;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,11 @@ class MessageWithRetryScreen extends StatelessWidget {
             OutlinedButton(
               onPressed: onTapRetry,
               child: Text(appLocalizations.buttonRetry),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: onTapChangePath,
+              child: Text(appLocalizations.buttonChangePath),
             ),
           ],
         ),

@@ -17,6 +17,7 @@
   "buildDetailsSkills": "Skills",
   "buildDetailsSummonerSpells": "Summoner spells",
   "buttonRetry": "RETRY",
+  "buttonChangePath": "Change path",
   "championPickImportButton": "IMPORT",
   "championPickNoBuildsMessage": "There are no builds for the selected role 🥲",
   "championPickNoPickedChampionMessage": "Pick champion 🙃",

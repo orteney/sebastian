@@ -19,6 +19,8 @@ const _gameFlowStateEvent = 'OnJsonApiEvent_lol-gameflow_v1_gameflow-phase';
 const _matchmakingEvent = 'OnJsonApiEvent_lol-matchmaking_v1_ready-check';
 
 class LCU {
+  static const macosFileType = 'app';
+
   final LcuPathStorage _lcuStore;
 
   LCU(this._lcuStore);
@@ -55,6 +57,11 @@ class LCU {
     _lolDirectory = savedLockfile.parent;
 
     String content = savedLockfile.readAsStringSync();
+
+    if (content.isEmpty) {
+      _lcuStore.clearLockfile();
+    }
+
     List<String> args = content.split(':');
     final authKey = args[3];
     _port = int.tryParse(args[2]) ?? -1;
@@ -135,7 +142,7 @@ class LCU {
     bool foundLolClients = false;
     File? lockfileFile;
 
-    await for (final FileSystemEntity f in directory.list()) {
+    checkLockfile(FileSystemEntity f) {
       if (f is File) {
         switch (path.basename(f.path)) {
           case 'lockfile':
@@ -146,6 +153,21 @@ class LCU {
             foundLolClients = true;
             break;
         }
+      }
+    }
+
+    if (directory.path.endsWith(LCU.macosFileType)) {
+      try {
+        final contentFolder = await directory.list().firstWhere((item) => item.path.endsWith('Contents'));
+        final lolFolder = await (contentFolder as Directory).list().firstWhere((item) => item.path.endsWith('LoL'));
+
+        await for (final FileSystemEntity f in (lolFolder as Directory).list()) {
+          checkLockfile(f);
+        }
+      } catch (_) {}
+    } else {
+      await for (final FileSystemEntity f in directory.list()) {
+        checkLockfile(f);
       }
     }
 

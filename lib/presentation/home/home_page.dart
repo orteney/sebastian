@@ -51,6 +51,9 @@ class HomePage extends StatelessWidget {
               LolNotLaunchedOrWrongPathProvidedHomeState _ => MessageWithRetryScreen(
                   message: appLocalizations.homeMessageLolOffline,
                   onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
+                  onTapChangePath: () => context
+                      .read<HomeBloc>()
+                      .add(PickLolPathHomeEvent(pickedPath: '')),
                 ),
               ErrorHomeState _ => MessageWithRetryScreen(
                   message: state.message,

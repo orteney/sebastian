@@ -19,7 +19,7 @@ const _gameFlowStateEvent = 'OnJsonApiEvent_lol-gameflow_v1_gameflow-phase';
 const _matchmakingEvent = 'OnJsonApiEvent_lol-matchmaking_v1_ready-check';
 
 class LCU {
-  static const macosFileType = 'app';
+  static const macosFileExtension = 'app';
 
   final LcuPathStorage _lcuStore;
 
@@ -59,7 +59,7 @@ class LCU {
     String content = savedLockfile.readAsStringSync();
 
     if (content.isEmpty) {
-      _lcuStore.clearLockfile();
+      _lcuStore.clear();
     }
 
     List<String> args = content.split(':');
@@ -129,7 +129,13 @@ class LCU {
   }
 
   Future<bool> saveLockfileDirectory(Directory directory) async {
-    final lockfile = await _getLockfileFromLolDirectory(directory);
+    File? lockfile;
+    if (Platform.isMacOS) {
+      lockfile = await _getLockfileFromMacosLolDirectory(directory);
+    } else {
+      lockfile = await _getLockfileFromLolDirectory(directory);
+    }
+
     if (lockfile == null) {
       return false;
     }
@@ -138,11 +144,30 @@ class LCU {
     return true;
   }
 
+  Future<File?> _getLockfileFromMacosLolDirectory(Directory directory) async {
+    File? lockfileFile;
+    try {
+      final contentFolder = await directory.list().firstWhere((item) => item.path.endsWith('Contents'));
+      final lolFolder = await (contentFolder as Directory).list().firstWhere((item) => item.path.endsWith('LoL'));
+
+      // is a valid directory if LoL folder exists
+      lockfileFile = File(path.join(directory.path, 'lockfile'));
+
+      await for (final FileSystemEntity f in (lolFolder as Directory).list()) {
+        if (f is File && path.basename(f.path) == 'lockfile') {
+          lockfileFile = f;
+        }
+      }
+    } catch (_) {}
+
+    return lockfileFile;
+  }
+
   Future<File?> _getLockfileFromLolDirectory(Directory directory) async {
     bool foundLolClients = false;
     File? lockfileFile;
 
-    checkLockfile(FileSystemEntity f) {
+    await for (final FileSystemEntity f in directory.list()) {
       if (f is File) {
         switch (path.basename(f.path)) {
           case 'lockfile':
@@ -153,21 +178,6 @@ class LCU {
             foundLolClients = true;
             break;
         }
-      }
-    }
-
-    if (directory.path.endsWith(LCU.macosFileType)) {
-      try {
-        final contentFolder = await directory.list().firstWhere((item) => item.path.endsWith('Contents'));
-        final lolFolder = await (contentFolder as Directory).list().firstWhere((item) => item.path.endsWith('LoL'));
-
-        await for (final FileSystemEntity f in (lolFolder as Directory).list()) {
-          checkLockfile(f);
-        }
-      } catch (_) {}
-    } else {
-      await for (final FileSystemEntity f in directory.list()) {
-        checkLockfile(f);
       }
     }
 

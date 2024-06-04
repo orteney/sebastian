@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:sebastian/data/lcu/lcu.dart';
+import 'package:sebastian/data/lcu/lcu_path_storage.dart';
 import 'package:sebastian/data/lcu/models/ready_check_event.dart';
 import 'package:sebastian/data/repositories/champion_repository.dart';
 import 'package:sebastian/data/repositories/items_repository.dart';
@@ -20,6 +21,7 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
   final LCU _lcu;
+  final LcuPathStorage _lcuStore;
   final SummonerRepository _summonerRepository;
   final ChampionRepository _championRepository;
   final PerksRepository _perksRepository;
@@ -29,6 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
 
   HomeBloc(
     this._lcu,
+    this._lcuStore,
     this._summonerRepository,
     this._championRepository,
     this._perksRepository,
@@ -39,6 +42,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
     on<StartHomeEvent>(_onStartHomeEvent);
     on<LcuDisconnectedHomeEvent>(_onLcuDisconnectedHomeEvent);
     on<PickLolPathHomeEvent>(_onPickLolPathHomeEvent);
+    on<TapClearLolPathHomeEvent>(_onTapClearLolPathHomeEvent);
     on<LoadCurrentSummonerInfoHomeEvent>(_onLoadCurrentSummonerInfoHomeEvent);
     on<TapDestinationHomeEvent>(_onTapDestinationHomeEvent);
     on<ToggleAutoAcceptHomeEvent>(_onToggleAutoAcceptHomeEvent);
@@ -75,6 +79,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
     } else {
       emit(PickedWrongLolPathHomeState());
     }
+  }
+
+  Future<void> _onTapClearLolPathHomeEvent(TapClearLolPathHomeEvent event, Emitter<HomeState> emit) async {
+    _lcuStore.clear();
+    add(StartHomeEvent());
   }
 
   Future<void> _onLoadCurrentSummonerInfoHomeEvent(
@@ -131,8 +140,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
         subscriptions.remove(_readyCheckSubscription!);
       }
     } else {
-      _readyCheckSubscription = _leagueClientEventRepository.observeReadyCheckEvent().listen(_onReadyChekEvent)
-        ..addTo(subscriptions);
+      _readyCheckSubscription = _leagueClientEventRepository.observeReadyCheckEvent().listen(_onReadyChekEvent)..addTo(subscriptions);
     }
 
     emit(state.copyWith(autoAcceptEnabled: !state.autoAcceptEnabled));
@@ -141,10 +149,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
   void _onReadyChekEvent(ReadyCheckEvent event) {
     if (state is! LoadedHomeState) return;
 
-    if ((state as LoadedHomeState).autoAcceptEnabled &&
-        event.timer >= 2 &&
-        event.state == 'InProgress' &&
-        event.playerResponse == 'None') {
+    if ((state as LoadedHomeState).autoAcceptEnabled && event.timer >= 2 && event.state == 'InProgress' && event.playerResponse == 'None') {
       _lcu.service.acceptReadyCheck().ignore();
     }
   }

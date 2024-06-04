@@ -20,6 +20,8 @@ class TapDestinationHomeEvent extends HomeEvent {
   TapDestinationHomeEvent(this.destination);
 }
 
+class TapClearLolPathHomeEvent extends HomeEvent {}
+
 class ToggleAutoAcceptHomeEvent extends HomeEvent {}
 
 class LcuDisconnectedHomeEvent extends HomeEvent {}

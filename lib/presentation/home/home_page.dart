@@ -10,6 +10,7 @@ import 'package:sebastian/presentation/champions_disenchanter/champions_disencha
 import 'package:sebastian/presentation/champions_table/champions_table_widget.dart';
 import 'package:sebastian/presentation/champions_tier_list/champions_tier_list_widget.dart';
 import 'package:sebastian/presentation/core/widgets/app_version.dart';
+import 'package:sebastian/presentation/home/screens/lol_not_launched_or_wrong_path.dart';
 import 'package:sebastian/presentation/summoner/summoner_widget.dart';
 
 import 'bloc/home_bloc.dart';
@@ -33,6 +34,7 @@ class HomePage extends StatelessWidget {
         getIt(),
         getIt(),
         getIt(),
+        getIt(),
       )..add(StartHomeEvent()),
       child: Scaffold(
         body: BlocBuilder<HomeBloc, HomeState>(
@@ -48,12 +50,10 @@ class HomePage extends StatelessWidget {
                   onRetryTap: () => context.read<HomeBloc>().add(StartHomeEvent()),
                   onPickedPath: (path) => context.read<HomeBloc>().add(PickLolPathHomeEvent(pickedPath: path)),
                 ),
-              LolNotLaunchedOrWrongPathProvidedHomeState _ => MessageWithRetryScreen(
+              LolNotLaunchedOrWrongPathProvidedHomeState _ => LolNotLaunchedOrWrongPathProvidedScreen(
                   message: appLocalizations.homeMessageLolOffline,
                   onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
-                  onTapChangePath: () => context
-                      .read<HomeBloc>()
-                      .add(PickLolPathHomeEvent(pickedPath: '')),
+                  onTapChangePath: () => context.read<HomeBloc>().add(TapClearLolPathHomeEvent()),
                 ),
               ErrorHomeState _ => MessageWithRetryScreen(
                   message: state.message,

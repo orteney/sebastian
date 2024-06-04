@@ -23,16 +23,16 @@ class PickLolPathScreen extends StatelessWidget {
   Future<void> _onPickPathTap(String dialogTitle) async {
     String? result;
 
-    if (!Platform.isMacOS) {
+    if (Platform.isMacOS) {
+      final files = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: [LCU.macosFileExtension]);
+      if (files != null) {
+        result = files.files.single.path;
+      }
+    } else {
       result = await FilePicker.platform.getDirectoryPath(
         lockParentWindow: true,
         dialogTitle: dialogTitle,
       );
-    } else {
-      final files = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: [LCU.macosFileType]);
-      if (files != null) {
-        result = files.files.single.path;
-      }
     }
 
     if (result != null) {

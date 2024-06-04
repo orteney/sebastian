@@ -19,7 +19,7 @@ class LcuPathStorage {
     return File(path);
   }
 
-  void clearLockfile() {
+  void clear() {
     _sharedPreferences.remove(_spLockfilePathKey);
   }
 

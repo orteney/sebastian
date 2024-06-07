@@ -217,4 +217,8 @@ class LCU {
     _websocket.close();
     _restClient.close();
   }
+
+  void resetPath() {
+    _lcuStore.clear();
+  }
 }

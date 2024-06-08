@@ -39,6 +39,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
     on<StartHomeEvent>(_onStartHomeEvent);
     on<LcuDisconnectedHomeEvent>(_onLcuDisconnectedHomeEvent);
     on<PickLolPathHomeEvent>(_onPickLolPathHomeEvent);
+    on<TapClearLolPathHomeEvent>(_onTapClearLolPathHomeEvent);
     on<LoadCurrentSummonerInfoHomeEvent>(_onLoadCurrentSummonerInfoHomeEvent);
     on<TapDestinationHomeEvent>(_onTapDestinationHomeEvent);
     on<ToggleAutoAcceptHomeEvent>(_onToggleAutoAcceptHomeEvent);
@@ -75,6 +76,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
     } else {
       emit(PickedWrongLolPathHomeState());
     }
+  }
+
+  Future<void> _onTapClearLolPathHomeEvent(TapClearLolPathHomeEvent event, Emitter<HomeState> emit) async {
+    _lcu.resetPath();
+    emit(LolPathUnspecifiedHomeState());
   }
 
   Future<void> _onLoadCurrentSummonerInfoHomeEvent(
@@ -131,8 +137,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
         subscriptions.remove(_readyCheckSubscription!);
       }
     } else {
-      _readyCheckSubscription = _leagueClientEventRepository.observeReadyCheckEvent().listen(_onReadyChekEvent)
-        ..addTo(subscriptions);
+      _readyCheckSubscription = _leagueClientEventRepository.observeReadyCheckEvent().listen(_onReadyChekEvent)..addTo(subscriptions);
     }
 
     emit(state.copyWith(autoAcceptEnabled: !state.autoAcceptEnabled));
@@ -141,10 +146,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with StreamSubscriptions {
   void _onReadyChekEvent(ReadyCheckEvent event) {
     if (state is! LoadedHomeState) return;
 
-    if ((state as LoadedHomeState).autoAcceptEnabled &&
-        event.timer >= 2 &&
-        event.state == 'InProgress' &&
-        event.playerResponse == 'None') {
+    if ((state as LoadedHomeState).autoAcceptEnabled && event.timer >= 2 && event.state == 'InProgress' && event.playerResponse == 'None') {
       _lcu.service.acceptReadyCheck().ignore();
     }
   }

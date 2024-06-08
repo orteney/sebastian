@@ -50,7 +50,6 @@ class HomePage extends StatelessWidget {
                   onPickedPath: (path) => context.read<HomeBloc>().add(PickLolPathHomeEvent(pickedPath: path)),
                 ),
               LolNotLaunchedOrWrongPathProvidedHomeState _ => LolNotLaunchedOrWrongPathProvidedScreen(
-                  message: appLocalizations.homeMessageLolOffline,
                   onTapRetry: () => context.read<HomeBloc>().add(StartHomeEvent()),
                   onTapChangePath: () => context.read<HomeBloc>().add(TapClearLolPathHomeEvent()),
                 ),

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:sebastian/data/lcu/lcu.dart';
 
+import 'package:sebastian/data/lcu/lcu.dart';
 import 'package:sebastian/presentation/core/widgets/sebastian_message.dart';
 
 class PickLolPathScreen extends StatelessWidget {
@@ -24,7 +24,10 @@ class PickLolPathScreen extends StatelessWidget {
     String? result;
 
     if (Platform.isMacOS) {
-      final files = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: [LCU.macosFileExtension]);
+      final files = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: [LCU.macosFileExtension],
+      );
       if (files != null) {
         result = files.files.single.path;
       }

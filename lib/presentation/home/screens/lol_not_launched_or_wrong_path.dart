@@ -16,36 +16,38 @@ class LolNotLaunchedOrWrongPathProvidedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final appLocalizations = AppLocalizations.of(context);
 
     return Center(
-      child: SebastianMessages(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+      child: SebastianMessage(
+        child: IntrinsicWidth(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(appLocalizations.homeMessageLolOffline),
+              const SizedBox(height: 16),
+              Text(
+                appLocalizations.homeMessageLolOfflineResetPathMessage,
+                style: theme.textTheme.bodyLarge,
+              ),
               const SizedBox(height: 32),
-              OutlinedButton(
-                onPressed: onTapRetry,
-                child: Text(appLocalizations.buttonRetry),
+              ButtonBar(
+                children: [
+                  OutlinedButton(
+                    onPressed: onTapChangePath,
+                    child: Text(appLocalizations.homeMessageLolOfflineResetPathButton),
+                  ),
+                  FilledButton(
+                    onPressed: onTapRetry,
+                    child: Text(appLocalizations.buttonRetry),
+                  ),
+                ],
               ),
             ],
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(appLocalizations.homeMessageLolOfflineResetPathMessage),
-              const SizedBox(height: 32),
-              OutlinedButton(
-                onPressed: onTapChangePath,
-                child: Text(appLocalizations.homeMessageLolOfflineResetPathButton),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }

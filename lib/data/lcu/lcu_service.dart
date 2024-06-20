@@ -3,10 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart' show compute;
 
+import 'package:sebastian/data/lcu/models/challenge.dart';
 import 'package:sebastian/data/lcu/models/champion_dto.dart';
 import 'package:sebastian/data/lcu/models/champion_full_dto.dart';
-import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
 import 'package:sebastian/data/lcu/models/champion_mastery.dart';
+import 'package:sebastian/data/lcu/models/champion_stat_stones.dart';
 import 'package:sebastian/data/lcu/models/item.dart';
 import 'package:sebastian/data/lcu/models/lcu_error.dart';
 import 'package:sebastian/data/lcu/models/loot.dart';
@@ -121,6 +122,15 @@ class LcuService {
   Future<ChampionFullDto> getChampion(int summonerId, int championId) async {
     final response = await _request('GET', '/lol-champions/v1/inventories/$summonerId/champions/$championId');
     return ChampionFullDto.fromJson(response);
+  }
+
+  Future<Map<String, Challenge>> getChallenges() async {
+    final response = await _request('GET', '/lol-challenges/v1/challenges/local-player');
+    if (response is Map) {
+      return response.map((key, value) => MapEntry(key, Challenge.fromJson(value)));
+    } else {
+      return {};
+    }
   }
 
   Future<dynamic> _request(

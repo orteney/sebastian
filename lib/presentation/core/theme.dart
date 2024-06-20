@@ -13,68 +13,69 @@ ThemeData mainTheme() {
   );
 
   return theme.copyWith(
-      scaffoldBackgroundColor: theme.colorScheme.surfaceContainerLowest,
-      progressIndicatorTheme: theme.progressIndicatorTheme.copyWith(
-        color: SebastianColors.primary,
-        linearTrackColor: theme.colorScheme.primary,
+    scaffoldBackgroundColor: theme.colorScheme.surfaceContainerLowest,
+    progressIndicatorTheme: theme.progressIndicatorTheme.copyWith(
+      color: SebastianColors.primary,
+      linearTrackColor: theme.colorScheme.primary,
+    ),
+    snackBarTheme: theme.snackBarTheme.copyWith(
+      behavior: SnackBarBehavior.floating,
+    ),
+    popupMenuTheme: theme.popupMenuTheme.copyWith(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
-      snackBarTheme: theme.snackBarTheme.copyWith(
-        behavior: SnackBarBehavior.floating,
+    ),
+    switchTheme: theme.switchTheme.copyWith(
+      thumbColor: WidgetStateProperty.resolveWith(
+        (states) {
+          if (states.contains(WidgetState.selected)) {
+            return theme.colorScheme.primary;
+          }
+          return null;
+        },
       ),
-      popupMenuTheme: theme.popupMenuTheme.copyWith(
+      trackColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return theme.colorScheme.primary.withAlpha(0x80);
+        }
+        return null;
+      }),
+    ),
+    listTileTheme: const ListTileThemeData(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),
+    ),
+
+    // Button themes
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
       ),
-      switchTheme: theme.switchTheme.copyWith(
-        thumbColor: WidgetStateProperty.resolveWith(
-          (states) {
-            if (states.contains(WidgetState.selected)) {
-              return theme.colorScheme.primary;
-            }
-            return null;
-          },
-        ),
-        trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return theme.colorScheme.primary.withAlpha(0x80);
-          }
-          return null;
-        }),
-      ),
-      listTileTheme: const ListTileThemeData(
-        shape: RoundedRectangleBorder(
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
       ),
-
-      // Button themes
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
       ),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-        ),
-      ),
-      filledButtonTheme: FilledButtonThemeData(
-        style: FilledButton.styleFrom(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-        ),
-      ));
+    ),
+  );
 }

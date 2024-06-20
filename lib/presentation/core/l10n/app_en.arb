@@ -73,6 +73,7 @@
   "homeMessageLolOffline": "Looks like the league is offline…\nRetry when it starts 🙃",
   "homeMessageLolOfflineResetPathButton": "RESET PATH",
   "homeMessageLolOfflineResetPathMessage": "If that doesn't work, try reset path",
+  "homeNavigationChallenges": "CHALLENGES",
   "homeNavigationCurrentGame": "CURRENT GAME",
   "homeNavigationDisenchanter": "DISENCHANTER",
   "homeNavigationMastery": "MASTERY",

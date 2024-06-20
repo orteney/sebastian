@@ -5,4 +5,5 @@ enum Destination {
   mastery,
   disenchanter,
   stats,
+  challenges,
 }

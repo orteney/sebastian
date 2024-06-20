@@ -8,6 +8,7 @@ import 'package:sebastian/data/blitz/blitz_data_source.dart';
 import 'package:sebastian/data/lcu/lcu.dart';
 import 'package:sebastian/data/lcu/lcu_path_storage.dart';
 import 'package:sebastian/data/repositories/build_repository.dart';
+import 'package:sebastian/data/repositories/challenges_repository.dart';
 import 'package:sebastian/data/repositories/champion_repository.dart';
 import 'package:sebastian/data/repositories/champion_tier_repository.dart';
 import 'package:sebastian/data/repositories/items_repository.dart';
@@ -36,4 +37,5 @@ Future<void> initDi() async {
   getIt.registerLazySingleton<ChampionTierRepository>(() => ChampionTierRepository(getIt(), getIt()));
   getIt.registerLazySingleton<LeagueClientEventRepository>(() => LeagueClientEventRepository(getIt()));
   getIt.registerFactory<BuildRepository>(() => BuildRepository(getIt(), getIt()));
+  getIt.registerLazySingleton<ChallengesRepository>(() => ChallengesRepository(getIt()));
 }

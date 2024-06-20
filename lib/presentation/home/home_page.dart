@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:sebastian/di/di.dart';
+import 'package:sebastian/presentation/challenges/challenges_page.dart';
 import 'package:sebastian/presentation/champion_pick/bloc/champion_pick_bloc.dart';
 import 'package:sebastian/presentation/champion_pick/champion_pick_page.dart';
 import 'package:sebastian/presentation/champions_disenchanter/champions_disenchanter_widget.dart';
@@ -107,6 +108,7 @@ class LoadedHomeStateWidget extends StatelessWidget {
                   Destination.mastery => ChampionsTableWidget(summonerId: state.summonerId),
                   Destination.disenchanter => const ChampionsDisenchanterWidget(),
                   Destination.stats => const ChampionsTierListWidget(),
+                  Destination.challenges => const ChallengesPage(),
                 },
               ),
             ),
@@ -177,12 +179,24 @@ class NavigationDrawer extends StatelessWidget {
                   isChecked: Destination.mastery == currentDestination,
                 ),
                 NavigationMenuItem(
-                  destination: Destination.stats,
-                  isChecked: Destination.stats == currentDestination,
+                  destination: Destination.challenges,
+                  isChecked: Destination.challenges == currentDestination,
                 ),
                 NavigationMenuItem(
                   destination: Destination.disenchanter,
                   isChecked: Destination.disenchanter == currentDestination,
+                ),
+              ],
+            ),
+          ),
+          Card(
+            elevation: 0,
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: Column(
+              children: [
+                NavigationMenuItem(
+                  destination: Destination.stats,
+                  isChecked: Destination.stats == currentDestination,
                 ),
               ],
             ),
@@ -216,7 +230,8 @@ class NavigationMenuItem extends StatelessWidget {
         Destination.mastery => appLocalizations.homeNavigationMastery,
         Destination.disenchanter => appLocalizations.homeNavigationDisenchanter,
         Destination.championPick => appLocalizations.homeNavigationCurrentGame,
-        Destination.stats => appLocalizations.homeNavigationTierList
+        Destination.stats => appLocalizations.homeNavigationTierList,
+        Destination.challenges => appLocalizations.homeNavigationChallenges,
       }),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(12)),

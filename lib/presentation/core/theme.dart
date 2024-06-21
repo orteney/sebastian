@@ -48,6 +48,10 @@ ThemeData mainTheme() {
       ),
     ),
 
+    inputDecorationTheme: const InputDecorationTheme(
+      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+    ),
+
     // Button themes
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(

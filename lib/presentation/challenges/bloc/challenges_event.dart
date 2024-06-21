@@ -4,3 +4,23 @@ part of 'challenges_bloc.dart';
 abstract class ChallengesEvent {}
 
 class InitChallengesEvent extends ChallengesEvent {}
+
+class ToggleFilterChallengesEvent extends ChallengesEvent {
+  final ChallengesFilter filter;
+
+  ToggleFilterChallengesEvent(this.filter);
+}
+
+class ToggleGameModeFilterChallengesEvent extends ChallengesEvent {
+  final ChallengeGameModeFilter filter;
+
+  ToggleGameModeFilterChallengesEvent(this.filter);
+}
+
+class TapRefreshChallengesEvent extends ChallengesEvent {}
+
+class ChangeSearchQueryChallengesEvent extends ChallengesEvent {
+  final String query;
+
+  ChangeSearchQueryChallengesEvent(this.query);
+}

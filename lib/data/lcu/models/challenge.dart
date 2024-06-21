@@ -85,7 +85,8 @@ class Challenge {
   final double currentValue;
   final double currentThreshold;
   final double nextThreshold;
-  final List<String> gameModes;
+  final String nextLevel;
+  final List<ChallengeGameMode> gameModes;
 
   Challenge(
     this.id,
@@ -101,6 +102,7 @@ class Challenge {
     this.currentValue,
     this.currentThreshold,
     this.nextThreshold,
+    this.nextLevel,
     this.gameModes,
   );
 
@@ -121,6 +123,17 @@ enum ChallengeLevel {
   challenger('CHALLENGER');
 
   const ChallengeLevel(this.name);
+
+  final String name;
+}
+
+@JsonEnum(valueField: 'name')
+enum ChallengeGameMode {
+  classic('CLASSIC'),
+  aram('ARAM'),
+  arena('CHERRY');
+
+  const ChallengeGameMode(this.name);
 
   final String name;
 }

@@ -17,16 +17,17 @@
   "buildDetailsSkills": "Skills",
   "buildDetailsSummonerSpells": "Summoner spells",
   "buttonRetry": "RETRY",
+  "challengesEmpty": "There are just no challenges within the current filters 🤷‍♀️",
+  "challengesFilterGameModeAram": "ARAM",
+  "challengesFilterGameModeArena": "Arena",
+  "challengesFilterGameModeClassic": "Classic",
+  "challengesFilterGameModeVsAi": "vs. AI",
+  "challengesFilterOnlyNonMaxed": "Only Non-Maxed",
   "championPickImportButton": "IMPORT",
   "championPickNoBuildsMessage": "There are no builds for the selected role 🥲",
   "championPickNoPickedChampionMessage": "Pick champion 🙃",
   "championPickNotInLobbyMessage": "Looks like you're not in the lobby right now 🤔",
   "championRole": "{role, select, assassin{Assassin} fighter{Fighter} mage{Mage} marksman{Marksman} support{Support} tank{Tank} other{All roles}}",
-  "@championRole": {
-    "placeholders": {
-      "role": {}
-    }
-  },
   "disenchanterAddAllButton": "Add All",
   "disenchanterDisenchantButton": "DISENCHANT",
   "disenchanterMasteryBadgeTooltip": "{level} mastery and {tokensCount} tokens",

@@ -37,5 +37,5 @@ Future<void> initDi() async {
   getIt.registerLazySingleton<ChampionTierRepository>(() => ChampionTierRepository(getIt(), getIt()));
   getIt.registerLazySingleton<LeagueClientEventRepository>(() => LeagueClientEventRepository(getIt()));
   getIt.registerFactory<BuildRepository>(() => BuildRepository(getIt(), getIt()));
-  getIt.registerLazySingleton<ChallengesRepository>(() => ChallengesRepository(getIt()));
+  getIt.registerLazySingleton<ChallengesRepository>(() => ChallengesRepository(getIt(), getIt()));
 }

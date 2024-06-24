@@ -24,3 +24,9 @@ class ChangeSearchQueryChallengesEvent extends ChallengesEvent {
 
   ChangeSearchQueryChallengesEvent(this.query);
 }
+
+class TapFavoriteChallengesEvent extends ChallengesEvent {
+  final Challenge challenge;
+
+  TapFavoriteChallengesEvent(this.challenge);
+}

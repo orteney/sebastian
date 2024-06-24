@@ -24,9 +24,10 @@ class ChallengesBloc extends Bloc<ChallengesEvent, ChallengesState> {
     on<ToggleGameModeFilterChallengesEvent>(_onToggleGameModeFilterChallengesEvent);
     on<TapRefreshChallengesEvent>(_onTapRefreshChallengesEvent);
     on<ChangeSearchQueryChallengesEvent>(_onChangeSearchQueryChallengesEvent);
+    on<TapFavoriteChallengesEvent>(_onTapFavoriteChallengesEvent);
   }
 
-  String? searchQuery;
+  String? _searchQuery;
 
   Future<void> _onInitChallengesEvent(
     InitChallengesEvent event,
@@ -41,7 +42,7 @@ class ChallengesBloc extends Bloc<ChallengesEvent, ChallengesState> {
         filters,
         null,
         null,
-      ).toList(),
+      ).toList(growable: false),
       activeFilters: filters,
     ));
   }
@@ -67,8 +68,8 @@ class ChallengesBloc extends Bloc<ChallengesEvent, ChallengesState> {
         challenges,
         filters,
         state.gameModeFilter,
-        searchQuery,
-      ).toList(),
+        _searchQuery,
+      ).toList(growable: false),
       activeFilters: filters,
     ));
   }
@@ -92,8 +93,8 @@ class ChallengesBloc extends Bloc<ChallengesEvent, ChallengesState> {
         challenges,
         state.activeFilters,
         filter,
-        searchQuery,
-      ).toList(),
+        _searchQuery,
+      ).toList(growable: false),
       gameModeFilter: () => filter,
     ));
   }
@@ -114,8 +115,8 @@ class ChallengesBloc extends Bloc<ChallengesEvent, ChallengesState> {
         challenges,
         state.activeFilters,
         state.gameModeFilter,
-        searchQuery,
-      ).toList(),
+        _searchQuery,
+      ).toList(growable: false),
       refreshing: false,
     ));
   }
@@ -128,18 +129,38 @@ class ChallengesBloc extends Bloc<ChallengesEvent, ChallengesState> {
     if (state is! LoadedChallengesState) return;
 
     final newQuery = event.query.toLowerCase();
-    if (newQuery == searchQuery) return;
+    if (newQuery == _searchQuery) return;
 
     final challenges = await _challengesRepository.getChallenges();
 
-    searchQuery = newQuery;
+    _searchQuery = newQuery;
 
     emit(state.copyWith(
       challenges: _filterChallenges(
         challenges,
         state.activeFilters,
         state.gameModeFilter,
-        searchQuery,
+        _searchQuery,
+      ).toList(growable: false),
+    ));
+  }
+
+  Future<void> _onTapFavoriteChallengesEvent(
+    TapFavoriteChallengesEvent event,
+    Emitter<ChallengesState> emit,
+  ) async {
+    final state = this.state;
+    if (state is! LoadedChallengesState) return;
+
+    _challengesRepository.toggleFavorite(event.challenge.id);
+    final challenges = await _challengesRepository.getChallenges();
+
+    emit(state.copyWith(
+      challenges: _filterChallenges(
+        challenges,
+        state.activeFilters,
+        state.gameModeFilter,
+        _searchQuery,
       ).toList(),
     ));
   }
@@ -171,6 +192,9 @@ class ChallengesBloc extends Bloc<ChallengesEvent, ChallengesState> {
         switch (filter) {
           case ChallengesFilter.maxed:
             if (challenge.nextLevel.isEmpty) continue mainloop;
+            break;
+          case ChallengesFilter.favorites:
+            if (!challenge.isFavorite) continue mainloop;
             break;
         }
       }

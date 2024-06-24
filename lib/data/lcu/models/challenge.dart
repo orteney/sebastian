@@ -88,6 +88,9 @@ class Challenge {
   final String nextLevel;
   final List<ChallengeGameMode> gameModes;
 
+  @JsonKey(includeFromJson: false)
+  final bool isFavorite;
+
   Challenge(
     this.id,
     this.name,
@@ -103,10 +106,49 @@ class Challenge {
     this.currentThreshold,
     this.nextThreshold,
     this.nextLevel,
-    this.gameModes,
-  );
+    this.gameModes, {
+    this.isFavorite = false,
+  });
 
   factory Challenge.fromJson(Map<String, dynamic> json) => _$ChallengeFromJson(json);
+
+  Challenge copyWith({
+    int? id,
+    String? name,
+    String? description,
+    bool? isCapstone,
+    List<int>? availableIds,
+    List<int>? completedIds,
+    double? percentile,
+    int? position,
+    int? pointsAwarded,
+    ChallengeLevel? currentLevel,
+    double? currentValue,
+    double? currentThreshold,
+    double? nextThreshold,
+    String? nextLevel,
+    List<ChallengeGameMode>? gameModes,
+    bool? isFavorite,
+  }) {
+    return Challenge(
+      id ?? this.id,
+      name ?? this.name,
+      description ?? this.description,
+      isCapstone ?? this.isCapstone,
+      availableIds ?? this.availableIds,
+      completedIds ?? this.completedIds,
+      percentile ?? this.percentile,
+      position ?? this.position,
+      pointsAwarded ?? this.pointsAwarded,
+      currentLevel ?? this.currentLevel,
+      currentValue ?? this.currentValue,
+      currentThreshold ?? this.currentThreshold,
+      nextThreshold ?? this.nextThreshold,
+      nextLevel ?? this.nextLevel,
+      gameModes ?? this.gameModes,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 }
 
 @JsonEnum(valueField: 'name')

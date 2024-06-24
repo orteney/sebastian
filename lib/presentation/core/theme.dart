@@ -3,41 +3,54 @@ import 'package:flutter/material.dart';
 import 'package:sebastian/presentation/core/colors.dart';
 
 ThemeData mainTheme() {
-  final theme = ThemeData.from(
-    useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: SebastianColors.primary,
-      surfaceContainerLowest: const Color(0xFF121212),
-      brightness: Brightness.dark,
-    ),
+  final colorScheme = ColorScheme.fromSeed(
+    seedColor: SebastianColors.primary,
+    brightness: Brightness.dark,
   );
 
-  return theme.copyWith(
-    scaffoldBackgroundColor: theme.colorScheme.surfaceContainerLowest,
-    progressIndicatorTheme: theme.progressIndicatorTheme.copyWith(
+  final bool isDark = colorScheme.brightness == Brightness.dark;
+
+  // For surfaces that use primary color in light themes and surface color in dark
+  final Color primarySurfaceColor = isDark ? colorScheme.surface : colorScheme.primary;
+  final Color onPrimarySurfaceColor = isDark ? colorScheme.onSurface : colorScheme.onPrimary;
+
+  return ThemeData(
+    useMaterial3: true,
+    colorScheme: colorScheme,
+    brightness: colorScheme.brightness,
+    primaryColor: primarySurfaceColor,
+    canvasColor: colorScheme.surface,
+    scaffoldBackgroundColor: colorScheme.surfaceContainerLowest,
+    cardColor: colorScheme.surface,
+    dividerColor: colorScheme.onSurface.withOpacity(0.12),
+    dialogBackgroundColor: colorScheme.surface,
+    indicatorColor: onPrimarySurfaceColor,
+    applyElevationOverlayColor: isDark,
+
+    progressIndicatorTheme: ProgressIndicatorThemeData(
       color: SebastianColors.primary,
-      linearTrackColor: theme.colorScheme.primary,
+      linearTrackColor: colorScheme.primary,
     ),
-    snackBarTheme: theme.snackBarTheme.copyWith(
+    snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
     ),
-    popupMenuTheme: theme.popupMenuTheme.copyWith(
-      shape: const RoundedRectangleBorder(
+    popupMenuTheme: const PopupMenuThemeData(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
     ),
-    switchTheme: theme.switchTheme.copyWith(
+    switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.selected)) {
-            return theme.colorScheme.primary;
+            return colorScheme.primary;
           }
           return null;
         },
       ),
       trackColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return theme.colorScheme.primary.withAlpha(0x80);
+          return colorScheme.primary.withAlpha(0x80);
         }
         return null;
       }),

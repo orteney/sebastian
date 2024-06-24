@@ -114,34 +114,68 @@ class ChallengesToolbar extends StatelessWidget {
           padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
           child: Row(
             children: [
-              FilterChip(
-                label: Text(appLocalizations.challengesFilterOnlyNonMaxed),
-                selected: state.activeFilters.contains(ChallengesFilter.maxed),
-                onSelected: (selected) => onTapFilter(ChallengesFilter.maxed),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    appLocalizations.challengesFilterSectionShowOnlyTitle,
+                    style: theme.textTheme.labelMedium!.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                  Row(
+                    children: [
+                      FilterChip(
+                        label: Text(appLocalizations.challengesFilterOnlyNonMaxed),
+                        selected: state.activeFilters.contains(ChallengesFilter.maxed),
+                        onSelected: (selected) => onTapFilter(ChallengesFilter.maxed),
+                      ),
+                      const SizedBox(width: 8),
+                      FilterChip(
+                        label: Text(appLocalizations.challengesFilterOnlyFavorites),
+                        selected: state.activeFilters.contains(ChallengesFilter.favorites),
+                        onSelected: (selected) => onTapFilter(ChallengesFilter.favorites),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               const VerticalDivider(),
-              FilterChip(
-                label: Text(appLocalizations.challengesFilterGameModeClassic),
-                selected: state.gameModeFilter == ChallengeGameModeFilter.classic,
-                onSelected: (selected) => onTapGameModeFilter(ChallengeGameModeFilter.classic),
-              ),
-              const SizedBox(width: 8),
-              FilterChip(
-                label: Text(appLocalizations.challengesFilterGameModeAram),
-                selected: state.gameModeFilter == ChallengeGameModeFilter.aram,
-                onSelected: (selected) => onTapGameModeFilter(ChallengeGameModeFilter.aram),
-              ),
-              const SizedBox(width: 8),
-              FilterChip(
-                label: Text(appLocalizations.challengesFilterGameModeVsAi),
-                selected: state.gameModeFilter == ChallengeGameModeFilter.vsAi,
-                onSelected: (selected) => onTapGameModeFilter(ChallengeGameModeFilter.vsAi),
-              ),
-              const SizedBox(width: 8),
-              FilterChip(
-                label: Text(appLocalizations.challengesFilterGameModeArena),
-                selected: state.gameModeFilter == ChallengeGameModeFilter.arena,
-                onSelected: (selected) => onTapGameModeFilter(ChallengeGameModeFilter.arena),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    appLocalizations.challengesFilterSectionGameModeTitle,
+                    style: theme.textTheme.labelMedium!.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                  Row(
+                    children: [
+                      FilterChip(
+                        label: Text(appLocalizations.challengesFilterGameModeClassic),
+                        selected: state.gameModeFilter == ChallengeGameModeFilter.classic,
+                        onSelected: (selected) => onTapGameModeFilter(ChallengeGameModeFilter.classic),
+                      ),
+                      const SizedBox(width: 8),
+                      FilterChip(
+                        label: Text(appLocalizations.challengesFilterGameModeAram),
+                        selected: state.gameModeFilter == ChallengeGameModeFilter.aram,
+                        onSelected: (selected) => onTapGameModeFilter(ChallengeGameModeFilter.aram),
+                      ),
+                      const SizedBox(width: 8),
+                      FilterChip(
+                        label: Text(appLocalizations.challengesFilterGameModeVsAi),
+                        selected: state.gameModeFilter == ChallengeGameModeFilter.vsAi,
+                        onSelected: (selected) => onTapGameModeFilter(ChallengeGameModeFilter.vsAi),
+                      ),
+                      const SizedBox(width: 8),
+                      FilterChip(
+                        label: Text(appLocalizations.challengesFilterGameModeArena),
+                        selected: state.gameModeFilter == ChallengeGameModeFilter.arena,
+                        onSelected: (selected) => onTapGameModeFilter(ChallengeGameModeFilter.arena),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               const VerticalDivider(),
               Expanded(
@@ -214,7 +248,7 @@ class ChallengeCard extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: const EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -248,6 +282,18 @@ class ChallengeCard extends StatelessWidget {
                       style: theme.textTheme.bodySmall,
                     ),
                   ),
+                  IconButton(
+                    onPressed: () => context.read<ChallengesBloc>().add(TapFavoriteChallengesEvent(challenge)),
+                    icon: challenge.isFavorite
+                        ? Icon(
+                            Icons.star_rounded,
+                            color: theme.colorScheme.tertiary,
+                          )
+                        : Icon(
+                            Icons.star_border_rounded,
+                            color: theme.colorScheme.outline,
+                          ),
+                  )
                 ],
               ),
             ),

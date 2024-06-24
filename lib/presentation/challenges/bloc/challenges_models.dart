@@ -1,5 +1,6 @@
 enum ChallengesFilter {
   maxed,
+  favorites,
 }
 
 enum ChallengeGameModeFilter {

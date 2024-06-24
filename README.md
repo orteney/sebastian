@@ -13,6 +13,7 @@
   - auto select unnecessary shards
   - display a hint when the shard can be useful
 - Champions mastery table (with **Seasonal Milestones** and **Eternals**)
+- Challenges with filters and search
 - Global champions stat for current patch
 - 🛠️ Technical Features
   - Runs with [Flutter](https://flutter.dev/)

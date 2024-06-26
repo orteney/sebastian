@@ -86,6 +86,8 @@ class Challenge {
   final double currentThreshold;
   final double nextThreshold;
   final String nextLevel;
+
+  @JsonKey(unknownEnumValue: ChallengeGameMode.unknown)
   final List<ChallengeGameMode> gameModes;
 
   @JsonKey(includeFromJson: false)
@@ -173,7 +175,8 @@ enum ChallengeLevel {
 enum ChallengeGameMode {
   classic('CLASSIC'),
   aram('ARAM'),
-  arena('CHERRY');
+  arena('CHERRY'),
+  unknown('UNKNOWN');
 
   const ChallengeGameMode(this.name);
 

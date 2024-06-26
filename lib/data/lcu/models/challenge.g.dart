@@ -26,7 +26,8 @@ Challenge _$ChallengeFromJson(Map<String, dynamic> json) => Challenge(
       (json['nextThreshold'] as num).toDouble(),
       json['nextLevel'] as String,
       (json['gameModes'] as List<dynamic>)
-          .map((e) => $enumDecode(_$ChallengeGameModeEnumMap, e))
+          .map((e) => $enumDecode(_$ChallengeGameModeEnumMap, e,
+              unknownValue: ChallengeGameMode.unknown))
           .toList(),
     );
 
@@ -47,4 +48,5 @@ const _$ChallengeGameModeEnumMap = {
   ChallengeGameMode.classic: 'CLASSIC',
   ChallengeGameMode.aram: 'ARAM',
   ChallengeGameMode.arena: 'CHERRY',
+  ChallengeGameMode.unknown: 'UNKNOWN',
 };

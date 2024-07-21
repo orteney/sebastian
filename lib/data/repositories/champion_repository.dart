@@ -41,6 +41,9 @@ class ChampionRepository {
     for (var dto in dtos) {
       if (dto.id == -1) continue;
 
+      // Filter champions for Swarm Mode
+      if (dto.alias.startsWith('Strawberry_')) continue;
+
       champions.add(
         Champion(
           id: dto.id,

@@ -33,7 +33,9 @@ class LolNotLaunchedOrWrongPathProvidedScreen extends StatelessWidget {
                 style: theme.textTheme.bodyLarge,
               ),
               const SizedBox(height: 32),
-              ButtonBar(
+              OverflowBar(
+                alignment: MainAxisAlignment.end,
+                spacing: 16,
                 children: [
                   OutlinedButton(
                     onPressed: onTapChangePath,

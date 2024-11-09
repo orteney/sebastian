@@ -1,6 +1,9 @@
 <p align="center">
   <img src="docs/logo.png" height="128">
 </p>
+<p align="center">
+  <img src="docs/screenshots/app_preview.png" width="800">
+</p>
 
 [![](https://img.shields.io/github/v/release/orteney/champmastery?label=VERSION&style=for-the-badge)](https://github.com/orteney/champmastery/releases/latest)
 [![](https://img.shields.io/github/downloads/orteney/sebastian/latest/total?style=for-the-badge)](https://github.com/orteney/champmastery/releases/latest)

@@ -15,14 +15,14 @@ class BlitzDataSource {
 
   Future<List<BlitzBuild>> getBuilds(BuildRequestVariables variables) async {
     const query = r'''
-query ChampionBuilds($championId:String! $queue:String! $role:String){
-  executeDatabricksQuery(game:LEAGUE queryName:"prod_champion_builds" params:[
+query ChampionBuildsTagged($championId:String! $queue:String! $role:String){
+  executeDatabricksQuery(game:LEAGUE queryName:"prod_champion_builds_tags" params:[
       {name:"individual_position",value:$role}
       {name:"queue_id",value:$queue}
       {name:"champion_id",value:$championId}
     ]
   )
-  {payload}
+  {metadata{byteSize lastModified parameters}payload}
 }''';
 
     final responseJson = await _requestDataLake({

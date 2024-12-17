@@ -26,7 +26,7 @@ class _CollectionTagCustomPainter extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = const Color(0xff211A19).withOpacity(1.0);
+    paint0Fill.color = const Color(0xff211A19);
     canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
@@ -50,7 +50,7 @@ class _CollectionTagCustomPainter extends CustomPainter {
     path_1.close();
 
     Paint paint1Fill = Paint()..style = PaintingStyle.fill;
-    paint1Fill.color = const Color(0xffC9C9C9).withOpacity(1.0);
+    paint1Fill.color = const Color(0xffC9C9C9);
     canvas.drawPath(path_1, paint1Fill);
 
     Path path_2 = Path();
@@ -69,7 +69,7 @@ class _CollectionTagCustomPainter extends CustomPainter {
     path_2.close();
 
     Paint paint2Fill = Paint()..style = PaintingStyle.fill;
-    paint2Fill.color = const Color(0xffC9C9C9).withOpacity(1.0);
+    paint2Fill.color = const Color(0xffC9C9C9);
     canvas.drawPath(path_2, paint2Fill);
 
     Path path_3 = Path();
@@ -90,7 +90,7 @@ class _CollectionTagCustomPainter extends CustomPainter {
     path_3.close();
 
     Paint paint3Fill = Paint()..style = PaintingStyle.fill;
-    paint3Fill.color = const Color(0xffC9C9C9).withOpacity(1.0);
+    paint3Fill.color = const Color(0xffC9C9C9);
     canvas.drawPath(path_3, paint3Fill);
 
     Path path_4 = Path();
@@ -103,7 +103,7 @@ class _CollectionTagCustomPainter extends CustomPainter {
     path_4.close();
 
     Paint paint4Fill = Paint()..style = PaintingStyle.fill;
-    paint4Fill.color = const Color(0xffC9C9C9).withOpacity(1.0);
+    paint4Fill.color = const Color(0xffC9C9C9);
     canvas.drawPath(path_4, paint4Fill);
 
     Path path_5 = Path();
@@ -116,7 +116,7 @@ class _CollectionTagCustomPainter extends CustomPainter {
     path_5.close();
 
     Paint paint5Fill = Paint()..style = PaintingStyle.fill;
-    paint5Fill.color = const Color(0xffC9C9C9).withOpacity(1.0);
+    paint5Fill.color = const Color(0xffC9C9C9);
     canvas.drawPath(path_5, paint5Fill);
   }
 

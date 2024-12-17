@@ -26,7 +26,7 @@ class _MasteryTagCustomPainter extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = const Color(0xff211A19).withOpacity(1.0);
+    paint0Fill.color = const Color(0xff211A19);
     canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
@@ -63,7 +63,7 @@ class _MasteryTagCustomPainter extends CustomPainter {
     path_1.close();
 
     Paint paint1Fill = Paint()..style = PaintingStyle.fill;
-    paint1Fill.color = const Color(0xffC9C9C9).withOpacity(1.0);
+    paint1Fill.color = const Color(0xffC9C9C9);
     canvas.drawPath(path_1, paint1Fill);
   }
 

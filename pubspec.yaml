@@ -4,8 +4,8 @@ publish_to: "none"
 version: 4.4.2
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
-  flutter: ">=3.24.0"
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=3.27.0"
 
 dependencies:
   flutter:
@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
 
   # DI
-  get_it: 8.0.2
+  get_it: 8.0.3
 
   # Data
   http: 1.2.2
@@ -25,22 +25,22 @@ dependencies:
   flutter_bloc: 8.1.6
 
   # UI
-  data_table_2: 2.5.15
+  data_table_2: 2.5.18
 
   # Extensions
   rxdart: 0.28.0
 
   # Utils
-  equatable: 2.0.5
+  equatable: 2.0.7
   intl: any #Resolved by flutter_localizations
   path: any #Resolved by Flutter
   meta: any #Resolved by Flutter
   collection: any #Resolved by Flutter
 
   # Plugins
-  shared_preferences: 2.3.2
-  file_picker: 8.1.3
-  package_info_plus: 8.1.1
+  shared_preferences: 2.3.3
+  file_picker: 8.1.6
+  package_info_plus: 8.1.2
 
 dev_dependencies:
   flutter_test:
@@ -50,8 +50,8 @@ dev_dependencies:
   flutter_lints: 5.0.0
 
   # Codegen
-  build_runner: 2.4.13
-  json_serializable: 6.8.0
+  build_runner: 2.4.14
+  json_serializable: 6.9.0
 
 flutter:
   generate: true

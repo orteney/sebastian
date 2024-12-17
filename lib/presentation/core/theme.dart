@@ -22,7 +22,7 @@ ThemeData mainTheme() {
     canvasColor: colorScheme.surface,
     scaffoldBackgroundColor: colorScheme.surfaceContainerLowest,
     cardColor: colorScheme.surface,
-    dividerColor: colorScheme.onSurface.withOpacity(0.12),
+    dividerColor: colorScheme.onSurface.withValues(alpha: 0.12),
     dialogBackgroundColor: colorScheme.surface,
     indicatorColor: onPrimarySurfaceColor,
     applyElevationOverlayColor: isDark,
